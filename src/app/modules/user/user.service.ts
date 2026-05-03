@@ -6,10 +6,12 @@ import { emailTemplate } from "../../../shared/emailTemplate";
 import { emailHelper } from "../../../helpers/emailHelper";
 import { jwtHelper } from "../../../helpers/jwtHelper";
 import config from "../../../config";
-import { Secret } from "jsonwebtoken";
+import { JwtPayload, Secret } from "jsonwebtoken";
 import { USER_ROLES } from "../../../enums/user";
 import { sendNotifications } from "../../../helpers/notificationsHelper";
 import { NOTIFICATION_REFERENCE_MODEL, NOTIFICATION_TYPE } from "../notification/notification.constant";
+import { IUser } from "./user.interface";
+import unlinkFile from "../../../shared/unlinkFile";
 
 // --- USER SERVICES ---
 const createUserToDB = async (payload: any) => {
@@ -79,6 +81,41 @@ const createUserToDB = async (payload: any) => {
   return result;
 };
 
+const getUserProfileFromDB = async (user: JwtPayload): Promise<any> => {
+  const { id } = user;
+
+  const result: any = await User.isExistUserById(id);
+  if (!result) {
+    throw new ApiError(StatusCodes.BAD_REQUEST, "User doesn't exist!");
+  }
+
+
+  return result;
+};
+
+const updateProfileToDB = async (
+  user: JwtPayload,
+  payload: Partial<IUser>,
+): Promise<Partial<IUser | null>> => {
+  const { id } = user;
+  const isExistUser = await User.isExistUserById(id);
+  if (!isExistUser) {
+    throw new ApiError(StatusCodes.BAD_REQUEST, "User doesn't exist!");
+  }
+
+  //unlink file here
+  if (payload.profileImage && isExistUser.profileImage) {
+    unlinkFile(isExistUser.profileImage);
+  }
+
+  const updateDoc = await User.findOneAndUpdate({ _id: id }, payload, {
+    new: true,
+  });
+  return updateDoc;
+};
+
 export const UserServices = {
   createUserToDB,
+  getUserProfileFromDB,
+  updateProfileToDB,
 }
