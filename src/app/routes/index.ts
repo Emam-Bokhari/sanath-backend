@@ -9,11 +9,8 @@ import { NotificationRoutes } from "../modules/notification/notification.routes"
 import { FcmTokenRoutes } from "../modules/fcmToken/fcmToken.route";
 import { SupportRoutes } from "../modules/support/support.route";
 import { BannerRoutes } from "../modules/banner/banner.route";
-import { LotteryRoutes } from "../modules/lottery/lottery.route";
 import { SettingsRoutes } from "../modules/settings/settings.route";
-import { LotteryParticipantRoutes } from "../modules/participant/participant.route";
-import { AnalyticsRoutes } from "../modules/analytics/analytics.route";
-import { WinnerRoutes } from "../modules/winner/winner.route";
+
 
 const router = express.Router();
 
@@ -25,14 +22,6 @@ const apiRoutes = [
   {
     path: "/auth",
     route: AuthRoutes,
-  },
-  {
-    path: "/lottery",
-    route: LotteryRoutes,
-  },
-  {
-    path: "/participants",
-    route: LotteryParticipantRoutes,
   },
   {
     path: "/rules",
@@ -69,14 +58,6 @@ const apiRoutes = [
   {
     path: "/settings",
     route: SettingsRoutes,
-  },
-  {
-    path: "/analytics",
-    route: AnalyticsRoutes,
-  },
-  {
-    path: "/winners",
-    route: WinnerRoutes,
   },
 ];
 

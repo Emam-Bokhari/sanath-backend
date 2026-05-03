@@ -1,6 +1,6 @@
 import "./email/email.worker";
 import "./notification/notification.worker";
-import "./scheduler/scheduler.worker";
+
 
 // workers
 export { emailWorker } from "./email/email.worker";
