@@ -1,4 +1,5 @@
 import { StatusCodes } from "http-status-codes";
+import bcrypt from "bcrypt";
 import ApiError from "../../../errors/ApiErrors";
 import { User } from "./user.model";
 import generateOTP from "../../../util/generateOTP";
@@ -7,11 +8,12 @@ import { emailHelper } from "../../../helpers/emailHelper";
 import { jwtHelper } from "../../../helpers/jwtHelper";
 import config from "../../../config";
 import { JwtPayload, Secret } from "jsonwebtoken";
-import { USER_ROLES } from "../../../enums/user";
+import { STATUS, USER_ROLES } from "../../../enums/user";
 import { sendNotifications } from "../../../helpers/notificationsHelper";
 import { NOTIFICATION_REFERENCE_MODEL, NOTIFICATION_TYPE } from "../notification/notification.constant";
 import { IUser } from "./user.interface";
 import unlinkFile from "../../../shared/unlinkFile";
+import QueryBuilder from "../../builder/queryBuilder";
 
 // --- USER SERVICES ---
 const createUserToDB = async (payload: any) => {
@@ -114,8 +116,118 @@ const updateProfileToDB = async (
   return updateDoc;
 };
 
+const getAllUsersFromDB = async (query: any) => {
+  // Base user query
+  const baseQuery = User.find({
+    role: USER_ROLES.USER,
+    verified: true,
+  });
+
+  const queryBuilder = new QueryBuilder(baseQuery, query)
+    .search(["name", "email"])
+    .sort()
+    .fields()
+    .filter()
+    .paginate();
+
+  // Fetch paginated users
+  const users = await queryBuilder.modelQuery;
+  const meta = await queryBuilder.countTotal();
+
+  if (!users || users.length === 0)
+    throw new ApiError(404, "No users are found in the database");
+ 
+
+  return {
+    data: users,
+    meta,
+  };
+};
+
+const getUserByIdFromDB = async (id: string) => {
+  const result = await User.findOne({
+    _id: id,
+    role: USER_ROLES.USER,
+  });
+
+  if (!result)
+    throw new ApiError(404, "No user is found in the database by this ID");
+
+  return result;
+};
+
+const updateUserStatusByIdToDB = async (
+  id: string,
+  status: STATUS.ACTIVE | STATUS.INACTIVE,
+) => {
+  if (![STATUS.ACTIVE, STATUS.INACTIVE].includes(status)) {
+    throw new ApiError(400, "Status must be either 'ACTIVE' or 'INACTIVE'");
+  }
+
+  const user = await User.findOne({
+    _id: id,
+    role: USER_ROLES.USER,
+  });
+  if (!user) {
+    throw new ApiError(404, "No user is found by this user ID");
+  }
+
+  const result = await User.findByIdAndUpdate(id, { status }, { new: true });
+  if (!result) {
+    throw new ApiError(400, "Failed to change status by this user ID");
+  }
+
+  return result;
+};
+
+const deleteUserByIdFromD = async (id: string) => {
+  const user = await User.findOne({
+    _id: id,
+    role: USER_ROLES.USER,
+  });
+
+  if (!user) {
+    throw new ApiError(404, "User doest not exist in the database");
+  }
+
+  const result = await User.findByIdAndDelete(id);
+
+  if (!result) {
+    throw new ApiError(400, "Failed to delete user by this ID");
+  }
+
+  return result;
+};
+
+const deleteProfileFromDB = async (id: string, password: string) => {
+  // user exists?
+  const user = await User.findById(id).select("+password");
+  if (!user) {
+    throw new ApiError(StatusCodes.BAD_REQUEST, "User doesn't exist!");
+  }
+
+  // check password
+  const isPasswordMatch = await bcrypt.compare(password, user.password!);
+  if (!isPasswordMatch) {
+    throw new ApiError(StatusCodes.UNAUTHORIZED, "Password is incorrect!");
+  }
+
+  // delete user
+  const result = await User.findByIdAndDelete(id);
+  if (!result) {
+    throw new ApiError(400, "Failed to delete this user");
+  }
+
+  return result;
+};
+
 export const UserServices = {
   createUserToDB,
   getUserProfileFromDB,
   updateProfileToDB,
+  getAllUsersFromDB,
+  getUserByIdFromDB,
+  updateUserStatusByIdToDB,
+  deleteUserByIdFromD,
+  deleteProfileFromDB,
 }
