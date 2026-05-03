@@ -20,6 +20,7 @@ export type IUser = {
   verified: boolean;
 
   status?: STATUS;
+  userName?: string;
 
   /* ================= PROFILE ================= */
   profileImage?: string;

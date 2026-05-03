@@ -1,128 +1,3 @@
-// import { Request, Response } from "express";
-// import { StatusCodes } from "http-status-codes";
-// import { AuthService } from "./auth.service";
-// import { JwtPayload } from "jsonwebtoken";
-// import catchAsync from "../../../shared/catchAsync";
-// import sendResponse from "../../../shared/sendResponse";
-
-// /* ================= LOGIN ================= */
-// const loginUser = catchAsync(async (req: Request, res: Response) => {
-//   const result = await AuthService.loginUserFromDB(req.body);
-
-//   sendResponse(res, {
-//     success: true,
-//     statusCode: StatusCodes.OK,
-//     message: "User login successfully",
-//     data: result,
-//   });
-// });
-
-// /* ================= FORGET PASSWORD ================= */
-// const forgetPassword = catchAsync(async (req: Request, res: Response) => {
-//   const { identifier } = req.body;
-
-//   const result = await AuthService.forgetPasswordToDB(identifier);
-
-//   sendResponse(res, {
-//     success: true,
-//     statusCode: StatusCodes.OK,
-//     message: "OTP sent successfully",
-//     data: result,
-//   });
-// });
-
-// /* ================= RESET PASSWORD ================= */
-// const resetPassword = catchAsync(async (req: Request, res: Response) => {
-//   const token = req.headers.resettoken as string;
-
-//   const result = await AuthService.resetPasswordToDB(token, req.body);
-
-//   sendResponse(res, {
-//     success: true,
-//     statusCode: StatusCodes.OK,
-//     message: "Password reset successfully",
-//     data: result,
-//   });
-// });
-
-// /* ================= CHANGE PASSWORD ================= */
-// const changePassword = catchAsync(async (req: Request, res: Response) => {
-//   const result = await AuthService.changePasswordToDB(
-//     req.user as JwtPayload,
-//     req.body
-//   );
-
-//   sendResponse(res, {
-//     success: true,
-//     statusCode: StatusCodes.OK,
-//     message: result.message,
-//   });
-// });
-
-// /* ================= NEW ACCESS TOKEN ================= */
-// const newAccessToken = catchAsync(async (req: Request, res: Response) => {
-//   const result = await AuthService.newAccessTokenToUser(req.body.token);
-
-//   sendResponse(res, {
-//     success: true,
-//     statusCode: StatusCodes.OK,
-//     message: "Access token generated successfully",
-//     data: result,
-//   });
-// });
-
-// /* ================= RESEND OTP ================= */
-// const resendOtp = catchAsync(async (req: Request, res: Response) => {
-//   const result = await AuthService.resendOtpToDB(req.body);
-
-//   sendResponse(res, {
-//     success: true,
-//     statusCode: StatusCodes.OK,
-//     message: "OTP sent successfully",
-//     data: result,
-//   });
-// });
-
-// /* ================= DELETE USER ================= */
-// const deleteUser = catchAsync(async (req: Request, res: Response) => {
-//   const result = await AuthService.deleteUserFromDB(
-//     req.user as JwtPayload,
-//     req.body.password
-//   );
-
-//   sendResponse(res, {
-//     success: true,
-//     statusCode: StatusCodes.OK,
-//     message: "Account deleted successfully",
-//     data: result,
-//   });
-// });
-
-// /* ================= VERIFY OTP (PHONE/EMAIL HYBRID) ================= */
-// const verifyOtp = catchAsync(async (req: Request, res: Response) => {
-//   const result = await AuthService.verifyOtpToDB(req.body);
-
-//   sendResponse(res, {
-//     success: true,
-//     statusCode: StatusCodes.OK,
-//     message: result.message,
-//     data: result,
-//   });
-// });
-
-// /* ================= EXPORT ================= */
-// export const AuthController = {
-//   loginUser,
-//   forgetPassword,
-//   resetPassword,
-//   changePassword,
-//   newAccessToken,
-//   resendOtp,
-//   deleteUser,
-//   verifyOtp,
-// };
-
-// ====================OTP OPTIONAL=====================
 import { Request, Response } from "express";
 import { StatusCodes } from "http-status-codes";
 import { AuthService } from "./auth.service";
@@ -130,8 +5,21 @@ import { JwtPayload } from "jsonwebtoken";
 import catchAsync from "../../../shared/catchAsync";
 import sendResponse from "../../../shared/sendResponse";
 
+const verifyEmail = catchAsync(async (req: Request, res: Response) => {
+  const { ...verifyData } = req.body;
+  const result = await AuthService.verifyEmailToDB(verifyData);
+
+  sendResponse(res, {
+    success: true,
+    statusCode: StatusCodes.OK,
+    message: result.message,
+    data: result.data,
+  });
+});
+
 const loginUser = catchAsync(async (req: Request, res: Response) => {
-  const result = await AuthService.loginUserFromDB(req.body);
+  const { ...loginData } = req.body;
+  const result = await AuthService.loginUserFromDB(loginData);
 
   sendResponse(res, {
     success: true,
@@ -142,62 +30,69 @@ const loginUser = catchAsync(async (req: Request, res: Response) => {
 });
 
 const forgetPassword = catchAsync(async (req: Request, res: Response) => {
-  const result = await AuthService.forgetPasswordToDB(req.body.identifier);
+  const email = req.body.email;
+  const result = await AuthService.forgetPasswordToDB(email);
 
   sendResponse(res, {
     success: true,
     statusCode: StatusCodes.OK,
-    message: result.message,
+    message: "Please check your email, we send a OTP!",
     data: result,
   });
 });
 
-const resetPassword = catchAsync(async (req: Request, res: Response) => {
-  const token = req.headers.resettoken as string;
-
-  const result = await AuthService.resetPasswordToDB(token, req.body);
+const resetPassword = catchAsync(async (req, res) => {
+  const token: any = req.headers.resettoken;
+  const { ...resetData } = req.body;
+  const result = await AuthService.resetPasswordToDB(token!, resetData);
 
   sendResponse(res, {
     success: true,
     statusCode: StatusCodes.OK,
-    message: "Password reset successfully",
+    message: "Your password has been successfully reset.",
     data: result,
   });
 });
 
 const changePassword = catchAsync(async (req: Request, res: Response) => {
-  await AuthService.changePasswordToDB(req.user as JwtPayload, req.body);
+  const user = req.user;
+  const { ...passwordData } = req.body;
+  await AuthService.changePasswordToDB(user as JwtPayload, passwordData);
 
   sendResponse(res, {
     success: true,
     statusCode: StatusCodes.OK,
     message: "Password changed successfully",
-    data: null,
   });
 });
 
 const newAccessToken = catchAsync(async (req: Request, res: Response) => {
-  const result = await AuthService.newAccessTokenToUser(req.body.token);
+  const { token } = req.body;
+  const result = await AuthService.newAccessTokenToUser(token);
 
   sendResponse(res, {
     success: true,
     statusCode: StatusCodes.OK,
-    message: "Access token generated successfully",
-    data: result.accessToken,
-  });
-});
-
-const resendOtp = catchAsync(async (req: Request, res: Response) => {
-  const result = await AuthService.resendOtpToDB(req.body);
-
-  sendResponse(res, {
-    success: true,
-    statusCode: StatusCodes.OK,
-    message: result.message,
+    message: "Generate Access Token successfully",
     data: result,
   });
 });
 
+const resendVerificationEmail = catchAsync(
+  async (req: Request, res: Response) => {
+    const { email } = req.body;
+    const result = await AuthService.resendVerificationEmailToDB(email);
+
+    sendResponse(res, {
+      success: true,
+      statusCode: StatusCodes.OK,
+      message: "Generate OTP and send successfully",
+      data: result,
+    });
+  },
+);
+
+// delete user
 const deleteUser = catchAsync(async (req: Request, res: Response) => {
   const result = await AuthService.deleteUserFromDB(
     req.user as JwtPayload,
@@ -207,29 +102,38 @@ const deleteUser = catchAsync(async (req: Request, res: Response) => {
   sendResponse(res, {
     success: true,
     statusCode: StatusCodes.OK,
-    message: result.message,
-    data: null,
+    message: "Account Deleted successfully",
+    data: result,
   });
 });
 
-const verifyOtp = catchAsync(async (req: Request, res: Response) => {
-  const result = await AuthService.verifyOtpToDB(req.body);
+// google login
+const googleLogin = catchAsync(async (req: Request, res: Response) => {
+  const { token, deviceToken } = req.body;
+
+  const data = {
+    token,
+    deviceToken,
+  };
+  console.log(token, deviceToken, "controller token");
+  const result = await AuthService.googleLoginService(data);
 
   sendResponse(res, {
     success: true,
     statusCode: StatusCodes.OK,
-    message: result.message,
+    message: "User login successfully",
     data: result,
   });
 });
 
 export const AuthController = {
+  verifyEmail,
   loginUser,
   forgetPassword,
   resetPassword,
   changePassword,
   newAccessToken,
-  resendOtp,
+  resendVerificationEmail,
   deleteUser,
-  verifyOtp,
+  googleLogin,
 };
