@@ -60,8 +60,82 @@ const updateProfile = catchAsync(async (req, res) => {
   });
 });
 
+const getAllUsers = catchAsync(async (req, res) => {
+  const result = await UserServices.getAllUsersFromDB(req.query);
+
+  sendResponse(res, {
+    success: true,
+    statusCode: 200,
+    message: "Successfully retrieved are users data",
+    data: result.data,
+    meta: result.meta,
+  });
+});
+
+const getUserById = catchAsync(async (req, res) => {
+  const { id } = req.params;
+  const result = await UserServices.getUserByIdFromDB(id);
+
+  sendResponse(res, {
+    success: true,
+    statusCode: 200,
+    message: "Successfully retrieve user by ID",
+    data: result,
+  });
+});
+
+const updateUserStatusById = catchAsync(async (req, res) => {
+  const { id } = req.params;
+
+  const { status } = req.body;
+
+  const result = await UserServices.updateUserStatusByIdToDB(id, status);
+
+  sendResponse(res, {
+    success: true,
+    statusCode: 200,
+    message: "Status updated successfully",
+    data: result,
+  });
+});
+
+
+
+const deleteUserById = catchAsync(async (req, res) => {
+  const { id } = req.params;
+
+  const result = await UserServices.deleteUserByIdFromD(id);
+
+  sendResponse(res, {
+    success: true,
+    statusCode: 200,
+    message: "User is deleted successfully",
+    data: result,
+  });
+});
+
+const deleteProfile = catchAsync(async (req, res) => {
+  const { id }: any = req.user;
+  // console.log(id, "ID");
+  const { password } = req.body;
+
+  const result = await UserServices.deleteProfileFromDB(id, password);
+
+  sendResponse(res, {
+    success: true,
+    statusCode:200,
+    message: "Profile deleted successfully",
+    data: result,
+  });
+});
+
 export const UserControllers={
   createUser,
   getUserProfile,
   updateProfile,
+  getAllUsers,
+  getUserById,
+  updateUserStatusById,
+  deleteUserById,
+  deleteProfile,
 }
