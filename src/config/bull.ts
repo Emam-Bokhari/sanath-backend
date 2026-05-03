@@ -14,8 +14,8 @@ export const defaultJobOptions = {
     delay: 2000,
   },
   // removeOnComplete: true,
-  removeOnComplete:{
-    age:3600
+  removeOnComplete: {
+    age: 3600,
   },
   removeOnFail: false,
 };

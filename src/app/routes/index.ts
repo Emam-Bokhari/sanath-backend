@@ -11,7 +11,6 @@ import { SupportRoutes } from "../modules/support/support.route";
 import { BannerRoutes } from "../modules/banner/banner.route";
 import { SettingsRoutes } from "../modules/settings/settings.route";
 
-
 const router = express.Router();
 
 const apiRoutes = [

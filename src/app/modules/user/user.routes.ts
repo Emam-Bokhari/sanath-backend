@@ -10,10 +10,7 @@ const router = express.Router();
 router
   .route("/profile")
   .get(isAuthenticated, UserControllers.getUserProfile)
-  .delete(
-    isAuthenticated,
-    UserControllers.deleteProfile,
-  );
+  .delete(isAuthenticated, UserControllers.deleteProfile);
 
 router
   .route("/")
@@ -22,21 +19,14 @@ router
   .patch(
     isAuthenticated,
     fileUploadHandler(),
-    parseAllFilesData(
-      {
-        fieldName: FOLDER_NAMES.PROFILE_IMAGE,
-        forceSingle: true,
-      },
-    ),
+    parseAllFilesData({
+      fieldName: FOLDER_NAMES.PROFILE_IMAGE,
+      forceSingle: true,
+    }),
     UserControllers.updateProfile,
   );
 
-
-router.patch(
-  "/status/:id",
-  isAdmin,
-  UserControllers.updateUserStatusById,
-);
+router.patch("/status/:id", isAdmin, UserControllers.updateUserStatusById);
 
 router
   .route("/:id")

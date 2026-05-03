@@ -10,7 +10,10 @@ import config from "../../../config";
 import { JwtPayload, Secret } from "jsonwebtoken";
 import { STATUS, USER_ROLES } from "../../../enums/user";
 import { sendNotifications } from "../../../helpers/notificationsHelper";
-import { NOTIFICATION_REFERENCE_MODEL, NOTIFICATION_TYPE } from "../notification/notification.constant";
+import {
+  NOTIFICATION_REFERENCE_MODEL,
+  NOTIFICATION_TYPE,
+} from "../notification/notification.constant";
 import { IUser } from "./user.interface";
 import unlinkFile from "../../../shared/unlinkFile";
 import QueryBuilder from "../../builder/queryBuilder";
@@ -91,7 +94,6 @@ const getUserProfileFromDB = async (user: JwtPayload): Promise<any> => {
     throw new ApiError(StatusCodes.BAD_REQUEST, "User doesn't exist!");
   }
 
-
   return result;
 };
 
@@ -136,7 +138,6 @@ const getAllUsersFromDB = async (query: any) => {
 
   if (!users || users.length === 0)
     throw new ApiError(404, "No users are found in the database");
- 
 
   return {
     data: users,
@@ -230,4 +231,4 @@ export const UserServices = {
   updateUserStatusByIdToDB,
   deleteUserByIdFromD,
   deleteProfileFromDB,
-}
+};

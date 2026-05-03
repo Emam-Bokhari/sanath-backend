@@ -11,12 +11,10 @@ import {
   notificationWorker,
   emailQueue,
   notificationQueue,
-
 } from "./queues";
 import "./queues";
 
 let server: any;
-
 
 // GRACEFUL SHUTDOWN
 
@@ -25,16 +23,10 @@ const shutdown = async () => {
 
   try {
     // close workers
-    await Promise.all([
-      emailWorker.close(),
-      notificationWorker.close(),
-    ]);
+    await Promise.all([emailWorker.close(), notificationWorker.close()]);
 
     // close queues
-    await Promise.all([
-      emailQueue.close(),
-      notificationQueue.close(),
-    ]);
+    await Promise.all([emailQueue.close(), notificationQueue.close()]);
 
     // close HTTP server
     if (server) {
@@ -51,13 +43,11 @@ const shutdown = async () => {
   }
 };
 
-
 // uncaughtException
 process.on("uncaughtException", (error) => {
   errorLogger.error("uncaughtException Detected", error);
   shutdown();
 });
-
 
 // MAIN APP START
 async function main() {
@@ -89,12 +79,10 @@ async function main() {
     socketHelper.socket(io);
     //@ts-ignore
     global.io = io;
-
   } catch (error) {
     errorLogger.error(colors.red("🤢 Failed to connect Database"));
     process.exit(1);
   }
-
 
   // unhandledRejection
   process.on("unhandledRejection", (error) => {
@@ -104,7 +92,6 @@ async function main() {
 }
 
 main();
-
 
 // SIGNAL HANDLING
 process.on("SIGINT", shutdown);

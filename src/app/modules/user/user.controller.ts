@@ -5,21 +5,19 @@ import { UserServices } from "./user.service";
 import bcrypt from "bcrypt";
 import config from "../../../config";
 
-const createUser = catchAsync(
-  async (req, res) => {
-    const { ...userData } = req.body;
+const createUser = catchAsync(async (req, res) => {
+  const { ...userData } = req.body;
 
-    const result = await UserServices.createUserToDB(userData);
+  const result = await UserServices.createUserToDB(userData);
 
-    sendResponse(res, {
-      success: true,
-      statusCode:200,
-      message:
-        "Your account has been successfully created. Verify Your Email By OTP. Check your email",
-      data: result,
-    });
-  },
-);
+  sendResponse(res, {
+    success: true,
+    statusCode: 200,
+    message:
+      "Your account has been successfully created. Verify Your Email By OTP. Check your email",
+    data: result,
+  });
+});
 
 const getUserProfile = catchAsync(async (req, res) => {
   const user = req.user;
@@ -27,7 +25,7 @@ const getUserProfile = catchAsync(async (req, res) => {
 
   sendResponse(res, {
     success: true,
-    statusCode:200,
+    statusCode: 200,
     message: "Profile data retrieved successfully",
     data: result,
   });
@@ -54,7 +52,7 @@ const updateProfile = catchAsync(async (req, res) => {
 
   sendResponse(res, {
     success: true,
-    statusCode:200,
+    statusCode: 200,
     message: "Profile updated successfully",
     data: result,
   });
@@ -99,8 +97,6 @@ const updateUserStatusById = catchAsync(async (req, res) => {
   });
 });
 
-
-
 const deleteUserById = catchAsync(async (req, res) => {
   const { id } = req.params;
 
@@ -123,13 +119,13 @@ const deleteProfile = catchAsync(async (req, res) => {
 
   sendResponse(res, {
     success: true,
-    statusCode:200,
+    statusCode: 200,
     message: "Profile deleted successfully",
     data: result,
   });
 });
 
-export const UserControllers={
+export const UserControllers = {
   createUser,
   getUserProfile,
   updateProfile,
@@ -138,4 +134,4 @@ export const UserControllers={
   updateUserStatusById,
   deleteUserById,
   deleteProfile,
-}
+};

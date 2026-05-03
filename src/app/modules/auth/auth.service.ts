@@ -124,7 +124,10 @@ const verifyEmailToDB = async (payload: IVerifyEmail) => {
   }
 
   const date = new Date();
-  if (date > isExistUser.authentication?.expireAt! && isExistUser.userName?.length) {
+  if (
+    date > isExistUser.authentication?.expireAt! &&
+    isExistUser.userName?.length
+  ) {
     throw new ApiError(
       StatusCodes.BAD_REQUEST,
 
@@ -362,7 +365,7 @@ const googleLoginService = async (payload: {
   token: string;
   fcmToken?: string;
   deviceId?: string;
-  deviceType?: 'ios' | 'android' | 'web';
+  deviceType?: "ios" | "android" | "web";
 }) => {
   const { token, fcmToken, deviceId, deviceType } = payload;
 
