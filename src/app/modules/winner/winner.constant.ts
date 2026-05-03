@@ -1,4 +1,0 @@
-export enum WINNER_SELECTED_BY {
-  MANUAL = "MANUAL",
-  RANDOM = "RANDOM",
-}

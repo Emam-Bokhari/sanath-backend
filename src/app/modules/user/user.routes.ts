@@ -7,7 +7,6 @@ import { isAdmin, isAuthenticated } from "../../../helpers/authHelper";
 
 const router = express.Router();
 
-
 router
   .route("/profile")
   .get(isAuthenticated, UserControllers.getUserProfile)
@@ -15,7 +14,6 @@ router
     isAuthenticated,
     UserControllers.deleteProfile,
   );
-
 
 router
   .route("/")

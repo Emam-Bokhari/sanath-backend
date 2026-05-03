@@ -9,10 +9,9 @@ import seedSuperAdmin from "./DB";
 import {
   emailWorker,
   notificationWorker,
-  schedulerWorker,
   emailQueue,
   notificationQueue,
-  schedulerQueue,
+
 } from "./queues";
 import "./queues";
 
@@ -29,14 +28,12 @@ const shutdown = async () => {
     await Promise.all([
       emailWorker.close(),
       notificationWorker.close(),
-      schedulerWorker.close(),
     ]);
 
     // close queues
     await Promise.all([
       emailQueue.close(),
       notificationQueue.close(),
-      schedulerQueue.close(),
     ]);
 
     // close HTTP server
