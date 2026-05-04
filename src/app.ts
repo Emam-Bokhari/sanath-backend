@@ -5,7 +5,6 @@ import { Morgan } from "./shared/morgan";
 import globalErrorHandler from "./app/middlewares/globalErrorHandler";
 import path from "path";
 import v2Router from "./app/routes/v2";
-
 import router from "./app/routes";
 import { serverAdapter } from "./config/bullboard";
 

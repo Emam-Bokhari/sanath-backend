@@ -17,7 +17,6 @@ import "./queues";
 let server: any;
 
 // GRACEFUL SHUTDOWN
-
 const shutdown = async () => {
   logger.info("🛑 Graceful shutdown started...");
 

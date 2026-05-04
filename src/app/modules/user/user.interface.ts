@@ -12,6 +12,8 @@ export type IUser = {
   phone?: string;
   // phoneNumber?:string;
   countryCode?: string;
+  country?: string;
+  postalCode?: string;
   dateOfBirth?: Date;
 
   password: string;

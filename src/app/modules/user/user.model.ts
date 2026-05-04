@@ -46,6 +46,14 @@ const userSchema = new Schema<IUser, UserModal>(
       type: String,
     },
 
+    country: {
+      type: String,
+    },
+
+    postalCode: {
+      type: String,
+    },
+
     dateOfBirth: {
       type: Date,
       default: null,
