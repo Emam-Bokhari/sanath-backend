@@ -2,6 +2,8 @@ import { TListing } from "./listing.interface";
 import { Listing } from "./listing.model";
 import { canPublishListing, generateChecklist } from "./listing.utils";
 import { LISTING_STATUS } from "./listing.constant";
+import { Types } from "mongoose";
+import QueryBuilder from "../../builder/queryBuilder";
 
 const createListingServiceToDB = async (payload: TListing, agentId: string) => {
   // always create listing first (safe default)
@@ -30,6 +32,36 @@ const createListingServiceToDB = async (payload: TListing, agentId: string) => {
 
   return listing;
 };
+
+const getMyListingsServiceFromDB = async (
+  agentId: string,
+  query: Record<string, unknown>
+) => {
+  // base query (IMPORTANT: ownership locked)
+  const baseQuery = Listing.find({
+    agentId: new Types.ObjectId(agentId),
+  });
+
+  // apply QueryBuilder
+  const listingQuery = new QueryBuilder(baseQuery, query)
+    .search(["title", "city", "country"])
+    .filter()
+    .sort()
+    .paginate()
+    .fields();
+
+  // execute query
+  const result = await listingQuery.modelQuery;
+
+  // meta count
+  const meta = await listingQuery.countTotal();
+
+  return {
+    data: result,
+    meta,
+  };
+};
+
 
 const updateListingServiceToDB = async (
   listingId: string,
@@ -68,5 +100,6 @@ const updateListingServiceToDB = async (
 
 export const ListingServices = {
   createListingServiceToDB,
+  getMyListingsServiceFromDB,
   updateListingServiceToDB,
 };

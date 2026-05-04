@@ -15,6 +15,18 @@ const createListing = catchAsync(async (req, res) => {
   });
 });
 
+const getMyListingsService = catchAsync(async (req, res) => {
+  const { id: agentId } = req.user as { id: string };
+  const query = req.query;
+  const result = await ListingServices.getMyListingsServiceFromDB(agentId, query);
+  sendResponse(res, {
+    success: true,
+    statusCode: 200,
+    message: "Listings retrieved successfully",
+    data: result,
+  });
+})
+
 const updateListing = catchAsync(async (req, res) => {
   const { id: agentId } = req.user as { id: string };
   const { listingId } = req.params;
@@ -35,5 +47,6 @@ const updateListing = catchAsync(async (req, res) => {
 
 export const ListingControllers = {
   createListing,
+  getMyListingsService,
   updateListing,
 };

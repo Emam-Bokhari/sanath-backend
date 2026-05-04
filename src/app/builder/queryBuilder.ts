@@ -1,4 +1,5 @@
 import { FilterQuery, Query, Types } from "mongoose";
+import { LISTING_TYPE } from "../modules/listing/listing.constant";
 
 class QueryBuilder<T> {
   public modelQuery: Query<T[], T>;
@@ -43,91 +44,58 @@ class QueryBuilder<T> {
     return this;
   }
 
-  // FILTER (fully generic)
-  //  filter() {
-  //   const queryObj = { ...this.query };
-
-  //   const excludeFields = [
-  //     "searchTerm",
-  //     "sort",
-  //     "limit",
-  //     "page",
-  //     "fields",
-  //   ];
-
-  //   excludeFields.forEach((el) => delete queryObj[el]);
-
-  //   // remove empty values
-  //   Object.keys(queryObj).forEach((key) => {
-  //     if (
-  //       queryObj[key] === undefined ||
-  //       queryObj[key] === null ||
-  //       queryObj[key] === ""
-  //     ) {
-  //       delete queryObj[key];
-  //     }
-  //   });
-
-  //   // ✅ ONLY allow valid fields (important for security)
-  //   const allowedFilters = ["status", "mode","city"];
-
-  //   const finalFilter: any = {};
-
-  //   allowedFilters.forEach((key) => {
-  //     if (queryObj[key]) {
-  //       finalFilter[key] = queryObj[key];
-  //     }
-  //   });
-
-  //   if (Object.keys(finalFilter).length > 0) {
-  //     this.modelQuery = this.modelQuery.find(finalFilter);
-  //   }
-
-  //   return this;
-  // }
+ 
   filter() {
-    const queryObj = { ...this.query };
+  const queryObj = { ...this.query };
 
-    const excludeFields = ["searchTerm", "sort", "limit", "page", "fields"];
+  const excludeFields = ["searchTerm", "sort", "limit", "page", "fields"];
 
-    excludeFields.forEach((el) => delete queryObj[el]);
+  excludeFields.forEach((el) => delete queryObj[el]);
 
-    // remove empty values
-    Object.keys(queryObj).forEach((key) => {
-      if (
-        queryObj[key] === undefined ||
-        queryObj[key] === null ||
-        queryObj[key] === ""
-      ) {
-        delete queryObj[key];
-      }
-    });
-
-    const finalFilter: any = {};
-
-    /* ================= EXACT MATCH (ENUM) ================= */
-    if (queryObj.status) {
-      finalFilter.status = queryObj.status;
+  // remove empty values
+  Object.keys(queryObj).forEach((key) => {
+    if (
+      queryObj[key] === undefined ||
+      queryObj[key] === null ||
+      queryObj[key] === ""
+    ) {
+      delete queryObj[key];
     }
+  });
 
-    if (queryObj.mode) {
-      finalFilter.mode = queryObj.mode;
-    }
+  const finalFilter: any = {};
 
-    /* ================= PARTIAL MATCH (TEXT) ================= */
-    if (queryObj.city) {
-      finalFilter.city = {
-        $regex: queryObj.city,
-        $options: "i",
-      };
-    }
+  /* ================= ENUM FILTERS ================= */
 
-    if (Object.keys(finalFilter).length > 0) {
-      this.modelQuery = this.modelQuery.find(finalFilter);
-    }
-
-    return this;
+  // STATUS
+  if (queryObj.status) {
+    finalFilter.status = queryObj.status;
   }
+
+  // SELL / RENT FILTER (IMPORTANT PART)
+  if (queryObj.listingType) {
+    const type = queryObj.listingType as LISTING_TYPE;
+
+    if (Object.values(LISTING_TYPE).includes(type)) {
+      finalFilter.listingType = type;
+    }
+  }
+
+  /* ================= TEXT FILTER ================= */
+
+  if (queryObj.city) {
+    finalFilter.city = {
+      $regex: queryObj.city,
+      $options: "i",
+    };
+  }
+
+  if (Object.keys(finalFilter).length > 0) {
+    this.modelQuery = this.modelQuery.find(finalFilter);
+  }
+
+  return this;
+}
 
   //  SORT
   sort() {
