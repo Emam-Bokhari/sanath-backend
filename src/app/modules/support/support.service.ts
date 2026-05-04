@@ -8,6 +8,7 @@ import { TSupport } from "./support.interface";
 import { Support } from "./support.model";
 import QueryBuilder from "../../builder/queryBuilder";
 import { SUPPORT_STATUS } from "./support.constant";
+import { emailQueue } from "../../../queues";
 
 const PRIMARY_COLOR = "#22143b";
 const TEXT_COLOR = "#ffffff";
@@ -75,9 +76,8 @@ const support = async (id: string, payload: TSupport) => {
                   <td style="padding:8px 0;">${payload.subject}</td>
                 </tr>
 
-                ${
-                  payload.attachment
-                    ? `
+                ${payload.attachment
+        ? `
                 <tr>
                   <td style="padding:8px 0;font-weight:bold;">Attachment:</td>
                   <td style="padding:8px 0;">
@@ -87,8 +87,8 @@ const support = async (id: string, payload: TSupport) => {
                   </td>
                 </tr>
                 `
-                    : ""
-                }
+        : ""
+      }
 
               </table>
 
@@ -145,7 +145,7 @@ const support = async (id: string, payload: TSupport) => {
 `,
   };
 
-  await emailHelper.sendEmail(emailPayload);
+  emailQueue.add("support-request", emailPayload);
 
   return supportEntry;
 };
