@@ -26,4 +26,25 @@ router.route("/")
         ListingControllers.createListing
     );
 
+router.route("/:listingId")
+    .put(
+        isAgent,
+        fileUploadHandler(),
+        parseFileData({
+            fieldName: "photos",
+            mode: 'multiple',
+        }, {
+            fieldName: "videos",
+            mode: 'multiple',
+        }, {
+            fieldName: "floorPlans",
+            mode: 'multiple',
+        }, {
+            fieldName: "brochure",
+            mode: 'single',
+        }),
+        ListingControllers.updateListing
+    );
+
+
 export const ListingRoutes = router;
