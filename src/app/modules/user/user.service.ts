@@ -4,7 +4,6 @@ import ApiError from "../../../errors/ApiErrors";
 import { User } from "./user.model";
 import generateOTP from "../../../util/generateOTP";
 import { emailTemplate } from "../../../shared/emailTemplate";
-import { emailHelper } from "../../../helpers/emailHelper";
 import { jwtHelper } from "../../../helpers/jwtHelper";
 import config from "../../../config";
 import { JwtPayload, Secret } from "jsonwebtoken";
