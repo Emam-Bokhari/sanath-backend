@@ -62,6 +62,22 @@ const getMyListingsServiceFromDB = async (
   };
 };
 
+const getMyleListingServiceByIdFromDB = async (
+  listingId: string,
+  agentId: string
+) => {
+  const listing = await Listing.findOne({
+    _id: listingId,
+    agentId: new Types.ObjectId(agentId),
+  });
+
+  if (!listing) {
+    throw new Error("Listing not found or unauthorized");
+  }
+
+  return listing;
+};
+
 
 const updateListingServiceToDB = async (
   listingId: string,
@@ -101,5 +117,6 @@ const updateListingServiceToDB = async (
 export const ListingServices = {
   createListingServiceToDB,
   getMyListingsServiceFromDB,
+  getMyleListingServiceByIdFromDB,
   updateListingServiceToDB,
 };
