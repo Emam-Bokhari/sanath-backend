@@ -11,7 +11,7 @@ export const generateChecklist = (listing: TListing) => {
     hasValue(listing.postalCode);
 
   const media =
-    (listing.photos?.length || 0) > 0 ||
+    (listing.photos?.length || 0) > 0 &&
     (listing.videos?.length || 0) > 0;
 
   const propertyInfo =
@@ -20,7 +20,7 @@ export const generateChecklist = (listing: TListing) => {
     hasValue(listing.propertyBathrooms);
 
   const featureDescription =
-    (listing.features?.length || 0) > 0 || hasValue(listing.description);
+    (listing.features?.length || 0) > 0 && hasValue(listing.description);
 
   const readyToPublish =
     basicInfo && media && propertyInfo && featureDescription;

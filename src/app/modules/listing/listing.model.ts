@@ -106,11 +106,13 @@ const listingSchema = new Schema<TListing>(
         },
 
         features: {
-            type: [FEATURES],
-            default: [],
+            type: [String],
+            enum: Object.values(FEATURES),
+            required: true,
         },
         description: {
             type: String,
+            required: true,
         },
 
         listingCheckList: {

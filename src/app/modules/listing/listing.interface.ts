@@ -41,8 +41,8 @@ export type TListing = {
         score: number;
     };
     // feature & description
-    features?: FEATURES[];
-    description?: string;
+    features: FEATURES[];
+    description: string;
     status: LISTING_STATUS;
     // listing checklist
      listingCheckList?: TListingChecklist;
