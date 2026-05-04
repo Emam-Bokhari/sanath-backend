@@ -30,6 +30,9 @@ router.route("/").post(
   ListingControllers.createListing,
 );
 
+router.route("/my").get(isAgent, ListingControllers.getMyListingsService);
+
+
 router.route("/:listingId").patch(
   isAgent,
   fileUploadHandler(),
