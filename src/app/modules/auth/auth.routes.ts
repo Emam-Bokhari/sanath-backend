@@ -1,9 +1,8 @@
 import express, { NextFunction, Request, Response } from "express";
-import auth from "../../middlewares/auth";
 import validateRequest from "../../middlewares/validateRequest";
 import { AuthController } from "./auth.controller";
 import { AuthValidation } from "./auth.validation";
-import { USER_ROLES } from "../../../enums/user";
+import { isAuthenticated } from "../../../helpers/authHelper";
 const router = express.Router();
 
 router.post(
@@ -48,12 +47,7 @@ router.post(
 
 router.post(
   "/change-password",
-  auth(
-    USER_ROLES.ADMIN,
-    USER_ROLES.AGENT,
-    USER_ROLES.USER,
-    USER_ROLES.SUPER_ADMIN,
-  ),
+  isAuthenticated,
   validateRequest(AuthValidation.createChangePasswordZodSchema),
   AuthController.changePassword,
 );
@@ -62,12 +56,7 @@ router.post("/resend-otp", AuthController.resendVerificationEmail);
 
 router.delete(
   "/delete-account",
-  auth(
-    USER_ROLES.ADMIN,
-    USER_ROLES.AGENT,
-    USER_ROLES.USER,
-    USER_ROLES.SUPER_ADMIN,
-  ),
+  isAuthenticated,
   AuthController.deleteUser,
 );
 

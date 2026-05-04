@@ -5,17 +5,18 @@ import { FOLDER_NAMES } from "../../../enums/files";
 import auth from "../../middlewares/auth";
 import fileUploadHandler from "../../middlewares/fileUploaderHandler";
 import validateRequest from "../../middlewares/validateRequest";
-import parseAllFilesData from "../../middlewares/parseAllFileData";
 import { BannerZodValidation } from "./banner.validation";
+import { parseFileData } from "../../middlewares/parseFileData";
+import { isAdmin } from "../../../helpers/authHelper";
 
 const router = express.Router();
 
 router
   .route("/")
   .post(
-    auth(USER_ROLES.ADMIN, USER_ROLES.SUPER_ADMIN),
+    isAdmin,
     fileUploadHandler(),
-    parseAllFilesData({ fieldName: FOLDER_NAMES.IMAGE, forceSingle: true }),
+    parseFileData({ mode: "single", fieldName: "image" }),
     validateRequest(BannerZodValidation.createBannerValidationSchema),
     BannerController.createBanner,
   )
@@ -23,26 +24,26 @@ router
 
 router.patch(
   "/status/:id",
-  auth(USER_ROLES.ADMIN, USER_ROLES.SUPER_ADMIN),
+  isAdmin,
   BannerController.updateBannerStatus,
 );
 
 router
   .route("/:id")
   .patch(
-    auth(USER_ROLES.ADMIN, USER_ROLES.SUPER_ADMIN),
+    isAdmin,
     fileUploadHandler(),
-    parseAllFilesData({ fieldName: FOLDER_NAMES.IMAGE, forceSingle: true }),
+    parseFileData({ mode: "single", fieldName: "image" }),
     BannerController.updateBanner,
   )
   .delete(
-    auth(USER_ROLES.ADMIN, USER_ROLES.SUPER_ADMIN),
+    isAdmin,
     BannerController.deleteBanner,
   );
 
 router.get(
   "/all",
-  auth(USER_ROLES.ADMIN, USER_ROLES.SUPER_ADMIN),
+  isAdmin,
   BannerController.getAllBanner,
 );
 

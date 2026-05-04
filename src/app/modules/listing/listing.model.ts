@@ -58,8 +58,9 @@ const listingSchema = new Schema<TListing>(
             required: true,
             default: [],
         },
-        floorPlan: {
-            type: String,
+        floorPlans: {
+            type: [String],
+            default: [],
         },
         brochure: {
             type: String,

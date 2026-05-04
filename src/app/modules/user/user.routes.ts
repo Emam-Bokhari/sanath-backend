@@ -1,9 +1,9 @@
 import { FOLDER_NAMES } from "./../../../enums/files";
 import express from "express";
 import fileUploadHandler from "../../middlewares/fileUploaderHandler";
-import parseAllFilesData from "../../middlewares/parseAllFileData";
 import { UserControllers } from "./user.controller";
 import { isAdmin, isAuthenticated } from "../../../helpers/authHelper";
+import { parseFileData } from "../../middlewares/parseFileData";
 
 const router = express.Router();
 
@@ -19,9 +19,9 @@ router
   .patch(
     isAuthenticated,
     fileUploadHandler(),
-    parseAllFilesData({
-      fieldName: FOLDER_NAMES.PROFILE_IMAGE,
-      forceSingle: true,
+    parseFileData({
+      fieldName: "profileImage",
+      mode: 'single',
     }),
     UserControllers.updateProfile,
   );

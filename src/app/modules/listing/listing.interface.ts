@@ -26,7 +26,7 @@ export type TListing = {
     // photos & media
     photos: string[];
     videos: string[];
-    floorPlan?: string;
+    floorPlans?: string[];
     brochure?: string;
     threeSixtyTour?: string;
     // property information
