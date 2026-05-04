@@ -22,7 +22,7 @@ export type TListing = {
         coordinates: [number, number]; // [longitude, latitude]
         address: string;
     };
-    userId: Types.ObjectId;
+    agentId: Types.ObjectId;
     // photos & media
     photos: string[];
     videos: string[];

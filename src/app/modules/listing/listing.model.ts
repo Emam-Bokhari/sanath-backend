@@ -43,7 +43,7 @@ const listingSchema = new Schema<TListing>(
             address: String,
         },
 
-        userId: {
+        agentId: {
             type: Schema.Types.ObjectId,
             ref: "User",
         },

@@ -4,8 +4,8 @@ import { ListingServices } from "./listing.service";
 
 const createListing = catchAsync(async (req, res) => {
     const data = req.body;
-    const { id: userId } = req.user as { id: string };
-    const listing = await ListingServices.createListingServiceToDB(data, userId);
+    const { id: agentId } = req.user as { id: string };
+    const listing = await ListingServices.createListingServiceToDB(data, agentId);
 
     sendResponse(res, {
         success: true,
