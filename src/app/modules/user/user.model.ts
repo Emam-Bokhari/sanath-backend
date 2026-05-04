@@ -1,11 +1,12 @@
 import { model, Schema } from "mongoose";
 import { GENDER, STATUS, USER_ROLES } from "../../../enums/user";
-import { IUser, UserModal } from "./user.interface";
+import { IUser, IUserModel } from "./user.interface";
 import bcrypt from "bcrypt";
 import config from "../../../config";
+import { softDeletePlugin } from "../../../DB/plugins/softDeletePlugin";
 
 /* ================= USER SCHEMA ================= */
-const userSchema = new Schema<IUser, UserModal>(
+const userSchema = new Schema<IUser, IUserModel>(
   {
     name: {
       type: String,
@@ -62,6 +63,7 @@ const userSchema = new Schema<IUser, UserModal>(
     /* ================= SECURITY ================= */
     password: {
       type: String,
+      required: true,
       select: false,
       minlength: 8,
     },
@@ -144,6 +146,9 @@ const userSchema = new Schema<IUser, UserModal>(
 /* ================= INDEX ================= */
 userSchema.index({ email: 1, phone: 1 });
 
+/* ================= PLUGIN ================= */
+userSchema.plugin(softDeletePlugin);
+
 /* ================= STATIC METHODS ================= */
 userSchema.statics.isExistUserById = async function (id: string) {
   return await this.findById(id);
@@ -178,4 +183,4 @@ userSchema.pre("save", async function (next) {
   next();
 });
 
-export const User = model<IUser, UserModal>("User", userSchema);
+export const User = model<IUser, IUserModel>("User", userSchema);

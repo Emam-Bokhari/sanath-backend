@@ -1,5 +1,6 @@
 import { Types } from "mongoose";
 import { SUPPORT_STATUS } from "./support.constant";
+import { ISoftDeleteModel } from "../../../types/softDelete";
 
 export type TSupport = {
   userId: Types.ObjectId;
@@ -10,3 +11,5 @@ export type TSupport = {
   attachment?: string;
   status?: SUPPORT_STATUS;
 };
+
+export type TSupportModel = ISoftDeleteModel<TSupport>;

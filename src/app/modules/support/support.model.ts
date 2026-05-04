@@ -1,8 +1,8 @@
 import { model, Schema } from "mongoose";
-import { TSupport } from "./support.interface";
+import { TSupport, TSupportModel } from "./support.interface";
 import { SUPPORT_STATUS } from "./support.constant";
 
-const supportSchema = new Schema<TSupport>(
+const supportSchema = new Schema<TSupport, TSupportModel>(
   {
     userId: {
       type: Schema.Types.ObjectId,
@@ -41,4 +41,4 @@ const supportSchema = new Schema<TSupport>(
   },
 );
 
-export const Support = model("Support", supportSchema);
+export const Support = model<TSupport, TSupportModel>("Support", supportSchema);
