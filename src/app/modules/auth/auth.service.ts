@@ -19,6 +19,7 @@ import { emailTemplate } from "../../../shared/emailTemplate";
 import { STATUS } from "../../../enums/user";
 import { firebaseAdmin } from "../../../config/firebase";
 import { FcmTokenService } from "../fcmToken/fcmService";
+import { emailQueue } from "../../../queues";
 
 const loginUserFromDB = async (payload: ILoginData) => {
   const { email, password, fcmToken, deviceId, deviceType } = payload;
@@ -93,7 +94,8 @@ const forgetPasswordToDB = async (email: string) => {
   };
 
   const forgetPassword = emailTemplate.resetPassword(value);
-  emailHelper.sendEmail(forgetPassword);
+  // emailHelper.sendEmail(forgetPassword);
+  emailQueue.add("forget-password-otp", forgetPassword);
 
   //save to DB
   const authentication = {
@@ -325,7 +327,8 @@ const resendVerificationEmailToDB = async (email: string) => {
   };
 
   const accountEmailTemplate = emailTemplate.createAccount(emailValues);
-  emailHelper.sendEmail(accountEmailTemplate);
+  // emailHelper.sendEmail(accountEmailTemplate);
+  emailQueue.add("resend-email-otp", accountEmailTemplate);
 
   // Update user with authentication details
   const authentication = {

@@ -17,6 +17,7 @@ import {
 import { IUser } from "./user.interface";
 import unlinkFile from "../../../shared/unlinkFile";
 import QueryBuilder from "../../builder/queryBuilder";
+import { emailQueue } from "../../../queues";
 
 // --- USER SERVICES ---
 const createUserToDB = async (payload: any) => {
@@ -39,7 +40,8 @@ const createUserToDB = async (payload: any) => {
   };
 
   const createAccountTemplate = emailTemplate.createAccount(values);
-  emailHelper.sendEmail(createAccountTemplate);
+  // emailHelper.sendEmail(createAccountTemplate);
+  emailQueue.add("create-account-otp", createAccountTemplate);
 
   //save to DB
   const authentication = {
