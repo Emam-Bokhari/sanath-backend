@@ -1,5 +1,6 @@
 import { model, Schema } from "mongoose";
 import { TFaq, TFaqModel } from "./faq.interface";
+import { softDeletePlugin } from "../../../DB/plugins/softDeletePlugin";
 
 const faqSchema = new Schema<TFaq, TFaqModel>(
   {
@@ -17,4 +18,6 @@ const faqSchema = new Schema<TFaq, TFaqModel>(
     versionKey: false,
   },
 );
+
+faqSchema.plugin(softDeletePlugin);
 export const Faq = model<TFaq, TFaqModel>("Faq", faqSchema);

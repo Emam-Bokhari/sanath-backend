@@ -32,30 +32,31 @@ router.route("/").post(
 
 router.route("/my").get(isAgent, ListingControllers.getMyListingsService);
 
-router.route("/my/:listingId").get(isAgent, ListingControllers.getListingById);
-
-router.route("/my/:listingId").patch(
-  isAgent,
-  fileUploadHandler(),
-  parseFileData(
-    {
-      fieldName: "photos",
-      mode: "multiple",
-    },
-    {
-      fieldName: "videos",
-      mode: "multiple",
-    },
-    {
-      fieldName: "floorPlans",
-      mode: "multiple",
-    },
-    {
-      fieldName: "brochure",
-      mode: "single",
-    },
-  ),
-  ListingControllers.updateListing,
-);
+router.route("/my/:listingId")
+  .get(isAgent, ListingControllers.getListingById)
+  .patch(
+    isAgent,
+    fileUploadHandler(),
+    parseFileData(
+      {
+        fieldName: "photos",
+        mode: "multiple",
+      },
+      {
+        fieldName: "videos",
+        mode: "multiple",
+      },
+      {
+        fieldName: "floorPlans",
+        mode: "multiple",
+      },
+      {
+        fieldName: "brochure",
+        mode: "single",
+      },
+    ),
+    ListingControllers.updateListing,
+  )
+  .delete(isAgent, ListingControllers.deleteListing);
 
 export const ListingRoutes = router;

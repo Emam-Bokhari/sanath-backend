@@ -7,6 +7,7 @@ import {
   PROPERTY_TYPE,
   TENURE,
 } from "./listing.constant";
+import { softDeletePlugin } from "../../../DB/plugins/softDeletePlugin";
 
 const listingSchema = new Schema<TListing, TListingModel>(
   {
@@ -149,5 +150,7 @@ const listingSchema = new Schema<TListing, TListingModel>(
     versionKey: false,
   },
 );
+
+listingSchema.plugin(softDeletePlugin);
 
 export const Listing = model<TListing, TListingModel>("Listing", listingSchema);

@@ -1,5 +1,6 @@
 import mongoose, { Schema } from "mongoose";
 import { ChatModel, IChat } from "./chat.interface";
+import { softDeletePlugin } from "../../../DB/plugins/softDeletePlugin";
 
 const chatSchema = new Schema<IChat, ChatModel>(
   {
@@ -20,5 +21,7 @@ const chatSchema = new Schema<IChat, ChatModel>(
     versionKey: false,
   },
 );
+
+chatSchema.plugin(softDeletePlugin);
 
 export const Chat = mongoose.model<IChat, ChatModel>("Chat", chatSchema);

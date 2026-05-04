@@ -4,6 +4,7 @@ import {
   NOTIFICATION_REFERENCE_MODEL,
   NOTIFICATION_TYPE,
 } from "./notification.constant";
+import { softDeletePlugin } from "../../../DB/plugins/softDeletePlugin";
 
 const notificationSchema = new Schema<INotification, NotificationModel>(
   {
@@ -49,6 +50,8 @@ const notificationSchema = new Schema<INotification, NotificationModel>(
     versionKey: false,
   },
 );
+
+notificationSchema.plugin(softDeletePlugin);
 
 export const Notification = model<INotification, NotificationModel>(
   "Notification",

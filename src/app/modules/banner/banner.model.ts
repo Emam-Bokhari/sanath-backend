@@ -1,5 +1,6 @@
 import { model, Schema } from "mongoose";
 import { TBanner, TBannerModel } from "./banner.interface";
+import { softDeletePlugin } from "../../../DB/plugins/softDeletePlugin";
 
 const bannerSchema = new Schema<TBanner, TBannerModel>(
   {
@@ -24,5 +25,7 @@ const bannerSchema = new Schema<TBanner, TBannerModel>(
     versionKey: false,
   },
 );
+
+bannerSchema.plugin(softDeletePlugin);
 
 export const Banner = model<TBanner, TBannerModel>("Banner", bannerSchema);
