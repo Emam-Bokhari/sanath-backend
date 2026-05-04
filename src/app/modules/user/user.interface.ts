@@ -36,7 +36,7 @@ export type IUser = {
   /* ================= LOCATION ================= */
   location?: {
     type: "Point";
-    coordinates: readonly [number, number]; // [longitude, latitude]
+    coordinates: [number, number]; // [longitude, latitude]
     address: string;
   };
 

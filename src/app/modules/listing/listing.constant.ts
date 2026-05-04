@@ -29,16 +29,6 @@ export enum COUNCIL_TAX_BAND {
     H = "H",
 }
 
-export const EPIC_ENERGY_RATING = {
-    A: { label: "A", score: "92+" },
-    B: { label: "B", score: "81 - 91" },
-    C: { label: "C", score: "69 - 80" },
-    D: { label: "D", score: "55 - 68" },
-    E: { label: "E", score: "39 - 54" },
-    F: { label: "F", score: "21 - 38" },
-    G: { label: "G", score: "1 - 20" },
-} as const;
-
 export enum FEATURES {
     GARDEN = "GARDEN",
     PARKING = "PARKING",
@@ -56,4 +46,9 @@ export enum FEATURES {
     OFF_STREET_PARKING = "OFF_STREET_PARKING",
     DRIVEWAY = "DRIVEWAY",
     ALARM_SYSTEM = "ALARM_SYSTEM",
+}
+
+export enum LISTING_STATUS{
+    DRAFT = "DRAFT",
+    PUBLISHED = "PUBLISHED",
 }
