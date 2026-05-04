@@ -11,13 +11,7 @@ router
 
 router
   .route("/:id")
-  .patch(
-    isAdmin,
-    FaqController.updateFaq,
-  )
-  .delete(
-    isAdmin,
-    FaqController.deleteFaq,
-  );
+  .patch(isAdmin, FaqController.updateFaq)
+  .delete(isAdmin, FaqController.deleteFaq);
 
 export const FaqRoutes = router;

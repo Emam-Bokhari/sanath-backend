@@ -15,31 +15,19 @@ router
     fileUploadHandler(),
     parseFileData({
       fieldName: "attachment",
-      mode: 'single',
+      mode: "single",
     }),
     SupportControllers.submitSupportRequest,
   )
-  .get(
-    isAdmin,
-    SupportControllers.getAllSupports,
-  );
+  .get(isAdmin, SupportControllers.getAllSupports);
 
 router
   .route("/:id/review")
-  .patch(
-    isAdmin,
-    SupportControllers.reviewSupportByAdmin,
-  );
+  .patch(isAdmin, SupportControllers.reviewSupportByAdmin);
 
 router
   .route("/:id")
-  .get(
-    isAdmin,
-    SupportControllers.getSupportById,
-  )
-  .delete(
-    isAdmin,
-    SupportControllers.deleteSupportById,
-  );
+  .get(isAdmin, SupportControllers.getSupportById)
+  .delete(isAdmin, SupportControllers.deleteSupportById);
 
 export const SupportRoutes = router;

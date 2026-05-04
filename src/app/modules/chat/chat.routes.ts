@@ -6,23 +6,11 @@ import { isAuthenticated } from "../../../helpers/authHelper";
 
 const router = Router();
 
-router.get(
-  "/",
-  isAuthenticated,
-  ChatController.getChats,
-);
+router.get("/", isAuthenticated, ChatController.getChats);
 
-router.get(
-  "/:chatId/images",
-  isAuthenticated,
-  ChatController.getChatImages,
-);
+router.get("/:chatId/images", isAuthenticated, ChatController.getChatImages);
 
-router.post(
-  "/create-chat",
-  isAuthenticated,
-  ChatController.createChat,
-);
+router.post("/create-chat", isAuthenticated, ChatController.createChat);
 
 router.patch(
   "/mark-chat-as-read/:id",
@@ -30,10 +18,6 @@ router.patch(
   ChatController.markChatAsRead,
 );
 
-router.delete(
-  "/delete/:chatId",
-  isAuthenticated,
-  ChatController.deleteChat,
-);
+router.delete("/delete/:chatId", isAuthenticated, ChatController.deleteChat);
 
 export const ChatRoutes = router;

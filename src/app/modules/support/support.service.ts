@@ -76,8 +76,9 @@ const support = async (id: string, payload: TSupport) => {
                   <td style="padding:8px 0;">${payload.subject}</td>
                 </tr>
 
-                ${payload.attachment
-        ? `
+                ${
+                  payload.attachment
+                    ? `
                 <tr>
                   <td style="padding:8px 0;font-weight:bold;">Attachment:</td>
                   <td style="padding:8px 0;">
@@ -87,8 +88,8 @@ const support = async (id: string, payload: TSupport) => {
                   </td>
                 </tr>
                 `
-        : ""
-      }
+                    : ""
+                }
 
               </table>
 

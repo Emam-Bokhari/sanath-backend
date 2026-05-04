@@ -54,11 +54,7 @@ router.post(
 
 router.post("/resend-otp", AuthController.resendVerificationEmail);
 
-router.delete(
-  "/delete-account",
-  isAuthenticated,
-  AuthController.deleteUser,
-);
+router.delete("/delete-account", isAuthenticated, AuthController.deleteUser);
 
 // google login
 router.post("/google-login", AuthController.googleLogin);

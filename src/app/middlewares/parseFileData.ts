@@ -1,13 +1,12 @@
-import { Request, Response, NextFunction } from 'express';
-import { mapFilesToUrls, mapFileToUrl } from './fileMapper';
-import { IFolderName } from './fileUploaderHandler';
-import ApiError from '../../errors/ApiErrors';
-
+import { Request, Response, NextFunction } from "express";
+import { mapFilesToUrls, mapFileToUrl } from "./fileMapper";
+import { IFolderName } from "./fileUploaderHandler";
+import ApiError from "../../errors/ApiErrors";
 
 // types
 interface FileFieldConfig {
   fieldName: IFolderName;
-  mode?: 'single' | 'multiple' | 'auto';
+  mode?: "single" | "multiple" | "auto";
 }
 
 type FieldInput = IFolderName | FileFieldConfig;
@@ -18,33 +17,33 @@ type MulterFiles = {
 
 // normalizer
 const normalizeField = (field: FieldInput) => {
-  if (typeof field === 'string') {
-    return { fieldName: field, mode: 'auto' as const };
+  if (typeof field === "string") {
+    return { fieldName: field, mode: "auto" as const };
   }
 
   return {
     fieldName: field.fieldName,
-    mode: field.mode ?? 'auto',
+    mode: field.mode ?? "auto",
   };
 };
 
 // safe json parse (FIXED)
 const safeJsonParse = (value: any) => {
-  if (typeof value !== 'string') return value;
+  if (typeof value !== "string") return value;
   try {
     return JSON.parse(value);
   } catch {
-    throw new ApiError(400, 'Invalid JSON in body.data');
+    throw new ApiError(400, "Invalid JSON in body.data");
   }
 };
 
 // auto mode resolver
 const resolveMode = (
-  mode: 'single' | 'multiple' | 'auto',
+  mode: "single" | "multiple" | "auto",
   files?: Express.Multer.File[],
-): 'single' | 'multiple' => {
-  if (mode !== 'auto') return mode;
-  return files && files.length <= 1 ? 'single' : 'multiple';
+): "single" | "multiple" => {
+  if (mode !== "auto") return mode;
+  return files && files.length <= 1 ? "single" : "multiple";
 };
 
 // main middleware
@@ -64,7 +63,7 @@ export const parseFileData = (...fields: FieldInput[]) => {
 
         const resolvedMode = resolveMode(mode, fieldFiles);
 
-        if (resolvedMode === 'single') {
+        if (resolvedMode === "single") {
           fileData[fieldName] = mapFileToUrl(fieldFiles[0]!, fieldName);
         } else {
           fileData[fieldName] = mapFilesToUrls(fieldFiles, fieldName);

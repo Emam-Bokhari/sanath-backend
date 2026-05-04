@@ -1,13 +1,9 @@
-import { Types } from "mongoose";
 import { TListing } from "./listing.interface";
 import { Listing } from "./listing.model";
 import { canPublishListing, generateChecklist } from "./listing.utils";
 import { LISTING_STATUS } from "./listing.constant";
 
-const createListingServiceToDB = async (
-  payload: TListing,
-  agentId: string
-) => {
+const createListingServiceToDB = async (payload: TListing, agentId: string) => {
   // always create listing first (safe default)
   const listing = await Listing.create({
     ...payload,
@@ -25,7 +21,7 @@ const createListingServiceToDB = async (
 
     if (!allowed) {
       throw new Error(
-        "Cannot publish listing on create. Please complete required sections first."
+        "Cannot publish listing on create. Please complete required sections first.",
       );
     }
   }
@@ -38,7 +34,7 @@ const createListingServiceToDB = async (
 const updateListingServiceToDB = async (
   listingId: string,
   payload: Partial<TListing>,
-  agentId: string
+  agentId: string,
 ) => {
   const existingListing = await Listing.findOne({
     _id: listingId,
@@ -60,7 +56,7 @@ const updateListingServiceToDB = async (
 
     if (!allowed) {
       throw new Error(
-        "Cannot publish listing. Complete all required sections first."
+        "Cannot publish listing. Complete all required sections first.",
       );
     }
   }
@@ -70,8 +66,7 @@ const updateListingServiceToDB = async (
   return existingListing;
 };
 
-
 export const ListingServices = {
-    createListingServiceToDB,
-    updateListingServiceToDB,
-}
+  createListingServiceToDB,
+  updateListingServiceToDB,
+};

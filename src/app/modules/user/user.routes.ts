@@ -21,7 +21,7 @@ router
     fileUploadHandler(),
     parseFileData({
       fieldName: "profileImage",
-      mode: 'single',
+      mode: "single",
     }),
     UserControllers.updateProfile,
   );

@@ -1,10 +1,9 @@
-import { Request } from 'express';
-import fs from 'fs';
-import path from 'path';
-import multer, { FileFilterCallback } from 'multer';
-import { StatusCodes } from 'http-status-codes';
-import ApiError from '../../errors/ApiErrors';
-
+import { Request } from "express";
+import fs from "fs";
+import path from "path";
+import multer, { FileFilterCallback } from "multer";
+import { StatusCodes } from "http-status-codes";
+import ApiError from "../../errors/ApiErrors";
 
 // types
 type FileConfig = {
@@ -13,79 +12,90 @@ type FileConfig = {
   mimeTypes: Set<string>;
 };
 
-const BASE_UPLOAD_DIR = path.join(process.cwd(), 'uploads');
+const BASE_UPLOAD_DIR = path.join(process.cwd(), "uploads");
 
 // config
 export const FILE_CONFIG = {
   image: {
-    dir: 'image',
+    dir: "image",
     maxCount: 14,
-    mimeTypes: new Set(['image/png', 'image/jpeg', 'image/jpg', 'image/webp', 'image/svg+xml']),
+    mimeTypes: new Set([
+      "image/png",
+      "image/jpeg",
+      "image/jpg",
+      "image/webp",
+      "image/svg+xml",
+    ]),
   },
   profileImage: {
-    dir: 'profileImage',
+    dir: "profileImage",
     maxCount: 1,
-    mimeTypes: new Set(['image/png', 'image/jpeg', 'image/webp']),
+    mimeTypes: new Set(["image/png", "image/jpeg", "image/webp"]),
   },
   images: {
-    dir: 'images',
+    dir: "images",
     maxCount: 10,
-    mimeTypes: new Set(['image/png', 'image/jpeg', 'image/webp']),
+    mimeTypes: new Set(["image/png", "image/jpeg", "image/webp"]),
   },
   photos: {
-    dir: 'photos',
+    dir: "photos",
     maxCount: 10,
-    mimeTypes: new Set(['image/png', 'image/jpeg', 'image/webp']),
+    mimeTypes: new Set(["image/png", "image/jpeg", "image/webp"]),
   },
   floorPlans: {
-    dir: 'floorPlans',
+    dir: "floorPlans",
     maxCount: 5,
-    mimeTypes: new Set(['image/png', 'image/jpeg', 'image/webp']),
+    mimeTypes: new Set(["image/png", "image/jpeg", "image/webp"]),
   },
   thumbnail: {
-    dir: 'thumbnail',
+    dir: "thumbnail",
     maxCount: 5,
-    mimeTypes: new Set(['image/png', 'image/jpeg', 'image/webp']),
+    mimeTypes: new Set(["image/png", "image/jpeg", "image/webp"]),
   },
   logo: {
-    dir: 'logo',
+    dir: "logo",
     maxCount: 5,
-    mimeTypes: new Set(['image/png', 'image/jpeg', 'image/webp', 'image/svg+xml']),
+    mimeTypes: new Set([
+      "image/png",
+      "image/jpeg",
+      "image/webp",
+      "image/svg+xml",
+    ]),
   },
   banner: {
-    dir: 'banner',
+    dir: "banner",
     maxCount: 5,
-    mimeTypes: new Set(['image/png', 'image/jpeg', 'image/webp']),
+    mimeTypes: new Set(["image/png", "image/jpeg", "image/webp"]),
   },
   coverImage: {
-    dir: 'coverImage',
+    dir: "coverImage",
     maxCount: 1,
-    mimeTypes: new Set(['image/png', 'image/jpeg', 'image/webp']),
+    mimeTypes: new Set(["image/png", "image/jpeg", "image/webp"]),
   },
   attachment: {
     dir: "attachment",
     maxCount: 1,
-    mimeTypes: new Set(['image/png', 'image/jpeg', 'image/webp']),
+    mimeTypes: new Set(["image/png", "image/jpeg", "image/webp"]),
   },
   audio: {
-    dir: 'audio',
+    dir: "audio",
     maxCount: 5,
-    mimeTypes: new Set(['audio/mpeg', 'audio/wav', 'audio/ogg']),
+    mimeTypes: new Set(["audio/mpeg", "audio/wav", "audio/ogg"]),
   },
   videos: {
-    dir: 'videos',
+    dir: "videos",
     maxCount: 5,
-    mimeTypes: new Set(['video/mp4', 'video/webm']),
+    mimeTypes: new Set(["video/mp4", "video/webm"]),
   },
   document: {
-    dir: 'document',
+    dir: "document",
     maxCount: 10,
-    mimeTypes: new Set(['application/pdf', 'text/plain', 'application/msword']),
+    mimeTypes: new Set(["application/pdf", "text/plain", "application/msword"]),
   },
   brochure: {
-    dir: 'brochure',
+    dir: "brochure",
     maxCount: 5,
-    mimeTypes: new Set(['application/pdf', 'text/plain', 'application/msword']),
+    mimeTypes: new Set(["application/pdf", "text/plain", "application/msword"]),
   },
 } satisfies Record<string, FileConfig>;
 
@@ -98,7 +108,10 @@ const ensureDir = (dir: string) => {
 
 const generateFileName = (originalName: string) => {
   const ext = path.extname(originalName);
-  const base = path.basename(originalName, ext).toLowerCase().replace(/\s+/g, '-');
+  const base = path
+    .basename(originalName, ext)
+    .toLowerCase()
+    .replace(/\s+/g, "-");
   return `${base}-${Date.now()}${ext}`;
 };
 
@@ -109,7 +122,7 @@ const storage = multer.diskStorage({
 
     const dir = config
       ? path.join(BASE_UPLOAD_DIR, config.dir)
-      : path.join(BASE_UPLOAD_DIR, 'others');
+      : path.join(BASE_UPLOAD_DIR, "others");
 
     ensureDir(dir);
     cb(null, dir);
@@ -121,15 +134,24 @@ const storage = multer.diskStorage({
 });
 
 // file filter
-const fileFilter = (req: Request, file: Express.Multer.File, cb: FileFilterCallback) => {
+const fileFilter = (
+  req: Request,
+  file: Express.Multer.File,
+  cb: FileFilterCallback,
+) => {
   const config = FILE_CONFIG[file.fieldname as IFolderName];
 
   if (!config) {
-    return cb(new ApiError(StatusCodes.BAD_REQUEST, 'Unsupported file field'));
+    return cb(new ApiError(StatusCodes.BAD_REQUEST, "Unsupported file field"));
   }
 
   if (!file.mimetype || !config.mimeTypes.has(file.mimetype)) {
-    return cb(new ApiError(StatusCodes.BAD_REQUEST, `Invalid file type for ${file.fieldname}`));
+    return cb(
+      new ApiError(
+        StatusCodes.BAD_REQUEST,
+        `Invalid file type for ${file.fieldname}`,
+      ),
+    );
   }
 
   cb(null, true);
@@ -147,7 +169,9 @@ const upload = multer({
 // optional field filtering (production improvement)
 export const fileUploadHandler = (allowedFields?: IFolderName[]) => {
   const fields = Object.entries(FILE_CONFIG)
-    .filter(([name]) => !allowedFields || allowedFields.includes(name as IFolderName))
+    .filter(
+      ([name]) => !allowedFields || allowedFields.includes(name as IFolderName),
+    )
     .map(([name, config]) => ({
       name,
       maxCount: config.maxCount,
