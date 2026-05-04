@@ -321,7 +321,7 @@ const resendVerificationEmailToDB = async (email: string) => {
   // Generate OTP and prepare email
   const otp = generateOTP();
   const emailValues = {
-    name: existingUser.firstName,
+    name: existingUser.name,
     otp,
     email: existingUser.email,
   };
