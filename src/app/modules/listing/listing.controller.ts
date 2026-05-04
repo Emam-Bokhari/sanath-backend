@@ -16,6 +16,24 @@ const createListing = catchAsync(async (req, res) => {
 
 })
 
+const updateListing = catchAsync(async (req, res) => {
+    const { id: agentId } = req.user as { id: string };
+    const { listingId } = req.params;
+    const data = req.body;
+    const updatedListing = await ListingServices.updateListingServiceToDB(listingId, data, agentId);
+
+    sendResponse(res, {
+        success: true,
+        statusCode: 200,
+        message: "Listing updated successfully",
+        data: updatedListing,
+    })
+
+})
+
+
+
 export const ListingControllers = {
     createListing,
+    updateListing,
 }
