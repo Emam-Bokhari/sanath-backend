@@ -57,9 +57,21 @@ const updateListing = catchAsync(async (req, res) => {
   });
 });
 
+const deleteListing = catchAsync(async (req, res) => {
+  const { id: agentId } = req.user as { id: string };
+  const { listingId } = req.params;
+  await ListingServices.deleteListingServiceByIdFromDB(listingId, agentId);
+  sendResponse(res, {
+    success: true,
+    statusCode: 200,
+    message: "Listing deleted successfully",
+  });
+});
+
 export const ListingControllers = {
   createListing,
   getMyListingsService,
   getListingById,
   updateListing,
+  deleteListing,
 };

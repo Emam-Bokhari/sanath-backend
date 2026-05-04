@@ -78,7 +78,6 @@ const getMyleListingServiceByIdFromDB = async (
   return listing;
 };
 
-
 const updateListingServiceToDB = async (
   listingId: string,
   payload: Partial<TListing>,
