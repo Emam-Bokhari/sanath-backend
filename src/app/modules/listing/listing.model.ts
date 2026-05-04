@@ -8,7 +8,7 @@ import {
     TENURE,
 } from "./listing.constant";
 
-const ListingSchema = new Schema<TListing>(
+const listingSchema = new Schema<TListing>(
     {
         title: {
             type: String,
@@ -143,4 +143,4 @@ const ListingSchema = new Schema<TListing>(
     }
 );
 
-export const ListingModel = model<TListing>("Listing", ListingSchema);
+export const Listing = model<TListing>("Listing", listingSchema);
