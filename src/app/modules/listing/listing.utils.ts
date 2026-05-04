@@ -1,4 +1,4 @@
-import { TListing } from "./listing.interface";
+import { TListing, TListingChecklist } from "./listing.interface";
 
 const hasValue = (v: any) => v !== undefined && v !== null && v !== "";
 
@@ -32,4 +32,13 @@ export const generateChecklist = (listing: TListing) => {
     featureDescription,
     readyToPublish,
   };
+};
+
+export const canPublishListing = (checklist?: TListingChecklist) => {
+  return (
+    checklist?.basicInfo &&
+    checklist?.media &&
+    checklist?.propertyInfo &&
+    checklist?.featureDescription
+  );
 };

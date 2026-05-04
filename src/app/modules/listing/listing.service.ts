@@ -1,49 +1,73 @@
 import { Types } from "mongoose";
 import { TListing } from "./listing.interface";
 import { Listing } from "./listing.model";
-import { generateChecklist } from "./listing.utils";
+import { canPublishListing, generateChecklist } from "./listing.utils";
+import { LISTING_STATUS } from "./listing.constant";
 
-const createListingServiceToDB = async (payload: TListing, agentId: string) => {
-    const listing = await Listing.create({
-        ...payload,
-        agentId,
-    });
+const createListingServiceToDB = async (
+  payload: TListing,
+  agentId: string
+) => {
+  // always create listing first (safe default)
+  const listing = await Listing.create({
+    ...payload,
+    agentId,
+    status: payload.status || LISTING_STATUS.DRAFT,
+  });
 
-    const checklist = generateChecklist(listing);
+  //  generate checklist
+  const checklist = generateChecklist(listing);
+  listing.listingCheckList = checklist;
 
-    listing.listingCheckList = checklist;
-    await listing.save();
+  // PUBLISH validation on CREATE (IMPORTANT)
+  if (listing.status === LISTING_STATUS.PUBLISHED) {
+    const allowed = canPublishListing(checklist);
 
-    return listing;
+    if (!allowed) {
+      throw new Error(
+        "Cannot publish listing on create. Please complete required sections first."
+      );
+    }
+  }
+
+  await listing.save();
+
+  return listing;
 };
 
 const updateListingServiceToDB = async (
-    listingId: string,
-    payload: Partial<TListing>,
-    agentId: string
+  listingId: string,
+  payload: Partial<TListing>,
+  agentId: string
 ) => {
-    //  check ownership
-    const existingListing = await Listing.findOne({
-        _id: listingId,
-        agentId: new Types.ObjectId(agentId),
-    });
+  const existingListing = await Listing.findOne({
+    _id: listingId,
+    agentId,
+  });
 
-    if (!existingListing) {
-        throw new Error("Listing not found or unauthorized");
+  if (!existingListing) {
+    throw new Error("Listing not found or unauthorized");
+  }
+
+  Object.assign(existingListing, payload);
+
+  const checklist = generateChecklist(existingListing);
+  existingListing.listingCheckList = checklist;
+
+  //  PUBLISH validation on UPDATE
+  if (payload.status === LISTING_STATUS.PUBLISHED) {
+    const allowed = canPublishListing(checklist);
+
+    if (!allowed) {
+      throw new Error(
+        "Cannot publish listing. Complete all required sections first."
+      );
     }
+  }
 
-    // update listing 
-    Object.assign(existingListing, payload);
+  await existingListing.save();
 
-    //  regenerate checklist after update
-    const checklist = generateChecklist(existingListing);
-
-    existingListing.listingCheckList = checklist;
-
-    // save updated listing
-    await existingListing.save();
-
-    return existingListing;
+  return existingListing;
 };
 
 
