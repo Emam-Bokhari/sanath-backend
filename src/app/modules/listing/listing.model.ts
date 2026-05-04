@@ -2,6 +2,7 @@ import { Schema, model } from "mongoose";
 import { TListing } from "./listing.interface";
 import {
     COUNCIL_TAX_BAND,
+    FEATURES,
     LISTING_STATUS,
     PROPERTY_TYPE,
     TENURE,
@@ -9,12 +10,27 @@ import {
 
 const ListingSchema = new Schema<TListing>(
     {
-        title: { type: String, required: true },
-        askingPrice: { type: Number, required: true },
+        title: {
+            type: String,
+            required: true
+        },
+        askingPrice: {
+            type: Number,
+            required: true
+        },
 
-        country: String,
-        city: String,
-        postalCode: String,
+        country: {
+            type: String,
+            required: true
+        },
+        city: {
+            type: String,
+            required: true
+        },
+        postalCode: {
+            type: String,
+            required: true
+        },
 
         location: {
             type: {
@@ -30,23 +46,44 @@ const ListingSchema = new Schema<TListing>(
         userId: {
             type: Schema.Types.ObjectId,
             ref: "User",
-            required: true,
         },
 
-        photos: [String],
-        videos: [String],
-        floorPlan: String,
-        brochure: String,
-        threeSixtyTour: String,
+        photos: {
+            type: [String],
+            required: true,
+            default: [],
+        },
+        videos: {
+            type: [String],
+            required: true,
+            default: [],
+        },
+        floorPlan: {
+            type: String,
+        },
+        brochure: {
+            type: String,
+        },
+        threeSixtyTour: {
+            type: String,
+        },
 
         propertyType: {
             type: String,
             enum: Object.values(PROPERTY_TYPE),
         },
 
-        propertyBedrooms: Number,
-        propertyBathrooms: Number,
-        propertySquareFoot: Number,
+        propertyBedrooms: {
+            type: Number,
+            required: true,
+        },
+        propertyBathrooms: {
+            type: Number,
+            required: true,
+        },
+        propertySquareFoot: {
+            type: Number,
+        },
 
         tenure: {
             type: String,
@@ -59,25 +96,45 @@ const ListingSchema = new Schema<TListing>(
         },
 
         epcEnergyRating: {
-            label: String,
-            score: Number,
+            label: {
+                type: String,
+            },
+            score: {
+                type: Number,
+            },
         },
 
-        features: [String],
-        description: String,
+        features: {
+            type: [FEATURES],
+            default: [],
+        },
+        description: {
+            type: String,
+        },
 
         listingCheckList: {
-            basicInfo: Boolean,
-            media: Boolean,
-            propertyInfo: Boolean,
-            featureDescription: Boolean,
-            readyToPublish: Boolean,
+            basicInfo: {
+                type: Boolean,
+            },
+            media: {
+                type: Boolean,
+            },
+            propertyInfo: {
+                type: Boolean,
+            },
+            featureDescription: {
+                type: Boolean,
+            },
+            readyToPublish: {
+                type: Boolean,
+            },
         },
 
         status: {
             type: String,
             enum: Object.values(LISTING_STATUS),
             default: LISTING_STATUS.DRAFT,
+            required: true,
         },
     },
     {
