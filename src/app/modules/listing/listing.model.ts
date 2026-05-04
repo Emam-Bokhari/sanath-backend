@@ -1,5 +1,5 @@
 import { Schema, model } from "mongoose";
-import { TListing } from "./listing.interface";
+import { TListing, TListingModel } from "./listing.interface";
 import {
   COUNCIL_TAX_BAND,
   FEATURES,
@@ -8,7 +8,7 @@ import {
   TENURE,
 } from "./listing.constant";
 
-const listingSchema = new Schema<TListing>(
+const listingSchema = new Schema<TListing, TListingModel>(
   {
     title: {
       type: String,
@@ -150,4 +150,4 @@ const listingSchema = new Schema<TListing>(
   },
 );
 
-export const Listing = model<TListing>("Listing", listingSchema);
+export const Listing = model<TListing, TListingModel>("Listing", listingSchema);

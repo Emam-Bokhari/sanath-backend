@@ -3,6 +3,7 @@ import {
   NOTIFICATION_REFERENCE_MODEL,
   NOTIFICATION_TYPE,
 } from "./notification.constant";
+import { ISoftDeleteModel } from "../../../types/softDelete";
 
 export type INotification = {
   title: string;
@@ -15,4 +16,4 @@ export type INotification = {
   type?: NOTIFICATION_TYPE;
 };
 
-export type NotificationModel = Model<INotification>;
+export type NotificationModel = ISoftDeleteModel<INotification>;

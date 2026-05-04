@@ -1,7 +1,7 @@
 import { model, Schema } from "mongoose";
-import { TFaq } from "./faq.interface";
+import { TFaq, TFaqModel } from "./faq.interface";
 
-const faqSchema = new Schema<TFaq>(
+const faqSchema = new Schema<TFaq, TFaqModel>(
   {
     question: {
       type: String,
@@ -17,4 +17,4 @@ const faqSchema = new Schema<TFaq>(
     versionKey: false,
   },
 );
-export const Faq = model<TFaq>("Faq", faqSchema);
+export const Faq = model<TFaq, TFaqModel>("Faq", faqSchema);

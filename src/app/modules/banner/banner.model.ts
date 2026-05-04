@@ -1,7 +1,7 @@
 import { model, Schema } from "mongoose";
-import { TBanner } from "./banner.interface";
+import { TBanner, TBannerModel } from "./banner.interface";
 
-const bannerSchema = new Schema<TBanner>(
+const bannerSchema = new Schema<TBanner, TBannerModel>(
   {
     name: {
       type: String,
@@ -25,4 +25,4 @@ const bannerSchema = new Schema<TBanner>(
   },
 );
 
-export const Banner = model<TBanner>("Banner", bannerSchema);
+export const Banner = model<TBanner, TBannerModel>("Banner", bannerSchema);

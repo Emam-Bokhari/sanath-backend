@@ -1,4 +1,5 @@
 import { Model, Types } from "mongoose";
+import { ISoftDeleteModel } from "../../../types/softDelete";
 
 export type IMessage = {
   chatId: Types.ObjectId;
@@ -13,4 +14,4 @@ export type IMessage = {
   pinnedAt?: Date;
 };
 
-export type MessageModel = Model<IMessage, Record<string, unknown>>;
+export type MessageModel = ISoftDeleteModel<IMessage>;

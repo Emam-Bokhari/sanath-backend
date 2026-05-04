@@ -1,7 +1,7 @@
 import mongoose, { Schema } from "mongoose";
-import { IChat } from "./chat.interface";
+import { ChatModel, IChat } from "./chat.interface";
 
-const chatSchema = new Schema<IChat>(
+const chatSchema = new Schema<IChat, ChatModel>(
   {
     participants: [{ type: Schema.Types.ObjectId, ref: "User" }],
     lastMessage: { type: Schema.Types.ObjectId, ref: "Message" },
@@ -21,4 +21,4 @@ const chatSchema = new Schema<IChat>(
   },
 );
 
-export const Chat = mongoose.model<IChat>("Chat", chatSchema);
+export const Chat = mongoose.model<IChat, ChatModel>("Chat", chatSchema);

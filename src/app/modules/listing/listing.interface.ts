@@ -6,6 +6,7 @@ import {
   PROPERTY_TYPE,
   TENURE,
 } from "./listing.constant";
+import { ISoftDeleteModel } from "../../../types/softDelete";
 
 export type TListingChecklist = {
   basicInfo: boolean;
@@ -53,3 +54,4 @@ export type TListing = {
   listingCheckList?: TListingChecklist;
   isDeleted?: boolean;
 };
+export type TListingModel = ISoftDeleteModel<TListing>;

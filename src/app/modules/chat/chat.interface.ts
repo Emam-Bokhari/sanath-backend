@@ -1,4 +1,5 @@
 import { Types } from "mongoose";
+import { ISoftDeleteModel } from "../../../types/softDelete";
 
 export type IChat = {
   participants: Types.ObjectId[];
@@ -10,3 +11,4 @@ export type IChat = {
   status: "ACTIVE" | "DELETED";
   pinnedMessages: Types.ObjectId[]; // Pinned message IDs
 };
+export type ChatModel = ISoftDeleteModel<IChat>;
