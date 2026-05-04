@@ -27,7 +27,7 @@ router.route("/")
     );
 
 router.route("/:listingId")
-    .put(
+    .patch(
         isAgent,
         fileUploadHandler(),
         parseFileData({
