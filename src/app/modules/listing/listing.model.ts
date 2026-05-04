@@ -139,6 +139,10 @@ const listingSchema = new Schema<TListing>(
       default: LISTING_STATUS.DRAFT,
       required: true,
     },
+    isDeleted: {
+      type: Boolean,
+      default: false,
+    },
   },
   {
     timestamps: true,

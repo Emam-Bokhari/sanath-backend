@@ -51,4 +51,5 @@ export type TListing = {
   status: LISTING_STATUS;
   // listing checklist
   listingCheckList?: TListingChecklist;
+  isDeleted?: boolean;
 };

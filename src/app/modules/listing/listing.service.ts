@@ -114,9 +114,43 @@ const updateListingServiceToDB = async (
   return existingListing;
 };
 
+const deleteListingServiceByIdFromDB = async (
+  listingId: string,
+  agentId: string
+) => {
+  const listing = await Listing.findOne({
+    _id: listingId,
+    agentId: new Types.ObjectId(agentId),
+  });
+
+  if (!listing) {
+    throw new Error("Listing not found or unauthorized");
+  }
+
+  // soft delete
+  const result = await Listing.findOneAndUpdate(
+    {
+      _id: listingId,
+      agentId: new Types.ObjectId(agentId),
+    },
+    {
+      isDeleted: true,
+    },
+    {
+      new: true,
+    }
+  );
+
+  return result;
+
+
+};
+
+
 export const ListingServices = {
   createListingServiceToDB,
   getMyListingsServiceFromDB,
   getMyleListingServiceByIdFromDB,
   updateListingServiceToDB,
+  deleteListingServiceByIdFromDB,
 };
