@@ -32,7 +32,8 @@ router.route("/").post(
 
 router.route("/my").get(isAgent, ListingControllers.getMyListingsService);
 
-router.route("/my/:listingId")
+router
+  .route("/my/:listingId")
   .get(isAgent, ListingControllers.getListingById)
   .patch(
     isAgent,

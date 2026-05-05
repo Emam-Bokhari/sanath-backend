@@ -1,4 +1,4 @@
-import { Schema, Query, Aggregate, Document, Model } from 'mongoose';
+import { Schema, Query, Aggregate, Document, Model } from "mongoose";
 
 // soft delete interfaces for methods
 export interface ISoftDeleteMethods {
@@ -30,13 +30,13 @@ export function softDeletePlugin<T>(schema: Schema<T>) {
   };
 
   const queryMethods = [
-    'find',
-    'findOne',
-    'findOneAndDelete',
-    'findOneAndReplace',
-    'findOneAndUpdate',
-    'countDocuments',
-    'distinct',
+    "find",
+    "findOne",
+    "findOneAndDelete",
+    "findOneAndReplace",
+    "findOneAndUpdate",
+    "countDocuments",
+    "distinct",
   ];
   queryMethods.forEach((method) => {
     schema.pre(method as any, excludeDeletedFilter);
@@ -51,7 +51,7 @@ export function softDeletePlugin<T>(schema: Schema<T>) {
   });
 
   // aggregation projection
-  schema.pre('aggregate', function (this: Aggregate<any>) {
+  schema.pre("aggregate", function (this: Aggregate<any>) {
     // Add $match stage to pipeline to exclude deleted documents
     this.pipeline().unshift({ $match: { isDeleted: { $ne: true } } });
   });
@@ -89,9 +89,12 @@ export function softDeletePlugin<T>(schema: Schema<T>) {
   };
 
   schema.statics.softDeleteMany = function (filter: Record<string, any>) {
-    return this.updateMany(filter as any, {
-      $set: { isDeleted: true, deletedAt: new Date() },
-    } as any);
+    return this.updateMany(
+      filter as any,
+      {
+        $set: { isDeleted: true, deletedAt: new Date() },
+      } as any,
+    );
   };
 
   schema.statics.restoreMany = function (filter: Record<string, any>) {

@@ -35,7 +35,7 @@ const createListingServiceToDB = async (payload: TListing, agentId: string) => {
 
 const getMyListingsServiceFromDB = async (
   agentId: string,
-  query: Record<string, unknown>
+  query: Record<string, unknown>,
 ) => {
   // base query (IMPORTANT: ownership locked)
   const baseQuery = Listing.find({
@@ -64,7 +64,7 @@ const getMyListingsServiceFromDB = async (
 
 const getMyleListingServiceByIdFromDB = async (
   listingId: string,
-  agentId: string
+  agentId: string,
 ) => {
   const listing = await Listing.findOne({
     _id: listingId,
@@ -115,7 +115,7 @@ const updateListingServiceToDB = async (
 
 const deleteListingServiceByIdFromDB = async (
   listingId: string,
-  agentId: string
+  agentId: string,
 ) => {
   const listing = await Listing.findOne({
     _id: listingId,
@@ -137,14 +137,11 @@ const deleteListingServiceByIdFromDB = async (
     },
     {
       new: true,
-    }
+    },
   );
 
   return result;
-
-
 };
-
 
 export const ListingServices = {
   createListingServiceToDB,

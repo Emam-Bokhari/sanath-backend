@@ -17,6 +17,7 @@ const createChatIntoDB = async (participants: string[]) => {
     participants: participants,
     lastMessage: null,
   });
+
   if (!newChat) {
     throw new Error("Failed to create chat");
   }
@@ -38,7 +39,7 @@ const markChatAsRead = async (userId: string, chatId: string) => {
   );
 };
 
-// 5. Updated getAllChatsFromDB with better unread count calculation
+// updated getAllChatsFromDB with better unread count calculation
 const getAllChatsFromDB = async (
   userId: string,
   query: Record<string, any>,
@@ -51,7 +52,7 @@ const getAllChatsFromDB = async (
   const chatQuery = {
     participants: { $in: [userId] },
     deletedBy: { $ne: userId },
-    isDeleted: { $ne: true }, // new field
+    isDeleted: { $ne: true },
   };
 
   let chats;
@@ -85,7 +86,7 @@ const getAllChatsFromDB = async (
         return {
           ...chat,
           participants: otherParticipants,
-          isRead: unreadCount === 0, // Chat is read if no unread messages
+          isRead: unreadCount === 0, // chat is read if no unread messages
           unreadCount,
         };
       }),
