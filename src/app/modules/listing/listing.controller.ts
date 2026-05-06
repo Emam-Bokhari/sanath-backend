@@ -89,6 +89,19 @@ const getNearbyListingsService = catchAsync(async (req, res) => {
   });
 });
 
+const getleListingById = catchAsync(async (req, res) => {
+  const { listingId } = req.params;
+  const listing = await ListingServices.getleListingServiceByIdFromDB(listingId);
+  sendResponse(res, {
+    success: true,
+    statusCode: 200,
+    message: "Listing retrieved successfully",
+    data: listing,
+  });
+});
+
+
+
 export const ListingControllers = {
   createListing,
   getMyListingsService,
@@ -96,4 +109,5 @@ export const ListingControllers = {
   updateListing,
   deleteListing,
   getNearbyListingsService,
+  getleListingById,
 };

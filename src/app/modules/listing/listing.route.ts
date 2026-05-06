@@ -1,4 +1,4 @@
-import { isAgent, isUser } from "./../../../helpers/authHelper";
+import { isAgent, isAuthenticated, isUser } from "./../../../helpers/authHelper";
 import express from "express";
 import { ListingControllers } from "./listing.controller";
 import fileUploadHandler from "../../middlewares/fileUploaderHandler";
@@ -30,6 +30,8 @@ router.route("/").post(
   ListingControllers.createListing,
 );
 
+router.route("/nearby").get(isUser, ListingControllers.getNearbyListingsService);
+
 router.route("/my").get(isAgent, ListingControllers.getMyListingsService);
 
 router
@@ -60,7 +62,11 @@ router
   )
   .delete(isAgent, ListingControllers.deleteListing);
 
-router.route("/nearby").get(isUser, ListingControllers.getNearbyListingsService);
+
+router.route("/:listingId")
+  .get(
+    isAuthenticated,
+    ListingControllers.getleListingById);
 
 
 export const ListingRoutes = router;

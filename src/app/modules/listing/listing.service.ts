@@ -172,14 +172,14 @@ const getNearbyListingsServiceFromDB = async ({
   return listings;
 };
 
-const getleListingServiceByIdFromDB = async (id: string) => {
+const getleListingServiceByIdFromDB = async (listingId: string) => {
 
-  if (!Types.ObjectId.isValid(id)) {
+  if (!Types.ObjectId.isValid(listingId)) {
     throw new Error("Invalid listing id");
   }
 
   const listing = await Listing.findOne({
-    _id: id,
+    _id: listingId,
     isDeleted: { $ne: true },
   }).lean(); 
 
