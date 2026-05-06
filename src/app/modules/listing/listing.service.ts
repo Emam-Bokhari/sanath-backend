@@ -152,6 +152,7 @@ const getNearbyListingsServiceFromDB = async ({
   lng: number;
   radiusInKm: number;
 }) => {
+  console.log(lat, lng, radiusInKm);
   const radiusInMeters = radiusInKm * 1000;
 
   const listings = await Listing.find({
@@ -171,6 +172,24 @@ const getNearbyListingsServiceFromDB = async ({
   return listings;
 };
 
+const getleListingServiceByIdFromDB = async (id: string) => {
+
+  if (!Types.ObjectId.isValid(id)) {
+    throw new Error("Invalid listing id");
+  }
+
+  const listing = await Listing.findOne({
+    _id: id,
+    isDeleted: { $ne: true },
+  }).lean(); 
+
+  if (!listing) {
+    throw new Error("Listing not found");
+  }
+
+  return listing;
+};
+
 export const ListingServices = {
   createListingServiceToDB,
   getMyListingsServiceFromDB,
@@ -178,4 +197,5 @@ export const ListingServices = {
   updateListingServiceToDB,
   deleteListingServiceByIdFromDB,
   getNearbyListingsServiceFromDB,
+  getleListingServiceByIdFromDB,
 };

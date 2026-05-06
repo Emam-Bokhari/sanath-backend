@@ -145,6 +145,7 @@ const userSchema = new Schema<IUser, IUserModel>(
 
 /* ================= INDEX ================= */
 userSchema.index({ email: 1, phone: 1 });
+userSchema.index({ location: "2dsphere" });
 
 /* ================= PLUGIN ================= */
 userSchema.plugin(softDeletePlugin);

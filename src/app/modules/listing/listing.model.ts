@@ -151,6 +151,8 @@ const listingSchema = new Schema<TListing, TListingModel>(
   },
 );
 
+listingSchema.index({ location: "2dsphere" });
+
 listingSchema.plugin(softDeletePlugin);
 
 export const Listing = model<TListing, TListingModel>("Listing", listingSchema);
