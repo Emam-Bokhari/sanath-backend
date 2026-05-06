@@ -74,10 +74,26 @@ const deleteListing = catchAsync(async (req, res) => {
   });
 });
 
+const getNearbyListingsService = catchAsync(async (req, res) => {
+  const { lat, lng, radiusInKm } = req.query;
+  const result = await ListingServices.getNearbyListingsServiceFromDB({
+    lat: Number(lat),
+    lng: Number(lng),
+    radiusInKm: Number(radiusInKm),
+  });
+  sendResponse(res, {
+    success: true,
+    statusCode: 200,
+    message: "Nearby listings retrieved successfully",
+    data: result,
+  });
+});
+
 export const ListingControllers = {
   createListing,
   getMyListingsService,
   getListingById,
   updateListing,
   deleteListing,
+  getNearbyListingsService,
 };

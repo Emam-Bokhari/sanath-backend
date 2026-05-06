@@ -143,10 +143,39 @@ const deleteListingServiceByIdFromDB = async (
   return result;
 };
 
+const getNearbyListingsServiceFromDB = async ({
+  lat,
+  lng,
+  radiusInKm,
+}: {
+  lat: number;
+  lng: number;
+  radiusInKm: number;
+}) => {
+  const radiusInMeters = radiusInKm * 1000;
+
+  const listings = await Listing.find({
+    location: {
+      $near: {
+        $geometry: {
+          type: "Point",
+          coordinates: [lng, lat], // IMPORTANT: [lng, lat]
+        },
+        $maxDistance: radiusInMeters,
+      },
+    },
+    isDeleted: { $ne: true },
+    status: LISTING_STATUS.PUBLISHED,
+  });
+
+  return listings;
+};
+
 export const ListingServices = {
   createListingServiceToDB,
   getMyListingsServiceFromDB,
   getMyleListingServiceByIdFromDB,
   updateListingServiceToDB,
   deleteListingServiceByIdFromDB,
+  getNearbyListingsServiceFromDB,
 };
