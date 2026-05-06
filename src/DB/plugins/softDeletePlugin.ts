@@ -53,7 +53,13 @@ export function softDeletePlugin<T>(schema: Schema<T>) {
   // aggregation projection
   schema.pre("aggregate", function (this: Aggregate<any>) {
     // Add $match stage to pipeline to exclude deleted documents
-    this.pipeline().unshift({ $match: { isDeleted: { $ne: true } } });
+    // But only if $geoNear is not the first stage, because $geoNear must be first
+    const pipeline = this.pipeline();
+    const firstStage = pipeline[0];
+
+    if (!firstStage || !("$geoNear" in firstStage)) {
+      pipeline.unshift({ $match: { isDeleted: { $ne: true } } });
+    }
   });
 
   // inside methods
