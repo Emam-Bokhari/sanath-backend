@@ -137,8 +137,9 @@ const getAllUsersFromDB = async (query: any) => {
   const users = await queryBuilder.modelQuery;
   const meta = await queryBuilder.countTotal();
 
-  if (!users || users.length === 0)
+  if (!users || users.length === 0) {
     throw new ApiError(404, "No users are found in the database");
+  }
 
   return {
     data: users,
