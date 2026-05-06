@@ -1,7 +1,7 @@
 import { TListing } from "./listing.interface";
 import { Listing } from "./listing.model";
 import { canPublishListing, generateChecklist } from "./listing.utils";
-import { LISTING_STATUS } from "./listing.constant";
+import { LISTING_STATUS, LISTING_TYPE } from "./listing.constant";
 import { FilterQuery, Types } from "mongoose";
 import QueryBuilder from "../../builder/queryBuilder";
 
@@ -191,7 +191,7 @@ const getleListingServiceByIdFromDB = async (listingId: string) => {
 };
 
 /* ================= TYPES ================= */
-
+/* ================= TYPES ================= */
 type TSort =
   | "price_low_high"
   | "price_high_low"
@@ -204,6 +204,8 @@ type TTimeFilter = "any" | "twentyFourHours" | "threeDays" | "sevenDays";
 type TSearchParams = {
   searchTerm?: string;
   location?: string;
+
+  listingType?: LISTING_TYPE;
 
   propertyType?: string;
 
@@ -227,10 +229,13 @@ type TSearchParams = {
 };
 
 /* ================= SERVICE ================= */
-export const searchListingsServiceFromDB = async (params: TSearchParams) => {
+export const searchListingsServiceFromDB = async (
+  params: TSearchParams,
+) => {
   const {
     searchTerm,
     location,
+    listingType,
     propertyType,
     minPrice,
     maxPrice,
@@ -245,19 +250,26 @@ export const searchListingsServiceFromDB = async (params: TSearchParams) => {
     radiusInKm,
   } = params;
 
-  const numericMinPrice = minPrice ? Number(minPrice) : undefined;
-  const numericMaxPrice = maxPrice ? Number(maxPrice) : undefined;
-  const numericBedrooms = bedrooms ? Number(bedrooms) : undefined;
-  const numericBathrooms = bathrooms ? Number(bathrooms) : undefined;
-  const numericLat = lat ? Number(lat) : undefined;
-  const numericLng = lng ? Number(lng) : undefined;
-  const numericRadiusInKm = radiusInKm ? Number(radiusInKm) : undefined;
+  /* ================= NORMALIZE NUMBERS ================= */
+  const numericMinPrice = minPrice !== undefined ? Number(minPrice) : undefined;
+  const numericMaxPrice = maxPrice !== undefined ? Number(maxPrice) : undefined;
+  const numericBedrooms = bedrooms !== undefined ? Number(bedrooms) : undefined;
+  const numericBathrooms = bathrooms !== undefined ? Number(bathrooms) : undefined;
+  const numericLat = lat !== undefined ? Number(lat) : undefined;
+  const numericLng = lng !== undefined ? Number(lng) : undefined;
+  const numericRadiusInKm =
+    radiusInKm !== undefined ? Number(radiusInKm) : undefined;
 
   /* ================= BASE QUERY ================= */
   const query: FilterQuery<any> = {
     isDeleted: { $ne: true },
     status: LISTING_STATUS.PUBLISHED,
   };
+
+  /* ================= LISTING TYPE (SALE / RENT) ================= */
+  if (listingType) {
+    query.listingType = listingType;
+  }
 
   /* ================= SEARCH ================= */
   if (searchTerm || location) {
@@ -279,11 +291,13 @@ export const searchListingsServiceFromDB = async (params: TSearchParams) => {
   /* ================= PRICE RANGE ================= */
   if (numericMinPrice !== undefined || numericMaxPrice !== undefined) {
     query.askingPrice = {};
-    if (numericMinPrice !== undefined) query.askingPrice.$gte = numericMinPrice;
-    if (numericMaxPrice !== undefined) query.askingPrice.$lte = numericMaxPrice;
+    if (numericMinPrice !== undefined)
+      query.askingPrice.$gte = numericMinPrice;
+    if (numericMaxPrice !== undefined)
+      query.askingPrice.$lte = numericMaxPrice;
   }
 
-  /* ================= BEDROOM / BATHROOM ================= */
+  /* ================= BED / BATH ================= */
   if (numericBedrooms) {
     query.propertyBedrooms = { $gte: numericBedrooms };
   }
@@ -324,11 +338,16 @@ export const searchListingsServiceFromDB = async (params: TSearchParams) => {
     }
   }
 
-  /* ================= NEAREST (GEO SEARCH) ================= */
-  const isGeoSearch = numericLat !== undefined && numericLng !== undefined;
+  /* ================= GEO SEARCH ================= */
+  const isGeoSearch =
+    numericLat !== undefined && numericLng !== undefined;
 
   if (isGeoSearch) {
-    const safeRadius = numericRadiusInKm || 5; // Removed 100km limit for testing
+    const safeRadius =
+      numericRadiusInKm && numericRadiusInKm > 0
+        ? Math.min(numericRadiusInKm, 100)
+        : 5;
+
     const radiusInMeters = safeRadius * 1000;
 
     const pipeline: any[] = [
@@ -341,7 +360,7 @@ export const searchListingsServiceFromDB = async (params: TSearchParams) => {
           distanceField: "distance",
           maxDistance: radiusInMeters,
           spherical: true,
-          query: query,
+          query,
         },
       },
       {
@@ -353,23 +372,28 @@ export const searchListingsServiceFromDB = async (params: TSearchParams) => {
       },
     ];
 
-    /* ================= APPLY SORT IN AGGREGATION IF NOT NEAREST ================= */
+    /* ================= SORT INSIDE GEO ================= */
     if (sort && sort !== "nearest") {
       let sortQuery: any = {};
+
       switch (sort) {
         case "price_low_high":
           sortQuery.askingPrice = 1;
           break;
+
         case "price_high_low":
           sortQuery.askingPrice = -1;
           break;
+
         case "newest":
           sortQuery.createdAt = -1;
           break;
+
         case "oldest":
           sortQuery.createdAt = 1;
           break;
       }
+
       if (Object.keys(sortQuery).length > 0) {
         pipeline.push({ $sort: sortQuery });
       }
@@ -378,7 +402,7 @@ export const searchListingsServiceFromDB = async (params: TSearchParams) => {
     return await Listing.aggregate(pipeline);
   }
 
-  /* ================= NORMAL SORT (NON-GEO) ================= */
+  /* ================= NORMAL SORT ================= */
   let sortQuery: any = {};
 
   switch (sort) {

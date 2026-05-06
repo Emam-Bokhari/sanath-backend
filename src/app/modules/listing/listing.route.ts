@@ -34,8 +34,6 @@ router.route("/nearby").get(isUser, ListingControllers.getNearbyListingsService)
 
 router.route("/search").get(isUser, ListingControllers.searchListingsService);
 
-
-
 router.route("/my").get(isAgent, ListingControllers.getMyListingsService);
 
 router

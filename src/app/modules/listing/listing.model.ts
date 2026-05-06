@@ -4,6 +4,7 @@ import {
   COUNCIL_TAX_BAND,
   FEATURES,
   LISTING_STATUS,
+  LISTING_TYPE,
   PROPERTY_TYPE,
   TENURE,
 } from "./listing.constant";
@@ -13,6 +14,11 @@ const listingSchema = new Schema<TListing, TListingModel>(
   {
     title: {
       type: String,
+      required: true,
+    },
+    listingType: {
+      type: String,
+      enum: Object.values(LISTING_TYPE),
       required: true,
     },
     askingPrice: {

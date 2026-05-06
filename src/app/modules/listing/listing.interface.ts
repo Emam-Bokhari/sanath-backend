@@ -3,6 +3,7 @@ import {
   COUNCIL_TAX_BAND,
   FEATURES,
   LISTING_STATUS,
+  LISTING_TYPE,
   PROPERTY_TYPE,
   TENURE,
 } from "./listing.constant";
@@ -19,6 +20,7 @@ export type TListingChecklist = {
 export type TListing = {
   // basic info
   title: string;
+  listingType: LISTING_TYPE;
   askingPrice: number;
   country: string;
   city: string;
