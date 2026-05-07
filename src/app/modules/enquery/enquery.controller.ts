@@ -34,7 +34,25 @@ const getAllEnqueries = catchAsync(async (req, res) => {
   });
 });
 
+const getEnqueryById = catchAsync(async (req, res) => {
+  const {id:agentId} = req.user as {id:string};
+  const {enqueryId} = req.params;
+
+  const result = await EnqueryServices.getEnqueryByIdFromDB(
+    agentId,
+    enqueryId,
+  );
+
+  sendResponse(res, {
+    success: true,
+    statusCode: StatusCodes.OK,
+    message: "Enquiry retrieved successfully",
+    data: result,
+  });
+});
+
 export const EnqueryControllers = {
     createEnquery,
     getAllEnqueries,
+    getEnqueryById,
 }
