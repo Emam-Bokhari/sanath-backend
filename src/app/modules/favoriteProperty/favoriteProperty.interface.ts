@@ -6,4 +6,4 @@ export interface TFavoriteProperty extends Document {
   listingId: Types.ObjectId;
 }
 
-export type TFavoriteModel=ISoftDeleteModel<TFavoriteProperty>
+export type TFavoriteModel = ISoftDeleteModel<TFavoriteProperty>;

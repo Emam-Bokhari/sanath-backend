@@ -4,43 +4,24 @@ import { FavoritePropertyControllers } from "./favoriteProperty.controller";
 
 const router = express.Router();
 
-
 router
   .route("/toggle")
-  .post(
-    auth(),
-    FavoritePropertyControllers.toggleFavoriteProperty,
-  );
+  .post(auth(), FavoritePropertyControllers.toggleFavoriteProperty);
 
 router
   .route("/")
-  .get(
-    auth(),
-    FavoritePropertyControllers.getFavoriteProperties,
-  );
-
+  .get(auth(), FavoritePropertyControllers.getFavoriteProperties);
 
 router
   .route("/status/:listingId")
-  .get(
-    auth(),
-    FavoritePropertyControllers.checkFavoritePropertyStatus,
-  );
-
+  .get(auth(), FavoritePropertyControllers.checkFavoritePropertyStatus);
 
 router
   .route("/:favoriteId")
-  .get(
-    auth(),
-    FavoritePropertyControllers.getFavoritePropertyById,
-  );
-
+  .get(auth(), FavoritePropertyControllers.getFavoritePropertyById);
 
 router
   .route("/listing/:listingId")
-  .delete(
-    auth(),
-    FavoritePropertyControllers.deleteFavoriteProperty,
-  );
+  .delete(auth(), FavoritePropertyControllers.deleteFavoriteProperty);
 
 export const FavoritePropertyRoutes = router;

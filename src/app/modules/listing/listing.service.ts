@@ -173,7 +173,6 @@ const getNearbyListingsServiceFromDB = async ({
 };
 
 const getleListingServiceByIdFromDB = async (listingId: string) => {
-
   if (!Types.ObjectId.isValid(listingId)) {
     throw new Error("Invalid listing id");
   }
@@ -181,7 +180,7 @@ const getleListingServiceByIdFromDB = async (listingId: string) => {
   const listing = await Listing.findOne({
     _id: listingId,
     isDeleted: { $ne: true },
-  }).lean(); 
+  }).lean();
 
   if (!listing) {
     throw new Error("Listing not found");
@@ -229,9 +228,7 @@ type TSearchParams = {
 };
 
 /* ================= SERVICE ================= */
-export const searchListingsServiceFromDB = async (
-  params: TSearchParams,
-) => {
+export const searchListingsServiceFromDB = async (params: TSearchParams) => {
   const {
     searchTerm,
     location,
@@ -254,7 +251,8 @@ export const searchListingsServiceFromDB = async (
   const numericMinPrice = minPrice !== undefined ? Number(minPrice) : undefined;
   const numericMaxPrice = maxPrice !== undefined ? Number(maxPrice) : undefined;
   const numericBedrooms = bedrooms !== undefined ? Number(bedrooms) : undefined;
-  const numericBathrooms = bathrooms !== undefined ? Number(bathrooms) : undefined;
+  const numericBathrooms =
+    bathrooms !== undefined ? Number(bathrooms) : undefined;
   const numericLat = lat !== undefined ? Number(lat) : undefined;
   const numericLng = lng !== undefined ? Number(lng) : undefined;
   const numericRadiusInKm =
@@ -291,10 +289,8 @@ export const searchListingsServiceFromDB = async (
   /* ================= PRICE RANGE ================= */
   if (numericMinPrice !== undefined || numericMaxPrice !== undefined) {
     query.askingPrice = {};
-    if (numericMinPrice !== undefined)
-      query.askingPrice.$gte = numericMinPrice;
-    if (numericMaxPrice !== undefined)
-      query.askingPrice.$lte = numericMaxPrice;
+    if (numericMinPrice !== undefined) query.askingPrice.$gte = numericMinPrice;
+    if (numericMaxPrice !== undefined) query.askingPrice.$lte = numericMaxPrice;
   }
 
   /* ================= BED / BATH ================= */
@@ -339,8 +335,7 @@ export const searchListingsServiceFromDB = async (
   }
 
   /* ================= GEO SEARCH ================= */
-  const isGeoSearch =
-    numericLat !== undefined && numericLng !== undefined;
+  const isGeoSearch = numericLat !== undefined && numericLng !== undefined;
 
   if (isGeoSearch) {
     const safeRadius =
@@ -427,9 +422,7 @@ export const searchListingsServiceFromDB = async (
   }
 
   /* ================= EXECUTE ================= */
-  const listings = await Listing.find(query)
-    .sort(sortQuery)
-    .lean();
+  const listings = await Listing.find(query).sort(sortQuery).lean();
 
   return listings;
 };

@@ -4,7 +4,6 @@ import ApiError from "../../../errors/ApiErrors";
 import { FavoriteProperty } from "./favoriteProperty.model";
 import { Listing } from "../listing/listing.model";
 
-
 const checkFavoritePropertyStatus = async (
   userId: string,
   listingId: string,
@@ -18,7 +17,6 @@ const checkFavoritePropertyStatus = async (
     isFavorite: !!favorite,
   };
 };
-
 
 const toggleFavoriteProperty = async (payload: {
   userId: string;
@@ -35,12 +33,10 @@ const toggleFavoriteProperty = async (payload: {
     throw new ApiError(StatusCodes.NOT_FOUND, "Property not found");
   }
 
-
   const existingFavorite = await FavoriteProperty.findOne({
     userId,
     listingId,
   });
-
 
   if (existingFavorite) {
     await FavoriteProperty.deleteOne({
@@ -65,7 +61,6 @@ const toggleFavoriteProperty = async (payload: {
   };
 };
 
-
 const getFavoriteProperties = async (userId: string) => {
   const favorites = await FavoriteProperty.find({
     userId,
@@ -82,7 +77,6 @@ const getFavoriteProperties = async (userId: string) => {
 
   return favorites;
 };
-
 
 const getFavoritePropertyByIdFromDB = async (
   userId: string,
@@ -102,30 +96,20 @@ const getFavoritePropertyByIdFromDB = async (
     .lean();
 
   if (!favorite) {
-    throw new ApiError(
-      StatusCodes.NOT_FOUND,
-      "Favorite property not found",
-    );
+    throw new ApiError(StatusCodes.NOT_FOUND, "Favorite property not found");
   }
 
   return favorite;
 };
 
-
-const deleteFavoriteProperty = async (
-  userId: string,
-  listingId: string,
-) => {
+const deleteFavoriteProperty = async (userId: string, listingId: string) => {
   const result = await FavoriteProperty.deleteOne({
     userId,
     listingId,
   });
 
   if (!result.deletedCount) {
-    throw new ApiError(
-      StatusCodes.NOT_FOUND,
-      "Favorite property not found",
-    );
+    throw new ApiError(StatusCodes.NOT_FOUND, "Favorite property not found");
   }
 
   return {

@@ -23,11 +23,7 @@ const favoritePropertySchema = new Schema<TFavoriteProperty>(
   },
 );
 
-
-favoritePropertySchema.index(
-  { userId: 1, listingId: 1 },
-  { unique: true },
-);
+favoritePropertySchema.index({ userId: 1, listingId: 1 }, { unique: true });
 
 export const FavoriteProperty = model<TFavoriteProperty>(
   "FavoriteProperty",
