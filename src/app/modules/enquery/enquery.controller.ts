@@ -19,7 +19,22 @@ const createEnquery = catchAsync(async (req, res) => {
   });
 });
 
+const getAllEnqueries = catchAsync(async (req, res) => {
+  const {id:agentId} = req.user as {id:string};
+
+  const result = await EnqueryServices.getAllEnqueriesFromDB(
+    agentId,
+  );
+
+  sendResponse(res, {
+    success: true,
+    statusCode: StatusCodes.OK,
+    message: "Enquiries retrieved successfully",
+    data: result,
+  });
+});
 
 export const EnqueryControllers = {
     createEnquery,
+    getAllEnqueries,
 }
