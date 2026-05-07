@@ -177,7 +177,47 @@ const getAllEnqueriesFromDB = async (agentId: string) => {
   return enqueries;
 };
 
+const getSingleEnqueryFromDB = async (
+  agentId: string,
+  enqueryId: string,
+) => {
+  const enquery = await Enquery.findById(enqueryId).lean();
+
+  if (!enquery) {
+    throw new ApiError(
+      StatusCodes.NOT_FOUND,
+      "Enquiry not found",
+    );
+  }
+
+  const listing = await Listing.findOne({
+    _id: enquery.listingId,
+    agentId: new Types.ObjectId(agentId),
+    isDeleted: { $ne: true },
+  })
+    .select("_id title agentId")
+    .lean();
+
+  if (!listing) {
+    throw new ApiError(
+      StatusCodes.FORBIDDEN,
+      "You are not allowed to access this enquiry",
+    );
+  }
+
+  const user = await User.findById(enquery.userId)
+    .select("name email phone")
+    .lean();
+
+  return {
+    ...enquery,
+    listing,
+    user,
+  };
+};
+
 export const EnqueryServices = {
     createEnquery,
     getAllEnqueriesFromDB,
+    getSingleEnqueryFromDB,
 }
