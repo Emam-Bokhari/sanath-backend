@@ -4,12 +4,9 @@ import sendResponse from "../../../shared/sendResponse";
 import { EnqueryServices } from "./enquery.service";
 
 const createEnquery = catchAsync(async (req, res) => {
-  const {id:userId} = req.user as {id:string};
+  const { id: userId } = req.user as { id: string };
 
-  const result = await EnqueryServices.createEnquery(
-    userId,
-    req.body,
-  );
+  const result = await EnqueryServices.createEnquery(userId, req.body);
 
   sendResponse(res, {
     success: true,
@@ -20,11 +17,9 @@ const createEnquery = catchAsync(async (req, res) => {
 });
 
 const getAllEnqueries = catchAsync(async (req, res) => {
-  const {id:agentId} = req.user as {id:string};
+  const { id: agentId } = req.user as { id: string };
 
-  const result = await EnqueryServices.getAllEnqueriesFromDB(
-    agentId,
-  );
+  const result = await EnqueryServices.getAllEnqueriesFromDB(agentId);
 
   sendResponse(res, {
     success: true,
@@ -35,13 +30,10 @@ const getAllEnqueries = catchAsync(async (req, res) => {
 });
 
 const getEnqueryById = catchAsync(async (req, res) => {
-  const {id:agentId} = req.user as {id:string};
-  const {enqueryId} = req.params;
+  const { id: agentId } = req.user as { id: string };
+  const { enqueryId } = req.params;
 
-  const result = await EnqueryServices.getEnqueryByIdFromDB(
-    agentId,
-    enqueryId,
-  );
+  const result = await EnqueryServices.getEnqueryByIdFromDB(agentId, enqueryId);
 
   sendResponse(res, {
     success: true,
@@ -52,7 +44,7 @@ const getEnqueryById = catchAsync(async (req, res) => {
 });
 
 export const EnqueryControllers = {
-    createEnquery,
-    getAllEnqueries,
-    getEnqueryById,
-}
+  createEnquery,
+  getAllEnqueries,
+  getEnqueryById,
+};

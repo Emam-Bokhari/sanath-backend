@@ -12,60 +12,47 @@ const PRIMARY_COLOR = "#22143b";
 const TEXT_COLOR = "#ffffff";
 
 const createEnquery = async (userId: string, payload: any) => {
+  const user = await User.findById(userId).select("name email");
 
-    const user = await User.findById(userId).select(
-        "name email",
-    );
+  if (!user) {
+    throw new ApiError(StatusCodes.NOT_FOUND, "User not found");
+  }
 
-    if (!user) {
-        throw new ApiError(StatusCodes.NOT_FOUND, "User not found");
+  let agentEmail: string | null = null;
+  let agentName: string | null = null;
+  let listingTitle: string | null = null;
+
+  if (payload.listingId) {
+    const listing = await Listing.findById(payload.listingId)
+      .select("agentId title")
+      .lean();
+
+    if (!listing) {
+      throw new ApiError(StatusCodes.NOT_FOUND, "Listing not found");
     }
 
+    listingTitle = listing.title;
 
-    let agentEmail: string | null = null;
-    let agentName: string | null = null;
-    let listingTitle: string | null = null;
+    const agent = await User.findById(listing.agentId).select("name email");
 
-    if (payload.listingId) {
-        const listing = await Listing.findById(
-            payload.listingId,
-        )
-            .select("agentId title")
-            .lean();
-
-        if (!listing) {
-            throw new ApiError(
-                StatusCodes.NOT_FOUND,
-                "Listing not found",
-            );
-        }
-
-        listingTitle = listing.title;
-
-        const agent = await User.findById(listing.agentId).select(
-            "name email",
-        );
-
-        if (agent) {
-            agentEmail = agent.email;
-            agentName = agent.name;
-        }
+    if (agent) {
+      agentEmail = agent.email;
+      agentName = agent.name;
     }
+  }
 
-    const enquery = await Enquery.create({
-        ...payload,
-        userId: new Types.ObjectId(userId),
-        name: user.name,
-        email: user.email,
-    });
+  const enquery = await Enquery.create({
+    ...payload,
+    userId: new Types.ObjectId(userId),
+    name: user.name,
+    email: user.email,
+  });
 
-    const emailPayload: ISendEmail = {
-        to:
-            agentEmail ||
-            config.support_receiver_email ||
-            "support@yourplatform.com",
-        subject: `New Property Enquiry - ${listingTitle || "General"}`,
-        html: `
+  const emailPayload: ISendEmail = {
+    to:
+      agentEmail || config.support_receiver_email || "support@yourplatform.com",
+    subject: `New Property Enquiry - ${listingTitle || "General"}`,
+    html: `
 <body style="margin:0;padding:0;background:#ffffff;font-family:Arial;">
   <table width="100%" cellpadding="0" cellspacing="0" style="padding:40px 0;">
     <tr>
@@ -97,10 +84,11 @@ const createEnquery = async (userId: string, payload: any) => {
               <p><b>User:</b> ${user.name}</p>
               <p><b>Email:</b> ${user.email}</p>
 
-              ${agentName
-                ? `<p><b>Agent:</b> ${agentName} (${agentEmail})</p>`
-                : ""
-            }
+              ${
+                agentName
+                  ? `<p><b>Agent:</b> ${agentName} (${agentEmail})</p>`
+                  : ""
+              }
 
               <p><b>Phone:</b> ${payload.phone}</p>
               <p><b>Country:</b> ${payload.country}</p>
@@ -148,15 +136,14 @@ const createEnquery = async (userId: string, payload: any) => {
   </table>
 </body>
 `,
-    };
+  };
 
-    await emailHelper.sendEmail(emailPayload);
+  await emailHelper.sendEmail(emailPayload);
 
-    return enquery;
+  return enquery;
 };
 
 const getAllEnqueriesFromDB = async (agentId: string) => {
-
   const listings = await Listing.find({
     agentId: new Types.ObjectId(agentId),
     isDeleted: { $ne: true },
@@ -166,26 +153,21 @@ const getAllEnqueriesFromDB = async (agentId: string) => {
 
   const enqueries = await Enquery.find({
     listingId: { $in: listingIds },
-  }).populate("listingId userId")
+  })
+    .populate("listingId userId")
     .sort({ createdAt: -1 })
     .lean();
 
   return enqueries;
 };
 
-const getEnqueryByIdFromDB = async (
-  agentId: string,
-  enqueryId: string,
-) => {
+const getEnqueryByIdFromDB = async (agentId: string, enqueryId: string) => {
   const enquery = await Enquery.findById(enqueryId)
     .populate("listingId userId")
     .lean();
 
   if (!enquery) {
-    throw new ApiError(
-      StatusCodes.NOT_FOUND,
-      "Enquiry not found",
-    );
+    throw new ApiError(StatusCodes.NOT_FOUND, "Enquiry not found");
   }
 
   const listing = await Listing.findOne({
@@ -207,7 +189,7 @@ const getEnqueryByIdFromDB = async (
 };
 
 export const EnqueryServices = {
-    createEnquery,
-    getAllEnqueriesFromDB,
-    getEnqueryByIdFromDB,
-}
+  createEnquery,
+  getAllEnqueriesFromDB,
+  getEnqueryByIdFromDB,
+};

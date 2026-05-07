@@ -70,10 +70,9 @@ const apiRoutes = [
     route: FavoritePropertyRoutes,
   },
   {
-    path:"/enquiries",
-    route:EnqueryRoutes
-
-  }
+    path: "/enquiries",
+    route: EnqueryRoutes,
+  },
 ];
 
 apiRoutes.forEach((route) => router.use(route.path, route.route));

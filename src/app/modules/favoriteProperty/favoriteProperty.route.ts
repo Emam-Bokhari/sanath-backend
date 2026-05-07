@@ -14,7 +14,10 @@ router
 
 router
   .route("/status/:listingId")
-  .get(isAuthenticated, FavoritePropertyControllers.checkFavoritePropertyStatus);
+  .get(
+    isAuthenticated,
+    FavoritePropertyControllers.checkFavoritePropertyStatus,
+  );
 
 router
   .route("/:favoriteId")
