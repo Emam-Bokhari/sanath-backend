@@ -1,4 +1,5 @@
 import { Types } from "mongoose";
+import { ISoftDeleteModel } from "../../../types/softDelete";
 
 export type TEnquery = {
   userId?: Types.ObjectId;
@@ -11,3 +12,5 @@ export type TEnquery = {
   country: string;
   message: string;
 };
+
+export type TEnqueryModel = ISoftDeleteModel<TEnquery>;
