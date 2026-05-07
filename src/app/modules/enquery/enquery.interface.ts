@@ -4,7 +4,7 @@ import { ISoftDeleteModel } from "../../../types/softDelete";
 export type TEnquery = {
   userId?: Types.ObjectId;
   listingId?: Types.ObjectId;
-  subject?: string;
+//   subject?: string;
   name: string;
   email: string;
   phone: string;

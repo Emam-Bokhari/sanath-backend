@@ -106,10 +106,6 @@ const createEnquery = async (userId: string, payload: any) => {
               <p><b>Country:</b> ${payload.country}</p>
               <p><b>Postal Code:</b> ${payload.postalCode}</p>
 
-              <div style="margin-top:20px;">
-                <p><b>Subject:</b> ${payload.subject || "-"}</p>
-              </div>
-
               <div style="margin-top:25px;">
                 <p style="font-weight:bold;">Message:</p>
                 <div style="

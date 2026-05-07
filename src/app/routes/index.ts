@@ -12,6 +12,7 @@ import { BannerRoutes } from "../modules/banner/banner.route";
 import { SettingsRoutes } from "../modules/settings/settings.route";
 import { ListingRoutes } from "../modules/listing/listing.route";
 import { FavoritePropertyRoutes } from "../modules/favoriteProperty/favoriteProperty.route";
+import { EnqueryRoutes } from "../modules/enquery/enquery.route";
 
 const router = express.Router();
 
@@ -68,6 +69,11 @@ const apiRoutes = [
     path: "/favorite-properties",
     route: FavoritePropertyRoutes,
   },
+  {
+    path:"/enquiries",
+    route:EnqueryRoutes
+
+  }
 ];
 
 apiRoutes.forEach((route) => router.use(route.path, route.route));
