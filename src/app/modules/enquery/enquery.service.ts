@@ -177,7 +177,7 @@ const getAllEnqueriesFromDB = async (agentId: string) => {
   return enqueries;
 };
 
-const getSingleEnqueryFromDB = async (
+const getEnqueryByIdFromDB = async (
   agentId: string,
   enqueryId: string,
 ) => {
@@ -219,5 +219,5 @@ const getSingleEnqueryFromDB = async (
 export const EnqueryServices = {
     createEnquery,
     getAllEnqueriesFromDB,
-    getSingleEnqueryFromDB,
+    getEnqueryByIdFromDB,
 }
