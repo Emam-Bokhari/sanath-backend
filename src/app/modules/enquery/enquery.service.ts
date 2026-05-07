@@ -166,7 +166,7 @@ const getAllEnqueriesFromDB = async (agentId: string) => {
 
   const enqueries = await Enquery.find({
     listingId: { $in: listingIds },
-  })
+  }).populate("listingId userId")
     .sort({ createdAt: -1 })
     .lean();
 
@@ -177,7 +177,9 @@ const getEnqueryByIdFromDB = async (
   agentId: string,
   enqueryId: string,
 ) => {
-  const enquery = await Enquery.findById(enqueryId).lean();
+  const enquery = await Enquery.findById(enqueryId)
+    .populate("listingId userId")
+    .lean();
 
   if (!enquery) {
     throw new ApiError(
@@ -191,7 +193,7 @@ const getEnqueryByIdFromDB = async (
     agentId: new Types.ObjectId(agentId),
     isDeleted: { $ne: true },
   })
-    .select("_id title agentId")
+    .select("_id")
     .lean();
 
   if (!listing) {
@@ -201,15 +203,7 @@ const getEnqueryByIdFromDB = async (
     );
   }
 
-  const user = await User.findById(enquery.userId)
-    .select("name email phone")
-    .lean();
-
-  return {
-    ...enquery,
-    listing,
-    user,
-  };
+  return enquery;
 };
 
 export const EnqueryServices = {

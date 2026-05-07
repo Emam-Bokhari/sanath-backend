@@ -10,14 +10,13 @@ router
         isAuthenticated,
         EnqueryControllers.createEnquery,
     )
-
     .get(
         isAgent,
         EnqueryControllers.getAllEnqueries,
     );
 
 router
-    .route("/:id")
+    .route("/:enqueryId")
     .get(
         isAgent,
         EnqueryControllers.getEnqueryById,
