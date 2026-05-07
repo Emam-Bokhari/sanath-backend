@@ -1,27 +1,27 @@
 import express from "express";
-import auth from "../../middlewares/auth";
 import { FavoritePropertyControllers } from "./favoriteProperty.controller";
+import { isAuthenticated } from "../../../helpers/authHelper";
 
 const router = express.Router();
 
 router
   .route("/toggle")
-  .post(auth(), FavoritePropertyControllers.toggleFavoriteProperty);
+  .post(isAuthenticated, FavoritePropertyControllers.toggleFavoriteProperty);
 
 router
   .route("/")
-  .get(auth(), FavoritePropertyControllers.getFavoriteProperties);
+  .get(isAuthenticated, FavoritePropertyControllers.getFavoriteProperties);
 
 router
   .route("/status/:listingId")
-  .get(auth(), FavoritePropertyControllers.checkFavoritePropertyStatus);
+  .get(isAuthenticated, FavoritePropertyControllers.checkFavoritePropertyStatus);
 
 router
   .route("/:favoriteId")
-  .get(auth(), FavoritePropertyControllers.getFavoritePropertyById);
+  .get(isAuthenticated, FavoritePropertyControllers.getFavoritePropertyById);
 
 router
   .route("/listing/:listingId")
-  .delete(auth(), FavoritePropertyControllers.deleteFavoriteProperty);
+  .delete(isAuthenticated, FavoritePropertyControllers.deleteFavoriteProperty);
 
 export const FavoritePropertyRoutes = router;
