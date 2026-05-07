@@ -159,6 +159,25 @@ const createEnquery = async (userId: string, payload: any) => {
     return enquery;
 };
 
+const getAllEnqueriesFromDB = async (agentId: string) => {
+
+  const listings = await Listing.find({
+    agentId: new Types.ObjectId(agentId),
+    isDeleted: { $ne: true },
+  }).select("_id");
+
+  const listingIds = listings.map((l) => l._id);
+
+  const enqueries = await Enquery.find({
+    listingId: { $in: listingIds },
+  })
+    .sort({ createdAt: -1 })
+    .lean();
+
+  return enqueries;
+};
+
 export const EnqueryServices = {
     createEnquery,
+    getAllEnqueriesFromDB,
 }
