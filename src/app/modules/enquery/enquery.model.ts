@@ -12,10 +12,6 @@ const enquerySchema = new Schema<TEnquery, TEnqueryModel>(
       type: Schema.Types.ObjectId,
       ref: "Listing",
     },
-    // subject: {
-    //     type: String,
-    //     default: ""
-    // },
     name: {
       type: String,
       required: true,
