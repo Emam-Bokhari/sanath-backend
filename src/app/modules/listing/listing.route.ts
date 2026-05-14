@@ -30,6 +30,10 @@ router.route("/").post(
       fieldName: "brochure",
       mode: "single",
     },
+    {
+      fieldName: "threeSixtyTour",
+      mode: "single",
+    },
   ),
   ListingControllers.createListing,
 );

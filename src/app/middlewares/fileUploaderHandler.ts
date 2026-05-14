@@ -72,6 +72,11 @@ export const FILE_CONFIG = {
     maxCount: 1,
     mimeTypes: new Set(["image/png", "image/jpeg", "image/webp"]),
   },
+  threeSixtyTour: {
+    dir: "threeSixtyTour",
+    maxCount: 1,
+    mimeTypes: new Set(["image/png", "image/jpeg", "image/webp"]),
+  },
   attachment: {
     dir: "attachment",
     maxCount: 1,
@@ -95,7 +100,7 @@ export const FILE_CONFIG = {
   brochure: {
     dir: "brochure",
     maxCount: 5,
-    mimeTypes: new Set(["application/pdf", "text/plain", "application/msword"]),
+    mimeTypes: new Set(["application/pdf", "text/plain", "application/msword","image/png", "image/jpeg", "image/webp"]),
   },
 } satisfies Record<string, FileConfig>;
 
