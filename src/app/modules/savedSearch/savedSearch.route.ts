@@ -1,5 +1,5 @@
 import express from "express";
-import { isUser } from "./../../../helpers/authHelper";
+import { isAuthenticated } from "./../../../helpers/authHelper";
 import { SavedSearchController } from "./savedSearch.controller";
 import validateRequest from "../../middlewares/validateRequest";
 import { SavedSearchValidation } from "./savedSearch.validation";
@@ -9,12 +9,12 @@ const router = express.Router();
 router
   .route("/")
   .post(
-    isUser,
+    isAuthenticated,
     validateRequest(SavedSearchValidation.toggleSavedSearchZodSchema),
     SavedSearchController.toggleSavedSearch,
   )
-  .get(isUser, SavedSearchController.getMySavedSearches);
+  .get(isAuthenticated, SavedSearchController.getMySavedSearches);
 
-router.route("/:savedSearchId").delete(isUser, SavedSearchController.deleteSavedSearch);
+router.route("/:savedSearchId").delete(isAuthenticated, SavedSearchController.deleteSavedSearch);
 
 export const SavedSearchRoutes = router;
