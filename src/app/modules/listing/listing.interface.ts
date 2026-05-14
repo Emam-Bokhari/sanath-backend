@@ -52,8 +52,38 @@ export type TListing = {
   features: FEATURES[];
   description: string;
   status: LISTING_STATUS;
+  isFeatured: boolean;
   // listing checklist
   listingCheckList?: TListingChecklist;
   isDeleted?: boolean;
 };
+
+export type TSort =
+  | "price_low_high"
+  | "price_high_low"
+  | "newest"
+  | "oldest"
+  | "nearest";
+
+export type TTimeFilter = "any" | "twentyFourHours" | "threeDays" | "sevenDays";
+
+export type TSearchParams = {
+  searchTerm?: string;
+  location?: string;
+  listingType?: LISTING_TYPE;
+  propertyType?: string;
+  minPrice?: number;
+  maxPrice?: number;
+  bedrooms?: number;
+  bathrooms?: number;
+  tenure?: string;
+  features?: string[];
+  isFeatured?: boolean | string;
+  timeFilter?: TTimeFilter;
+  sort?: TSort;
+  lat?: number;
+  lng?: number;
+  radiusInKm?: number;
+};
+
 export type TListingModel = ISoftDeleteModel<TListing>;

@@ -121,7 +121,10 @@ const listingSchema = new Schema<TListing, TListingModel>(
       type: String,
       required: true,
     },
-
+    isFeatured: {
+      type: Boolean,
+      default: false,
+    },
     listingCheckList: {
       basicInfo: {
         type: Boolean,

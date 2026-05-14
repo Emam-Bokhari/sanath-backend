@@ -1,5 +1,9 @@
-import { TListing } from "./listing.interface";
+import {
+  TListing,
+  TSearchParams,
+} from "./listing.interface";
 import { Listing } from "./listing.model";
+import { SavedSearch } from "../savedSearch/savedSearch.model";
 import { canPublishListing, generateChecklist } from "./listing.utils";
 import { LISTING_STATUS, LISTING_TYPE } from "./listing.constant";
 import { FilterQuery, Types } from "mongoose";
@@ -167,7 +171,7 @@ const getNearbyListingsServiceFromDB = async ({
     },
     isDeleted: { $ne: true },
     status: LISTING_STATUS.PUBLISHED,
-  });
+  }).populate("agentId");
 
   return listings;
 };
@@ -180,7 +184,9 @@ const getleListingServiceByIdFromDB = async (listingId: string) => {
   const listing = await Listing.findOne({
     _id: listingId,
     isDeleted: { $ne: true },
-  }).lean();
+  })
+    .populate("agentId")
+    .lean();
 
   if (!listing) {
     throw new Error("Listing not found");
@@ -189,46 +195,11 @@ const getleListingServiceByIdFromDB = async (listingId: string) => {
   return listing;
 };
 
-/* ================= TYPES ================= */
-/* ================= TYPES ================= */
-type TSort =
-  | "price_low_high"
-  | "price_high_low"
-  | "newest"
-  | "oldest"
-  | "nearest";
-
-type TTimeFilter = "any" | "twentyFourHours" | "threeDays" | "sevenDays";
-
-type TSearchParams = {
-  searchTerm?: string;
-  location?: string;
-
-  listingType?: LISTING_TYPE;
-
-  propertyType?: string;
-
-  minPrice?: number;
-  maxPrice?: number;
-
-  bedrooms?: number;
-  bathrooms?: number;
-
-  tenure?: string;
-  features?: string[];
-
-  timeFilter?: TTimeFilter;
-
-  sort?: TSort;
-
-  lat?: number;
-  lng?: number;
-
-  radiusInKm?: number;
-};
-
 /* ================= SERVICE ================= */
-export const searchListingsServiceFromDB = async (params: TSearchParams) => {
+const searchListingsServiceFromDB = async (
+  params: TSearchParams,
+  userId?: string,
+) => {
   const {
     searchTerm,
     location,
@@ -240,12 +211,33 @@ export const searchListingsServiceFromDB = async (params: TSearchParams) => {
     bathrooms,
     tenure,
     features,
+    isFeatured,
     timeFilter,
     sort,
     lat,
     lng,
     radiusInKm,
   } = params;
+
+  // Save search to history if userId is provided
+  if (userId) {
+    // We only save if there are actual search params
+    const hasParams = Object.values(params).some((v) => v !== undefined);
+    if (hasParams) {
+      // Check if this exact search already exists to avoid duplicates in history
+      const existingSearch = await SavedSearch.findOne({
+        userId,
+        params,
+      });
+
+      if (!existingSearch) {
+        await SavedSearch.create({
+          userId: userId as any,
+          params,
+        });
+      }
+    }
+  }
 
   /* ================= NORMALIZE NUMBERS ================= */
   const numericMinPrice = minPrice !== undefined ? Number(minPrice) : undefined;
@@ -267,6 +259,11 @@ export const searchListingsServiceFromDB = async (params: TSearchParams) => {
   /* ================= LISTING TYPE (SALE / RENT) ================= */
   if (listingType) {
     query.listingType = listingType;
+  }
+
+  /* ================= FEATURED ================= */
+  if (isFeatured !== undefined) {
+    query.isFeatured = String(isFeatured) === "true";
   }
 
   /* ================= SEARCH ================= */
@@ -365,6 +362,20 @@ export const searchListingsServiceFromDB = async (params: TSearchParams) => {
           },
         },
       },
+      {
+        $lookup: {
+          from: "users",
+          localField: "agentId",
+          foreignField: "_id",
+          as: "agentId",
+        },
+      },
+      {
+        $unwind: {
+          path: "$agentId",
+          preserveNullAndEmptyArrays: true,
+        },
+      },
     ];
 
     /* ================= SORT INSIDE GEO ================= */
@@ -422,7 +433,10 @@ export const searchListingsServiceFromDB = async (params: TSearchParams) => {
   }
 
   /* ================= EXECUTE ================= */
-  const listings = await Listing.find(query).sort(sortQuery).lean();
+  const listings = await Listing.find(query)
+    .sort(sortQuery)
+    .populate("agentId")
+    .lean();
 
   return listings;
 };

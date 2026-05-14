@@ -103,7 +103,11 @@ const getleListingById = catchAsync(async (req, res) => {
 
 const searchListingsService = catchAsync(async (req, res) => {
   const query = req.query;
-  const result = await ListingServices.searchListingsServiceFromDB(query);
+  const user = req.user as { id: string } | undefined;
+  const result = await ListingServices.searchListingsServiceFromDB(
+    query,
+    user?.id,
+  );
   sendResponse(res, {
     success: true,
     statusCode: 200,

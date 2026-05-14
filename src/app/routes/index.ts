@@ -13,6 +13,7 @@ import { SettingsRoutes } from "../modules/settings/settings.route";
 import { ListingRoutes } from "../modules/listing/listing.route";
 import { FavoritePropertyRoutes } from "../modules/favoriteProperty/favoriteProperty.route";
 import { EnqueryRoutes } from "../modules/enquery/enquery.route";
+import { SavedSearchRoutes } from "../modules/savedSearch/savedSearch.route";
 
 const router = express.Router();
 
@@ -72,6 +73,10 @@ const apiRoutes = [
   {
     path: "/enquiries",
     route: EnqueryRoutes,
+  },
+  {
+    path: "/saved-searches",
+    route: SavedSearchRoutes,
   },
 ];
 
