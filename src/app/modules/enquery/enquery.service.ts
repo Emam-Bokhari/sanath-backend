@@ -7,6 +7,7 @@ import { Enquery } from "./enquery.model";
 import { ISendEmail } from "../../../types/email";
 import config from "../../../config";
 import { emailHelper } from "../../../helpers/emailHelper";
+import QueryBuilder from "../../builder/queryBuilder";
 
 const PRIMARY_COLOR = "#22143b";
 const TEXT_COLOR = "#ffffff";
@@ -143,7 +144,10 @@ const createEnquery = async (userId: string, payload: any) => {
   return enquery;
 };
 
-const getAllEnqueriesFromDB = async (agentId: string) => {
+const getAllEnqueriesFromDB = async (
+  agentId: string,
+  query: Record<string, unknown>,
+) => {
   const listings = await Listing.find({
     agentId: new Types.ObjectId(agentId),
     isDeleted: { $ne: true },
@@ -151,14 +155,24 @@ const getAllEnqueriesFromDB = async (agentId: string) => {
 
   const listingIds = listings.map((l) => l._id);
 
-  const enqueries = await Enquery.find({
+  const baseQuery = Enquery.find({
     listingId: { $in: listingIds },
-  })
-    .populate("listingId userId")
-    .sort({ createdAt: -1 })
-    .lean();
+  }).populate("listingId userId");
 
-  return enqueries;
+  const enqueryQuery = new QueryBuilder(baseQuery, query)
+    .search(["name", "email", "phone", "message", "postalCode", "country"])
+    .filter()
+    .sort()
+    .paginate()
+    .fields();
+
+  const result = await enqueryQuery.modelQuery;
+  const meta = await enqueryQuery.countTotal();
+
+  return {
+    data: result,
+    meta,
+  };
 };
 
 const getEnqueryByIdFromDB = async (agentId: string, enqueryId: string) => {
@@ -188,8 +202,49 @@ const getEnqueryByIdFromDB = async (agentId: string, enqueryId: string) => {
   return enquery;
 };
 
+const getMyEnqueriesFromDB = async (
+  userId: string,
+  query: Record<string, unknown>,
+) => {
+  const baseQuery = Enquery.find({
+    userId: new Types.ObjectId(userId),
+  }).populate("listingId userId");
+
+  const enqueryQuery = new QueryBuilder(baseQuery, query)
+    .search(["name", "email", "phone", "message", "postalCode", "country"])
+    .filter()
+    .sort()
+    .paginate()
+    .fields();
+
+  const result = await enqueryQuery.modelQuery;
+  const meta = await enqueryQuery.countTotal();
+
+  return {
+    data: result,
+    meta,
+  };
+};
+
+const getMyEnqueryByIdFromDB = async (userId: string, enqueryId: string) => {
+  const enquery = await Enquery.findOne({
+    _id: new Types.ObjectId(enqueryId),
+    userId: new Types.ObjectId(userId),
+  })
+    .populate("listingId userId")
+    .lean();
+
+  if (!enquery) {
+    throw new ApiError(StatusCodes.NOT_FOUND, "Enquiry not found");
+  }
+
+  return enquery;
+};
+
 export const EnqueryServices = {
   createEnquery,
   getAllEnqueriesFromDB,
   getEnqueryByIdFromDB,
+  getMyEnqueriesFromDB,
+  getMyEnqueryByIdFromDB,
 };

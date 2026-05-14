@@ -14,6 +14,7 @@ import { ListingRoutes } from "../modules/listing/listing.route";
 import { FavoritePropertyRoutes } from "../modules/favoriteProperty/favoriteProperty.route";
 import { EnqueryRoutes } from "../modules/enquery/enquery.route";
 import { SavedSearchRoutes } from "../modules/savedSearch/savedSearch.route";
+import { AnalyticsRoutes } from "../modules/analytics/analytics.route";
 
 const router = express.Router();
 
@@ -77,6 +78,10 @@ const apiRoutes = [
   {
     path: "/saved-searches",
     route: SavedSearchRoutes,
+  },
+  {
+    path: "/analytics",
+    route: AnalyticsRoutes,
   },
 ];
 

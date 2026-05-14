@@ -18,14 +18,16 @@ const createEnquery = catchAsync(async (req, res) => {
 
 const getAllEnqueries = catchAsync(async (req, res) => {
   const { id: agentId } = req.user as { id: string };
+  const query = req.query;
 
-  const result = await EnqueryServices.getAllEnqueriesFromDB(agentId);
+  const result = await EnqueryServices.getAllEnqueriesFromDB(agentId, query);
 
   sendResponse(res, {
     success: true,
     statusCode: StatusCodes.OK,
     message: "Enquiries retrieved successfully",
-    data: result,
+    data: result.data,
+    meta: result.meta,
   });
 });
 
@@ -43,8 +45,39 @@ const getEnqueryById = catchAsync(async (req, res) => {
   });
 });
 
+const getMyEnqueries = catchAsync(async (req, res) => {
+  const { id: userId } = req.user as { id: string };
+  const query = req.query;
+
+  const result = await EnqueryServices.getMyEnqueriesFromDB(userId, query);
+
+  sendResponse(res, {
+    success: true,
+    statusCode: StatusCodes.OK,
+    message: "My enquiries retrieved successfully",
+    data: result.data,
+    meta: result.meta,
+  });
+});
+
+const getMyEnqueryById = catchAsync(async (req, res) => {
+  const { id: userId } = req.user as { id: string };
+  const { enqueryId } = req.params;
+
+  const result = await EnqueryServices.getMyEnqueryByIdFromDB(userId, enqueryId);
+
+  sendResponse(res, {
+    success: true,
+    statusCode: StatusCodes.OK,
+    message: "Enquiry retrieved successfully",
+    data: result,
+  });
+});
+
 export const EnqueryControllers = {
   createEnquery,
   getAllEnqueries,
   getEnqueryById,
+  getMyEnqueries,
+  getMyEnqueryById,
 };

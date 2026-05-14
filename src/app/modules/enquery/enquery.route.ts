@@ -9,6 +9,14 @@ router
   .post(isAuthenticated, EnqueryControllers.createEnquery)
   .get(isAgent, EnqueryControllers.getAllEnqueries);
 
+router
+  .route("/my-enqueries")
+  .get(isAuthenticated, EnqueryControllers.getMyEnqueries);
+
+router
+  .route("/my-enqueries/:enqueryId")
+  .get(isAuthenticated, EnqueryControllers.getMyEnqueryById);
+
 router.route("/:enqueryId").get(isAgent, EnqueryControllers.getEnqueryById);
 
 export const EnqueryRoutes = router;
