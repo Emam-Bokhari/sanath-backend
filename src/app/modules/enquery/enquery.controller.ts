@@ -74,10 +74,32 @@ const getMyEnqueryById = catchAsync(async (req, res) => {
   });
 });
 
+const updateEnqueryStatus = catchAsync(async (req, res) => {
+  const { id: agentId } = req.user as { id: string };
+  const { enqueryId } = req.params;
+  const { status } = req.body;
+
+  const result = await EnqueryServices.updateEnqueryStatus(
+    enqueryId,
+    agentId,
+    status,
+  );
+
+  sendResponse(res, {
+    success: true,
+    statusCode: StatusCodes.OK,
+    message: "Enquiry status updated successfully",
+    data: result,
+  });
+});
+
+
+
 export const EnqueryControllers = {
   createEnquery,
   getAllEnqueries,
   getEnqueryById,
   getMyEnqueries,
   getMyEnqueryById,
+  updateEnqueryStatus,
 };
