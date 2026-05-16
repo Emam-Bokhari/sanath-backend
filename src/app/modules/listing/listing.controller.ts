@@ -22,12 +22,15 @@ const getMyListingsService = catchAsync(async (req, res) => {
     agentId,
     query,
   );
+
   sendResponse(res, {
     success: true,
     statusCode: 200,
     message: "Listings retrieved successfully",
-    data: result,
+    data: result.data,
+    meta: result.meta,
   });
+  
 });
 
 const getListingById = catchAsync(async (req, res) => {

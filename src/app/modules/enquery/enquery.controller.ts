@@ -50,6 +50,7 @@ const getMyEnqueries = catchAsync(async (req, res) => {
   const query = req.query;
 
   const result = await EnqueryServices.getMyEnqueriesFromDB(userId, query);
+  console.log(result);
 
   sendResponse(res, {
     success: true,
