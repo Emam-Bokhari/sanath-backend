@@ -19,4 +19,9 @@ router
 
 router.route("/:enqueryId").get(isAgent, EnqueryControllers.getEnqueryById);
 
+router
+  .route("/:enqueryId/status")
+  .patch(isAgent, EnqueryControllers.updateEnqueryStatus);
+
+
 export const EnqueryRoutes = router;
