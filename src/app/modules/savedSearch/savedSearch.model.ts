@@ -2,7 +2,7 @@ import { Schema, model } from "mongoose";
 import { TSavedSearch, TSavedSearchModel } from "./savedSearch.interface";
 import { softDeletePlugin } from "../../../DB/plugins/softDeletePlugin";
 
-const savedSearchSchema = new Schema<TSavedSearch,TSavedSearchModel>(
+const savedSearchSchema = new Schema<TSavedSearch, TSavedSearchModel>(
   {
     userId: {
       type: Schema.Types.ObjectId,
@@ -42,5 +42,7 @@ const savedSearchSchema = new Schema<TSavedSearch,TSavedSearchModel>(
 
 savedSearchSchema.plugin(softDeletePlugin);
 
-
-export const SavedSearch = model<TSavedSearch,TSavedSearchModel>("SavedSearch", savedSearchSchema);
+export const SavedSearch = model<TSavedSearch, TSavedSearchModel>(
+  "SavedSearch",
+  savedSearchSchema,
+);

@@ -15,6 +15,8 @@ router
   )
   .get(isAuthenticated, SavedSearchController.getMySavedSearches);
 
-router.route("/:savedSearchId").delete(isAuthenticated, SavedSearchController.deleteSavedSearch);
+router
+  .route("/:savedSearchId")
+  .delete(isAuthenticated, SavedSearchController.deleteSavedSearch);
 
 export const SavedSearchRoutes = router;

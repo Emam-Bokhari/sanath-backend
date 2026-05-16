@@ -9,5 +9,4 @@ export type TSavedSearch = {
   isDeleted?: boolean;
 };
 
-
 export type TSavedSearchModel = ISoftDeleteModel<TSavedSearch>;

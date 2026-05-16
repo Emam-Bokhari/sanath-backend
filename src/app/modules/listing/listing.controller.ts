@@ -92,9 +92,11 @@ const getNearbyListingsService = catchAsync(async (req, res) => {
 const getleListingById = catchAsync(async (req, res) => {
   const { listingId } = req.params;
   const user = req.user as { id: string } | undefined;
-  console.log(listingId,user?.id)
-  const listing =
-    await ListingServices.getleListingServiceByIdFromDB(listingId, user?.id);
+  console.log(listingId, user?.id);
+  const listing = await ListingServices.getleListingServiceByIdFromDB(
+    listingId,
+    user?.id,
+  );
   sendResponse(res, {
     success: true,
     statusCode: 200,

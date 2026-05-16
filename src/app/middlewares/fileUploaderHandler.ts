@@ -100,7 +100,14 @@ export const FILE_CONFIG = {
   brochure: {
     dir: "brochure",
     maxCount: 5,
-    mimeTypes: new Set(["application/pdf", "text/plain", "application/msword","image/png", "image/jpeg", "image/webp"]),
+    mimeTypes: new Set([
+      "application/pdf",
+      "text/plain",
+      "application/msword",
+      "image/png",
+      "image/jpeg",
+      "image/webp",
+    ]),
   },
 } satisfies Record<string, FileConfig>;
 

@@ -2,7 +2,6 @@ import catchAsync from "../../../shared/catchAsync";
 import sendResponse from "../../../shared/sendResponse";
 import { AnalyticsService } from "./analytics.service";
 
-
 const getAgentDashboardStats = catchAsync(async (req, res) => {
   const { id: agentId } = req.user as { id: string };
   const result = await AnalyticsService.getAgentDashboardStats(agentId);

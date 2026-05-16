@@ -1,7 +1,4 @@
-import {
-  TListing,
-  TSearchParams,
-} from "./listing.interface";
+import { TListing, TSearchParams } from "./listing.interface";
 import { Listing } from "./listing.model";
 import { SavedSearch } from "../savedSearch/savedSearch.model";
 import { canPublishListing, generateChecklist } from "./listing.utils";
@@ -197,7 +194,7 @@ const getleListingServiceByIdFromDB = async (
     const agentId = (listing.agentId as any)?._id || listing.agentId;
     const isOwner = agentId.toString() === userId;
     const hasViewed = listing.viewedBy?.some((id) => id.toString() === userId);
-    console.log(hasViewed)
+    console.log(hasViewed);
 
     if (!isOwner && !hasViewed) {
       await Listing.findByIdAndUpdate(listingId, {
@@ -208,7 +205,7 @@ const getleListingServiceByIdFromDB = async (
     }
   }
 
-  console.log(listing)
+  console.log(listing);
 
   return listing;
 };

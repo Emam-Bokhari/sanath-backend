@@ -73,7 +73,8 @@ class QueryBuilder<T> {
 
     // isFeatured
     if (queryObj.isFeatured !== undefined) {
-      finalFilter.isFeatured = queryObj.isFeatured === "true" || queryObj.isFeatured === true;
+      finalFilter.isFeatured =
+        queryObj.isFeatured === "true" || queryObj.isFeatured === true;
     }
 
     // SELL / RENT FILTER (IMPORTANT PART)

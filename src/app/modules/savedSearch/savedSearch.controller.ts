@@ -3,7 +3,6 @@ import catchAsync from "../../../shared/catchAsync";
 import sendResponse from "../../../shared/sendResponse";
 import { SavedSearchService } from "./savedSearch.service";
 
-
 const toggleSavedSearch = catchAsync(async (req: Request, res: Response) => {
   const { id: userId } = req.user as { id: string };
   const params = req.body;
@@ -37,7 +36,10 @@ const deleteSavedSearch = catchAsync(async (req: Request, res: Response) => {
   const { id: userId } = req.user as { id: string };
   const { savedSearchId } = req.params;
   console.log(savedSearchId, userId);
-  const result = await SavedSearchService.deleteSavedSearchService(savedSearchId, userId);
+  const result = await SavedSearchService.deleteSavedSearchService(
+    savedSearchId,
+    userId,
+  );
 
   sendResponse(res, {
     success: true,

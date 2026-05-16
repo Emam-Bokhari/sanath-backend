@@ -52,7 +52,10 @@ const getMySavedSearchesService = async (userId: string) => {
   return result;
 };
 
-const deleteSavedSearchService = async (savedSearchId: string, userId: string) => {
+const deleteSavedSearchService = async (
+  savedSearchId: string,
+  userId: string,
+) => {
   const result = await SavedSearch.findOneAndUpdate(
     { _id: savedSearchId, userId },
     { isDeleted: true },

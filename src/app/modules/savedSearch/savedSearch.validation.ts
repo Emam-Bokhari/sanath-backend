@@ -20,7 +20,6 @@ const toggleSavedSearchZodSchema = z.object({
   }),
 });
 
-
 export const SavedSearchValidation = {
   toggleSavedSearchZodSchema,
 };

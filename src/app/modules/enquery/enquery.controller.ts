@@ -64,7 +64,10 @@ const getMyEnqueryById = catchAsync(async (req, res) => {
   const { id: userId } = req.user as { id: string };
   const { enqueryId } = req.params;
 
-  const result = await EnqueryServices.getMyEnqueryByIdFromDB(userId, enqueryId);
+  const result = await EnqueryServices.getMyEnqueryByIdFromDB(
+    userId,
+    enqueryId,
+  );
 
   sendResponse(res, {
     success: true,
@@ -92,8 +95,6 @@ const updateEnqueryStatus = catchAsync(async (req, res) => {
     data: result,
   });
 });
-
-
 
 export const EnqueryControllers = {
   createEnquery,

@@ -4,10 +4,6 @@ import { AnalyticsController } from "./analytics.controller";
 
 const router = express.Router();
 
-router.get(
-  "/agent-stats",
-  isAgent,
-  AnalyticsController.getAgentDashboardStats
-);
+router.get("/agent-stats", isAgent, AnalyticsController.getAgentDashboardStats);
 
 export const AnalyticsRoutes = router;

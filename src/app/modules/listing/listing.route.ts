@@ -42,7 +42,9 @@ router
   .route("/nearby")
   .get(isAuthenticated, ListingControllers.getNearbyListingsService);
 
-router.route("/search").get(isAuthenticated, ListingControllers.searchListingsService);
+router
+  .route("/search")
+  .get(isAuthenticated, ListingControllers.searchListingsService);
 
 router.route("/my").get(isAgent, ListingControllers.getMyListingsService);
 
