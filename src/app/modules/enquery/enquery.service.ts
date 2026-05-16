@@ -8,6 +8,7 @@ import { ISendEmail } from "../../../types/email";
 import config from "../../../config";
 import { emailHelper } from "../../../helpers/emailHelper";
 import QueryBuilder from "../../builder/queryBuilder";
+import { ENQUERY_STATUS } from "./enquery.constant";
 
 const PRIMARY_COLOR = "#22143b";
 const TEXT_COLOR = "#ffffff";
@@ -241,10 +242,52 @@ const getMyEnqueryByIdFromDB = async (userId: string, enqueryId: string) => {
   return enquery;
 };
 
+const updateEnqueryStatus = async (
+  enqueryId: string,
+  agentId: string,
+  status: ENQUERY_STATUS,
+) => {
+  const enquery = await Enquery.findById(enqueryId)
+    .populate("listingId userId")
+    .lean();
+
+  if (!enquery) {
+    throw new ApiError(StatusCodes.NOT_FOUND, "Enquiry not found");
+  }
+
+  const listing = await Listing.findOne({
+    _id: enquery.listingId,
+    agentId: new Types.ObjectId(agentId),
+    isDeleted: { $ne: true },
+  })
+    .select("_id")
+    .lean();
+
+  if (!listing) {
+    throw new ApiError(
+      StatusCodes.FORBIDDEN,
+      "You are not allowed to update this enquiry",
+    );
+  }
+
+  const updatedEnqueryStatus = await Enquery.findByIdAndUpdate(
+    enqueryId,
+    { status },
+    { new: true },
+  );
+
+  if (!enquery) {
+    throw new ApiError(StatusCodes.NOT_FOUND, "Enquiry not found");
+  }
+
+  return updatedEnqueryStatus;
+};
+
 export const EnqueryServices = {
   createEnquery,
   getAllEnqueriesFromDB,
   getEnqueryByIdFromDB,
   getMyEnqueriesFromDB,
   getMyEnqueryByIdFromDB,
+  updateEnqueryStatus,
 };

@@ -1,0 +1,4 @@
+export enum ENQUERY_STATUS {
+    ENQUERED = "ENQUIRED",
+    CONDACTED = "CONDACTED",
+}
