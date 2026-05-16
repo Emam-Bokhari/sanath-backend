@@ -65,6 +65,15 @@ const listingSchema = new Schema<TListing, TListingModel>(
       required: true,
       default: [],
     },
+    views: {
+      type: Number,
+      default: 0,
+    },
+    viewedBy: {
+      type: [Schema.Types.ObjectId],
+      ref: "User",
+      default: [],
+    },
     floorPlans: {
       type: [String],
       default: [],

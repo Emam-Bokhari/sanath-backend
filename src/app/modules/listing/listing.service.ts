@@ -176,7 +176,10 @@ const getNearbyListingsServiceFromDB = async ({
   return listings;
 };
 
-const getleListingServiceByIdFromDB = async (listingId: string) => {
+const getleListingServiceByIdFromDB = async (
+  listingId: string,
+  userId?: string,
+) => {
   if (!Types.ObjectId.isValid(listingId)) {
     throw new Error("Invalid listing id");
   }
@@ -184,13 +187,28 @@ const getleListingServiceByIdFromDB = async (listingId: string) => {
   const listing = await Listing.findOne({
     _id: listingId,
     isDeleted: { $ne: true },
-  })
-    .populate("agentId")
-    .lean();
+  }).populate("agentId");
 
   if (!listing) {
     throw new Error("Listing not found");
   }
+
+  if (userId) {
+    const agentId = (listing.agentId as any)?._id || listing.agentId;
+    const isOwner = agentId.toString() === userId;
+    const hasViewed = listing.viewedBy?.some((id) => id.toString() === userId);
+    console.log(hasViewed)
+
+    if (!isOwner && !hasViewed) {
+      await Listing.findByIdAndUpdate(listingId, {
+        $inc: { views: 1 },
+        $push: { viewedBy: new Types.ObjectId(userId) },
+      });
+      listing.views = (listing.views || 0) + 1;
+    }
+  }
+
+  console.log(listing)
 
   return listing;
 };

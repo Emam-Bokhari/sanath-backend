@@ -34,6 +34,8 @@ export type TListing = {
   // photos & media
   photos: string[];
   videos: string[];
+  views?: number;
+  viewedBy?: Types.ObjectId[];
   floorPlans?: string[];
   brochure?: string;
   threeSixtyTour?: string;
