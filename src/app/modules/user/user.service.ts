@@ -367,6 +367,20 @@ const getAdminFromDB = async (query: any) => {
   };
 };
 
+const getAdminStatsFromDB=async()=>{
+  const [totalAdmins,totalSuperAdmins,totalActiveAdmins]=await Promise.all([
+    User.countDocuments({ role: USER_ROLES.ADMIN,verified:true,isDeleted:false }),
+    User.countDocuments({ role: USER_ROLES.SUPER_ADMIN,verified:true,isDeleted:false }),
+    User.countDocuments({ role: USER_ROLES.ADMIN, status: STATUS.ACTIVE,verified:true,isDeleted:false }),
+  ])
+
+  return {
+    totalAdmins,
+    totalSuperAdmins,
+    totalActiveAdmins,
+  }
+}
+
 export const UserServices = {
   createUserToDB,
   getUserProfileFromDB,
@@ -378,4 +392,5 @@ export const UserServices = {
   deleteProfileFromDB,
   createAdminToDB,
   getAdminFromDB,
+  getAdminStatsFromDB,
 };
