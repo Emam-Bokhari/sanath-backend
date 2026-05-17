@@ -1,7 +1,6 @@
 import {
   isAgent,
   isAuthenticated,
-  isUser,
 } from "./../../../helpers/authHelper";
 import express from "express";
 import { ListingControllers } from "./listing.controller";

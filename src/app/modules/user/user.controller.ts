@@ -100,7 +100,7 @@ const updateUserStatusById = catchAsync(async (req, res) => {
 const deleteUserById = catchAsync(async (req, res) => {
   const { id } = req.params;
 
-  const result = await UserServices.deleteUserByIdFromD(id);
+  const result = await UserServices.deleteUserByIdFromDB(id);
 
   sendResponse(res, {
     success: true,

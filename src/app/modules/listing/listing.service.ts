@@ -2,7 +2,7 @@ import { TListing, TSearchParams } from "./listing.interface";
 import { Listing } from "./listing.model";
 import { SavedSearch } from "../savedSearch/savedSearch.model";
 import { canPublishListing, generateChecklist } from "./listing.utils";
-import { LISTING_STATUS, LISTING_TYPE } from "./listing.constant";
+import { LISTING_STATUS } from "./listing.constant";
 import { FilterQuery, Types } from "mongoose";
 import QueryBuilder from "../../builder/queryBuilder";
 
@@ -210,7 +210,6 @@ const getleListingServiceByIdFromDB = async (
   return listing;
 };
 
-/* ================= SERVICE ================= */
 const searchListingsServiceFromDB = async (
   params: TSearchParams,
   userId?: string,
