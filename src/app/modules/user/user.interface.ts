@@ -48,6 +48,7 @@ export type IUser = {
   };
   isDeleted?: boolean;
   deletedAt?: Date | null;
+  lastLoginAt?: Date | null;
 };
 
 /* ================= STATIC METHODS ================= */

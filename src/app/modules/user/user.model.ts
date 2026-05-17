@@ -127,6 +127,15 @@ const userSchema = new Schema<IUser, IUserModel>(
       },
     },
 
+    lastLoginAt: {
+      type: Date,
+      default: null,
+    },
+
+
+
+
+
     /* ================= AUTH ================= */
     authentication: {
       type: {

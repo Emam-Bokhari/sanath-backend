@@ -50,7 +50,7 @@ const createUserToDB = async (payload: any) => {
 
   await User.findOneAndUpdate(
     { _id: createUser._id },
-    { $set: { authentication } },
+    { $set: { authentication, lastLoginAt: new Date() } },
   );
 
   const createToken = jwtHelper.createToken(

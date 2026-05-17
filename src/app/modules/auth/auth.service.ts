@@ -13,7 +13,6 @@ import {
 import { User } from "../user/user.model";
 import cryptoToken from "../../../util/cryptoToken";
 import { ResetToken } from "../resetToken/resetToken.model";
-import { emailHelper } from "../../../helpers/emailHelper";
 import generateOTP from "../../../util/generateOTP";
 import { emailTemplate } from "../../../shared/emailTemplate";
 import { STATUS } from "../../../enums/user";
@@ -63,6 +62,9 @@ const loginUserFromDB = async (payload: ILoginData) => {
       deviceType,
     });
   }
+
+  // update last login
+  await User.findByIdAndUpdate(isExistUser._id, { lastLoginAt: new Date() });
 
   // create token
   const createToken = jwtHelper.createToken(
@@ -466,6 +468,9 @@ const googleLoginService = async (payload: {
       deviceType,
     });
   }
+
+  // update last login
+  await User.findByIdAndUpdate(user._id, { lastLoginAt: new Date() });
 
   // create token
   const createToken = jwtHelper.createToken(
