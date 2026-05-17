@@ -1,9 +1,11 @@
 import express from "express";
-import { isAgent } from "../../../helpers/authHelper";
-import { AnalyticsController } from "./analytics.controller";
+import { isAdmin, isAgent } from "../../../helpers/authHelper";
+import { AnalyticsControllers } from "./analytics.controller";
 
 const router = express.Router();
 
-router.get("/agent-stats", isAgent, AnalyticsController.getAgentDashboardStats);
+router.get("/agent-stats", isAgent, AnalyticsControllers.getAgentDashboardStats);
+
+router.get("/stats", isAdmin, AnalyticsControllers.getAdminStats);
 
 export const AnalyticsRoutes = router;

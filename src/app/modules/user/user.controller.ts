@@ -125,6 +125,44 @@ const deleteProfile = catchAsync(async (req, res) => {
   });
 });
 
+const createAdmin = catchAsync(async (req, res) => {
+  const userData = req.body;
+  // console.log(userData, "payload");
+  const result = await UserServices.createAdminToDB(userData);
+
+  sendResponse(res, {
+    success: true,
+    statusCode: 200,
+    message: "Admin created successfully",
+    data: result,
+  });
+});
+
+const getAdmin = catchAsync(async (req, res) => {
+  const result = await UserServices.getAdminFromDB(req.query);
+  sendResponse(res, {
+    statusCode: 200,
+    success: true,
+    message: "Admin retrieved Successfully",
+    data: result.data,
+    meta: result.meta,
+  });
+});
+
+const deleteAdmin = catchAsync(async (req, res) => {
+  const payload = req.params.id;
+  const result = await UserServices.deleteAdminFromDB(payload);
+
+  sendResponse(res, {
+    statusCode: 200,
+    success: true,
+    message: "Admin Deleted Successfully",
+    data: result,
+  });
+});
+
+
+
 export const UserControllers = {
   createUser,
   getUserProfile,
@@ -134,4 +172,7 @@ export const UserControllers = {
   updateUserStatusById,
   deleteUserById,
   deleteProfile,
+  createAdmin,
+  getAdmin,
+  deleteAdmin,
 };

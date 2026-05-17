@@ -1,10 +1,10 @@
 import catchAsync from "../../../shared/catchAsync";
 import sendResponse from "../../../shared/sendResponse";
-import { AnalyticsService } from "./analytics.service";
+import { AnalyticsServices } from "./analytics.service";
 
 const getAgentDashboardStats = catchAsync(async (req, res) => {
   const { id: agentId } = req.user as { id: string };
-  const result = await AnalyticsService.getAgentDashboardStats(agentId);
+  const result = await AnalyticsServices.getAgentDashboardStats(agentId);
 
   sendResponse(res, {
     success: true,
@@ -14,6 +14,17 @@ const getAgentDashboardStats = catchAsync(async (req, res) => {
   });
 });
 
-export const AnalyticsController = {
+const getAdminStats = catchAsync(async (req, res) => {
+  const result = await AnalyticsServices.getAdminStatsFromDB();
+  sendResponse(res, {
+    statusCode: 200,
+    success: true,
+    message: "Admin Stats retrieved Successfully",
+    data: result,
+  });
+});
+
+export const AnalyticsControllers = {
   getAgentDashboardStats,
+  getAdminStats,
 };

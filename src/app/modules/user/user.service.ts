@@ -367,19 +367,17 @@ const getAdminFromDB = async (query: any) => {
   };
 };
 
-const getAdminStatsFromDB=async()=>{
-  const [totalAdmins,totalSuperAdmins,totalActiveAdmins]=await Promise.all([
-    User.countDocuments({ role: USER_ROLES.ADMIN,verified:true,isDeleted:false }),
-    User.countDocuments({ role: USER_ROLES.SUPER_ADMIN,verified:true,isDeleted:false }),
-    User.countDocuments({ role: USER_ROLES.ADMIN, status: STATUS.ACTIVE,verified:true,isDeleted:false }),
-  ])
 
-  return {
-    totalAdmins,
-    totalSuperAdmins,
-    totalActiveAdmins,
+
+const deleteAdminFromDB = async (id: any) => {
+  const isExistAdmin = await User.findByIdAndDelete(id);
+
+  if (!isExistAdmin) {
+    throw new ApiError(StatusCodes.BAD_REQUEST, "Failed to delete Admin");
   }
-}
+
+  return isExistAdmin;
+};
 
 export const UserServices = {
   createUserToDB,
@@ -392,5 +390,5 @@ export const UserServices = {
   deleteProfileFromDB,
   createAdminToDB,
   getAdminFromDB,
-  getAdminStatsFromDB,
+  deleteAdminFromDB,
 };

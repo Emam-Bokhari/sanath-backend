@@ -2,6 +2,8 @@ import { Listing } from "../listing/listing.model";
 import { FavoriteProperty } from "../favoriteProperty/favoriteProperty.model";
 import { LISTING_STATUS } from "../listing/listing.constant";
 import { Types } from "mongoose";
+import { User } from "../user/user.model";
+import { STATUS, USER_ROLES } from "../../../enums/user";
 
 const getAgentDashboardStats = async (agentId: string) => {
   const agentObjectId = new Types.ObjectId(agentId);
@@ -40,6 +42,21 @@ const getAgentDashboardStats = async (agentId: string) => {
   };
 };
 
-export const AnalyticsService = {
+const getAdminStatsFromDB=async()=>{
+  const [totalAdmins,totalSuperAdmins,totalActiveAdmins]=await Promise.all([
+    User.countDocuments({ role: USER_ROLES.ADMIN,verified:true }),
+    User.countDocuments({ role: USER_ROLES.SUPER_ADMIN,verified:true }),
+    User.countDocuments({ role: USER_ROLES.ADMIN, status: STATUS.ACTIVE,verified:true }),
+  ])
+
+  return {
+    totalAdmins,
+    totalSuperAdmins,
+    totalActiveAdmins,
+  }
+}
+
+export const AnalyticsServices = {
   getAgentDashboardStats,
+  getAdminStatsFromDB,
 };
