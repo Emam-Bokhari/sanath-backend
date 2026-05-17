@@ -19,8 +19,6 @@ router
 
 router.get("/admins", isAdmin, UserControllers.getAdmin);
 
-
-
 router
   .route("/")
   .post(UserControllers.createUser)

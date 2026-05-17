@@ -370,13 +370,23 @@ const getAdminFromDB = async (query: any) => {
 
 
 const deleteAdminFromDB = async (id: any) => {
-  const isExistAdmin = await User.findByIdAndDelete(id);
+  const isExistAdmin = await User.findById(id);
 
   if (!isExistAdmin) {
+    throw new ApiError(StatusCodes.NOT_FOUND, "Admin not found");
+  }
+
+  if (isExistAdmin.role === USER_ROLES.SUPER_ADMIN) {
+    throw new ApiError(StatusCodes.FORBIDDEN, "Super Admin cannot be deleted");
+  }
+
+  const result = await User.findByIdAndDelete(id);
+
+  if (!result) {
     throw new ApiError(StatusCodes.BAD_REQUEST, "Failed to delete Admin");
   }
 
-  return isExistAdmin;
+  return result;
 };
 
 export const UserServices = {
