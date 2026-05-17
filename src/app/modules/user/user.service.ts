@@ -167,12 +167,16 @@ const updateUserStatusByIdToDB = async (
     throw new ApiError(400, "Status must be either 'ACTIVE' or 'INACTIVE'");
   }
 
-  const user = await User.findOne({
-    _id: id,
-    role: USER_ROLES.USER,
-  });
+  const user = await User.findById(id);
   if (!user) {
-    throw new ApiError(404, "No user is found by this user ID");
+    throw new ApiError(StatusCodes.NOT_FOUND, "No user is found by this user ID");
+  }
+
+  if (user.role === USER_ROLES.SUPER_ADMIN) {
+    throw new ApiError(
+      StatusCodes.FORBIDDEN,
+      "SUPER_ADMIN status cannot be changed",
+    );
   }
 
   const result = await User.findByIdAndUpdate(id, { status }, { new: true });
@@ -184,13 +188,17 @@ const updateUserStatusByIdToDB = async (
 };
 
 const deleteUserByIdFromDB = async (id: string) => {
-  const user = await User.findOne({
-    _id: id,
-    role: USER_ROLES.USER,
-  });
+  const user = await User.findById(id);
 
   if (!user) {
-    throw new ApiError(404, "User doest not exist in the database");
+    throw new ApiError(
+      StatusCodes.NOT_FOUND,
+      "User doest not exist in the database",
+    );
+  }
+
+  if (user.role === USER_ROLES.SUPER_ADMIN) {
+    throw new ApiError(StatusCodes.FORBIDDEN, "SUPER_ADMIN cannot be deleted");
   }
 
   const result = await User.findByIdAndDelete(id);
@@ -207,6 +215,13 @@ const deleteProfileFromDB = async (id: string, password: string) => {
   const user = await User.findById(id).select("+password");
   if (!user) {
     throw new ApiError(StatusCodes.BAD_REQUEST, "User doesn't exist!");
+  }
+
+  if (user.role === USER_ROLES.SUPER_ADMIN) {
+    throw new ApiError(
+      StatusCodes.FORBIDDEN,
+      "SUPER_ADMIN account cannot be deleted",
+    );
   }
 
   // check password
