@@ -329,6 +329,29 @@ const createAdminToDB = async (payload: any): Promise<IUser> => {
   return createAdmin;
 };
 
+const getAdminFromDB = async (query: any) => {
+  const baseQuery = User.find({
+    role: { $in: [USER_ROLES.ADMIN,USER_ROLES.SUPER_ADMIN] },
+    status: STATUS.ACTIVE,
+    verified: true,
+  }).select("name email role profileImage createdAt updatedAt status");
+
+  const queryBuilder = new QueryBuilder<IUser>(baseQuery, query)
+    .search(["name", "email"])
+    .sort()
+    .fields()
+    .paginate();
+
+  const admins = await queryBuilder.modelQuery;
+
+  const meta = await queryBuilder.countTotal();
+
+  return {
+    data: admins,
+    meta,
+  };
+};
+
 export const UserServices = {
   createUserToDB,
   getUserProfileFromDB,
@@ -339,4 +362,5 @@ export const UserServices = {
   deleteUserByIdFromDB,
   deleteProfileFromDB,
   createAdminToDB,
+  getAdminFromDB,
 };
