@@ -315,12 +315,16 @@ const searchListingsServiceFromDB = async (
 
   /* ================= TENURE ================= */
   if (tenure) {
-    query.tenure = tenure;
+    const tenureArray = Array.isArray(tenure) ? tenure : [tenure];
+    query.tenure = { $in: tenureArray };
   }
 
   /* ================= FEATURES ================= */
-  if (features?.length) {
-    query.features = { $in: features };
+  if (features) {
+    const featuresArray = Array.isArray(features) ? features : [features];
+    if (featuresArray.length > 0) {
+      query.features = { $in: featuresArray };
+    }
   }
 
   /* ================= TIME FILTER ================= */

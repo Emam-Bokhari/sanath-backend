@@ -78,8 +78,8 @@ export type TSearchParams = {
   maxPrice?: number;
   bedrooms?: number;
   bathrooms?: number;
-  tenure?: string;
-  features?: string[];
+  tenure?: string | string[];
+  features?: string | string[];
   isFeatured?: boolean | string;
   timeFilter?: TTimeFilter;
   sort?: TSort;

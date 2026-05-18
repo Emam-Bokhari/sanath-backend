@@ -1,14 +1,15 @@
 import { JwtPayload } from "jsonwebtoken";
 import catchAsync from "../../../shared/catchAsync";
 import sendResponse from "../../../shared/sendResponse";
-import { UserServices } from "./user.service";
 import bcrypt from "bcrypt";
 import config from "../../../config";
+import { UserCommands } from "./services/user.command";
+import { UserQueries } from "./services/user.query";
 
 const createUser = catchAsync(async (req, res) => {
   const { ...userData } = req.body;
 
-  const result = await UserServices.createUserToDB(userData);
+  const result = await UserCommands.createUserToDB(userData);
 
   sendResponse(res, {
     success: true,
@@ -21,7 +22,7 @@ const createUser = catchAsync(async (req, res) => {
 
 const getUserProfile = catchAsync(async (req, res) => {
   const user = req.user;
-  const result = await UserServices.getUserProfileFromDB(user as JwtPayload);
+  const result = await UserQueries.getUserProfileFromDB(user as JwtPayload);
 
   sendResponse(res, {
     success: true,
@@ -37,9 +38,9 @@ const updateProfile = catchAsync(async (req, res) => {
   if ("role" in req.body) {
     delete req.body.role;
   }
-  if ("phone" in req.body) {
-    delete req.body.phone;
-  }
+  // if ("phone" in req.body) {
+  //   delete req.body.phone;
+  // }
   // If password is provided
   if (req.body.password) {
     req.body.password = await bcrypt.hash(
@@ -48,7 +49,7 @@ const updateProfile = catchAsync(async (req, res) => {
     );
   }
 
-  const result = await UserServices.updateProfileToDB(user, req.body);
+  const result = await UserCommands.updateProfileToDB(user, req.body);
 
   sendResponse(res, {
     success: true,
@@ -59,7 +60,7 @@ const updateProfile = catchAsync(async (req, res) => {
 });
 
 const getAllUsers = catchAsync(async (req, res) => {
-  const result = await UserServices.getAllUsersFromDB(req.query);
+  const result = await UserQueries.getAllUsersFromDB(req.query);
 
   sendResponse(res, {
     success: true,
@@ -72,7 +73,7 @@ const getAllUsers = catchAsync(async (req, res) => {
 
 const getUserById = catchAsync(async (req, res) => {
   const { id } = req.params;
-  const result = await UserServices.getUserByIdFromDB(id);
+  const result = await UserQueries.getUserByIdFromDB(id);
 
   sendResponse(res, {
     success: true,
@@ -87,7 +88,7 @@ const updateUserStatusById = catchAsync(async (req, res) => {
 
   const { status } = req.body;
 
-  const result = await UserServices.updateUserStatusByIdToDB(id, status);
+  const result = await UserCommands.updateUserStatusByIdToDB(id, status);
 
   sendResponse(res, {
     success: true,
@@ -100,7 +101,7 @@ const updateUserStatusById = catchAsync(async (req, res) => {
 const deleteUserById = catchAsync(async (req, res) => {
   const { id } = req.params;
 
-  const result = await UserServices.deleteUserByIdFromDB(id);
+  const result = await UserCommands.deleteUserByIdFromDB(id);
 
   sendResponse(res, {
     success: true,
@@ -115,7 +116,7 @@ const deleteProfile = catchAsync(async (req, res) => {
   // console.log(id, "ID");
   const { password } = req.body;
 
-  const result = await UserServices.deleteProfileFromDB(id, password);
+  const result = await UserCommands.deleteProfileFromDB(id, password);
 
   sendResponse(res, {
     success: true,
@@ -128,7 +129,7 @@ const deleteProfile = catchAsync(async (req, res) => {
 const createAdmin = catchAsync(async (req, res) => {
   const userData = req.body;
   // console.log(userData, "payload");
-  const result = await UserServices.createAdminToDB(userData);
+  const result = await UserCommands.createAdminToDB(userData);
 
   sendResponse(res, {
     success: true,
@@ -139,7 +140,7 @@ const createAdmin = catchAsync(async (req, res) => {
 });
 
 const getAdmin = catchAsync(async (req, res) => {
-  const result = await UserServices.getAdminFromDB(req.query);
+  const result = await UserQueries.getAdminFromDB(req.query);
   sendResponse(res, {
     statusCode: 200,
     success: true,
@@ -151,7 +152,7 @@ const getAdmin = catchAsync(async (req, res) => {
 
 const deleteAdmin = catchAsync(async (req, res) => {
   const payload = req.params.id;
-  const result = await UserServices.deleteAdminFromDB(payload);
+  const result = await UserCommands.deleteAdminFromDB(payload);
 
   sendResponse(res, {
     statusCode: 200,

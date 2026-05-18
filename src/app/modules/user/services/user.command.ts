@@ -1,24 +1,20 @@
 import { StatusCodes } from "http-status-codes";
-import bcrypt from "bcrypt";
-import ApiError from "../../../errors/ApiErrors";
-import { User } from "./user.model";
-import generateOTP from "../../../util/generateOTP";
-import { emailTemplate } from "../../../shared/emailTemplate";
-import { jwtHelper } from "../../../helpers/jwtHelper";
-import config from "../../../config";
+import ApiError from "../../../../errors/ApiErrors";
+import { User } from "../user.model";
+import generateOTP from "../../../../util/generateOTP";
+import { emailTemplate } from "../../../../shared/emailTemplate";
+import { emailQueue } from "../../../../queues";
+import { jwtHelper } from "../../../../helpers/jwtHelper";
+import config from "../../../../config";
 import { JwtPayload, Secret } from "jsonwebtoken";
-import { STATUS, USER_ROLES } from "../../../enums/user";
-import { sendNotifications } from "../../../helpers/notificationsHelper";
-import {
-  NOTIFICATION_REFERENCE_MODEL,
-  NOTIFICATION_TYPE,
-} from "../notification/notification.constant";
-import { IUser } from "./user.interface";
-import unlinkFile from "../../../shared/unlinkFile";
-import QueryBuilder from "../../builder/queryBuilder";
-import { emailQueue } from "../../../queues";
+import { STATUS, USER_ROLES } from "../../../../enums/user";
+import { sendNotifications } from "../../../../helpers/notificationsHelper";
+import { NOTIFICATION_REFERENCE_MODEL, NOTIFICATION_TYPE } from "../../notification/notification.constant";
+import { IUser } from "../user.interface";
+import unlinkFile from "../../../../shared/unlinkFile";
+import bcrypt from "bcrypt";
 
-// --- USER SERVICES ---
+
 const createUserToDB = async (payload: any) => {
   const isExistUser = await User.findOne({ email: payload.email });
   if (isExistUser) {
@@ -87,17 +83,6 @@ const createUserToDB = async (payload: any) => {
   return result;
 };
 
-const getUserProfileFromDB = async (user: JwtPayload): Promise<any> => {
-  const { id } = user;
-
-  const result: any = await User.isExistUserById(id);
-  if (!result) {
-    throw new ApiError(StatusCodes.BAD_REQUEST, "User doesn't exist!");
-  }
-
-  return result;
-};
-
 const updateProfileToDB = async (
   user: JwtPayload,
   payload: Partial<IUser>,
@@ -117,46 +102,6 @@ const updateProfileToDB = async (
     new: true,
   });
   return updateDoc;
-};
-
-const getAllUsersFromDB = async (query: any) => {
-  // Base user query
-  const baseQuery = User.find({
-    role: USER_ROLES.USER,
-    verified: true,
-  });
-
-  const queryBuilder = new QueryBuilder(baseQuery, query)
-    .search(["name", "email"])
-    .sort()
-    .fields()
-    .filter()
-    .paginate();
-
-  // Fetch paginated users
-  const users = await queryBuilder.modelQuery;
-  const meta = await queryBuilder.countTotal();
-
-  if (!users || users.length === 0) {
-    throw new ApiError(404, "No users are found in the database");
-  }
-
-  return {
-    data: users,
-    meta,
-  };
-};
-
-const getUserByIdFromDB = async (id: string) => {
-  const result = await User.findOne({
-    _id: id,
-    role: USER_ROLES.USER,
-  });
-
-  if (!result)
-    throw new ApiError(404, "No user is found in the database by this ID");
-
-  return result;
 };
 
 const updateUserStatusByIdToDB = async (
@@ -239,7 +184,6 @@ const deleteProfileFromDB = async (id: string, password: string) => {
   return result;
 };
 
-// ========ADMIN SERVICES===
 const createAdminToDB = async (payload: any): Promise<IUser> => {
   delete payload.phone;
 
@@ -262,112 +206,20 @@ const createAdminToDB = async (payload: any): Promise<IUser> => {
   const createAdmin = await User.create(adminPayload);
 
   // ---------------- EMAIL TEMPLATE ----------------
- const emailHtml = `
-  <body style="margin:0;padding:0;background:#d1d2d2;font-family:Arial,sans-serif;">
-    <table width="100%" cellpadding="0" cellspacing="0" style="padding:40px 0;">
-      <tr>
-        <td align="center">
-
-          <table width="600" cellpadding="0" cellspacing="0" style="background:#ffffff;border-radius:10px;overflow:hidden;box-shadow:0 8px 20px rgba(0,0,0,0.08);">
-
-            <!-- Header -->
-            <tr>
-              <td style="background:#0b3c6d;padding:25px;text-align:center;color:#ffffff;">
-                <h2 style="margin:0;">Admin Account Created</h2>
-                <p style="margin:5px 0 0 0;font-size:13px;">Welcome to My Home Admin Panel</p>
-              </td>
-            </tr>
-
-            <!-- Body -->
-            <tr>
-              <td style="padding:30px;color:#333;font-size:15px;line-height:1.6;">
-
-                <p>Hello <b>${payload.name || "Admin"}</b>,</p>
-
-                <p>Your admin account has been created successfully.</p>
-
-                <table style="width:100%;margin-top:20px;">
-                  <tr>
-                    <td style="padding:8px 0;font-weight:bold;width:120px;">Email:</td>
-                    <td>${payload.email}</td>
-                  </tr>
-
-                  <tr>
-                    <td style="padding:8px 0;font-weight:bold;">Password:</td>
-                    <td style="background:#f0f0f0;padding:8px;border-radius:5px;">
-                      ${rawPassword}
-                    </td>
-                  </tr>
-
-                  <tr>
-                    <td style="padding:8px 0;font-weight:bold;">Role:</td>
-                    <td>ADMIN</td>
-                  </tr>
-                </table>
-
-                <div style="margin-top:25px;text-align:center;">
-                  <a href="${config.dashboard_url}/dashboard" 
-                    style="background:#0b3c6d;color:#ffffff;padding:12px 22px;border-radius:6px;text-decoration:none;font-weight:bold;">
-                    Login to Dashboard
-                  </a>
-                </div>
-
-                <p style="margin-top:25px;font-size:13px;color:#666;">
-                  ⚠️ Please change your password after first login for security.
-                </p>
-
-              </td>
-            </tr>
-
-            <!-- Footer -->
-            <tr>
-              <td style="background:#f2f2f2;text-align:center;padding:15px;font-size:12px;color:#888;">
-                © ${new Date().getFullYear()} My Home. All rights reserved.
-              </td>
-            </tr>
-
-          </table>
-
-        </td>
-      </tr>
-    </table>
-  </body>
-`;
-
+  const template = emailTemplate.adminCredentials({
+    name: payload.name,
+    email: payload.email,
+    password: rawPassword,
+  });
 
   await emailQueue.add("admin-credentials-email", {
-    to: payload.email,
-    subject: "Your Admin Account Credentials - My Home",
-    html: emailHtml,
+    to: template.to,
+    subject: template.subject,
+    html: template.html,
   });
 
   return createAdmin;
 };
-
-const getAdminFromDB = async (query: any) => {
-  const baseQuery = User.find({
-    role: { $in: [USER_ROLES.ADMIN,USER_ROLES.SUPER_ADMIN] },
-    status: STATUS.ACTIVE,
-    verified: true,
-  }).select("name email role profileImage createdAt updatedAt status");
-
-  const queryBuilder = new QueryBuilder<IUser>(baseQuery, query)
-    .search(["name", "email"])
-    .sort()
-    .fields()
-    .paginate();
-
-  const admins = await queryBuilder.modelQuery;
-
-  const meta = await queryBuilder.countTotal();
-
-  return {
-    data: admins,
-    meta,
-  };
-};
-
-
 
 const deleteAdminFromDB = async (id: any) => {
   const isExistAdmin = await User.findById(id);
@@ -389,16 +241,12 @@ const deleteAdminFromDB = async (id: any) => {
   return result;
 };
 
-export const UserServices = {
+export const UserCommands = {
   createUserToDB,
-  getUserProfileFromDB,
   updateProfileToDB,
-  getAllUsersFromDB,
-  getUserByIdFromDB,
   updateUserStatusByIdToDB,
   deleteUserByIdFromDB,
   deleteProfileFromDB,
   createAdminToDB,
-  getAdminFromDB,
   deleteAdminFromDB,
 };
