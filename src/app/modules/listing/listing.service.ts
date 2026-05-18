@@ -7,24 +7,31 @@ import { FilterQuery, Types } from "mongoose";
 import QueryBuilder from "../../builder/queryBuilder";
 
 const createListingServiceToDB = async (payload: TListing, agentId: string) => {
+  // force status to DRAFT or PENDING_APPROVAL if PUBLISHED is requested by agent
+  let initialStatus = payload.status || LISTING_STATUS.DRAFT;
+
+  if (initialStatus === LISTING_STATUS.PUBLISHED) {
+    initialStatus = LISTING_STATUS.PENDING_APPROVAL;
+  }
+
   // always create listing first (safe default)
   const listing = await Listing.create({
     ...payload,
     agentId,
-    status: payload.status || LISTING_STATUS.DRAFT,
+    status: initialStatus,
   });
 
   //  generate checklist
   const checklist = generateChecklist(listing);
   listing.listingCheckList = checklist;
 
-  // PUBLISH validation on CREATE (IMPORTANT)
-  if (listing.status === LISTING_STATUS.PUBLISHED) {
+  // Validation if PENDING_APPROVAL is requested
+  if (listing.status === LISTING_STATUS.PENDING_APPROVAL) {
     const allowed = canPublishListing(checklist);
 
     if (!allowed) {
       throw new Error(
-        "Cannot publish listing on create. Please complete required sections first.",
+        "Cannot request publication. Please complete required sections first.",
       );
     }
   }
@@ -93,18 +100,22 @@ const updateListingServiceToDB = async (
     throw new Error("Listing not found or unauthorized");
   }
 
+  if (payload.status === LISTING_STATUS.PUBLISHED) {
+    payload.status = LISTING_STATUS.PENDING_APPROVAL;
+  }
+
   Object.assign(existingListing, payload);
 
   const checklist = generateChecklist(existingListing);
   existingListing.listingCheckList = checklist;
 
-  //  PUBLISH validation on UPDATE
-  if (payload.status === LISTING_STATUS.PUBLISHED) {
+  //  Validation if PENDING_APPROVAL is requested
+  if (existingListing.status === LISTING_STATUS.PENDING_APPROVAL) {
     const allowed = canPublishListing(checklist);
 
     if (!allowed) {
       throw new Error(
-        "Cannot publish listing. Complete all required sections first.",
+        "Cannot request publication. Complete all required sections first.",
       );
     }
   }
@@ -509,6 +520,8 @@ const searchListingsServiceFromDB = async (
 
   return listings;
 };
+
+
 
 export const ListingServices = {
   createListingServiceToDB,
