@@ -35,11 +35,11 @@ const getMyListingsService = catchAsync(async (req, res) => {
 });
 
 const getListingById = catchAsync(async (req, res) => {
-  const { id: agentId } = req.user as { id: string };
+  const user = req?.user as { id: string } | undefined;
   const { listingId } = req.params;
-  const listing = await ListingServices.getMyleListingServiceByIdFromDB(
+  const listing = await ListingServices.getSingleListingByIdFromDB(
     listingId,
-    agentId,
+    user?.id,
   );
 
   sendResponse(res, {
@@ -122,13 +122,12 @@ const getNearbyListingsService = catchAsync(async (req, res) => {
 
 });
 
-const getleListingById = catchAsync(async (req, res) => {
+const getMyListingById = catchAsync(async (req, res) => {
   const { listingId } = req.params;
-  const user = req.user as { id: string } | undefined;
-  console.log(listingId, user?.id);
-  const listing = await ListingServices.getleListingServiceByIdFromDB(
+  const { id: agentId } = req.user as { id: string };
+  const listing = await ListingServices.getAgentListingByIdFromDB(
     listingId,
-    user?.id,
+    agentId,
   );
 
   sendResponse(res, {
@@ -160,11 +159,11 @@ const searchListingsService = catchAsync(async (req, res) => {
 export const ListingControllers = {
   createListing,
   getMyListingsService,
-  getListingById,
+  getMyListingById,
   updateListing,
   deleteListing,
   updateListingStatusToSold,
   getNearbyListingsService,
-  getleListingById,
+  getListingById,
   searchListingsService,
 };

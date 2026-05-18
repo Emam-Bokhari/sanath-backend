@@ -52,7 +52,7 @@ router.route("/my").get(isAgent, ListingControllers.getMyListingsService);
 
 router
   .route("/my/:listingId")
-  .get(isAgent, ListingControllers.getListingById)
+  .get(isAgent, ListingControllers.getMyListingById)
   .patch(
     isAgent,
     checkSubscription(),

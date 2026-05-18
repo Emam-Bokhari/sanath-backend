@@ -142,7 +142,7 @@ const getMyListingsServiceFromDB = async (
   };
 };
 
-const getMyleListingServiceByIdFromDB = async (
+const getAgentListingByIdFromDB = async (
   listingId: string,
   agentId: string,
 ) => {
@@ -351,7 +351,7 @@ const getNearbyListingsServiceFromDB = async (
   };
 };
 
-const getleListingServiceByIdFromDB = async (
+const getSingleListingByIdFromDB = async (
   listingId: string,
   userId?: string,
 ) => {
@@ -717,11 +717,11 @@ const searchListingsServiceFromDB = async (
 export const ListingServices = {
   createListingServiceToDB,
   getMyListingsServiceFromDB,
-  getMyleListingServiceByIdFromDB,
+  getSingleListingByIdFromDB,
   updateListingServiceToDB,
   deleteListingServiceByIdFromDB,
   updateListingStatusToSoldServiceToDB,
   getNearbyListingsServiceFromDB,
-  getleListingServiceByIdFromDB,
+  getAgentListingByIdFromDB,
   searchListingsServiceFromDB,
 };
