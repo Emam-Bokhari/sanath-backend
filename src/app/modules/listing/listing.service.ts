@@ -315,13 +315,35 @@ const searchListingsServiceFromDB = async (
 
   /* ================= TENURE ================= */
   if (tenure) {
-    const tenureArray = Array.isArray(tenure) ? tenure : [tenure];
-    query.tenure = { $in: tenureArray };
+    let tenureArray = Array.isArray(tenure)
+      ? tenure
+      : typeof tenure === "string"
+        ? tenure.split(",")
+        : [tenure];
+
+    // Trim spaces and filter out empty strings
+    tenureArray = tenureArray
+      .map((t: any) => (typeof t === "string" ? t.trim() : t))
+      .filter((t: any) => t !== "");
+
+    if (tenureArray.length > 0) {
+      query.tenure = { $in: tenureArray };
+    }
   }
 
   /* ================= FEATURES ================= */
   if (features) {
-    const featuresArray = Array.isArray(features) ? features : [features];
+    let featuresArray = Array.isArray(features)
+      ? features
+      : typeof features === "string"
+        ? features.split(",")
+        : [features];
+
+    // Trim spaces and filter out empty strings
+    featuresArray = featuresArray
+      .map((f: any) => (typeof f === "string" ? f.trim() : f))
+      .filter((f: any) => f !== "");
+
     if (featuresArray.length > 0) {
       query.features = { $in: featuresArray };
     }
