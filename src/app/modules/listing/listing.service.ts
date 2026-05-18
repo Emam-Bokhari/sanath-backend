@@ -144,33 +144,58 @@ const deleteListingServiceByIdFromDB = async (
   return result;
 };
 
-const getNearbyListingsServiceFromDB = async ({
-  lat,
-  lng,
-  radiusInKm,
-}: {
-  lat: number;
-  lng: number;
-  radiusInKm: number;
-}) => {
-  console.log(lat, lng, radiusInKm);
-  const radiusInMeters = radiusInKm * 1000;
+const getNearbyListingsServiceFromDB = async (
+  {
+    lat,
+    lng,
+    radiusInKm,
+  }: {
+    lat?: number;
+    lng?: number;
+    radiusInKm?: number;
+  },
+  query: Record<string, unknown>,
+) => {
+  let baseQuery;
 
-  const listings = await Listing.find({
-    location: {
-      $near: {
-        $geometry: {
-          type: "Point",
-          coordinates: [lng, lat], // IMPORTANT: [lng, lat]
+  // If lat or lng is not provided or invalid, return all published listings as fallback
+  if (lat === undefined || lng === undefined || isNaN(lat) || isNaN(lng)) {
+    baseQuery = Listing.find({
+      isDeleted: { $ne: true },
+      status: LISTING_STATUS.PUBLISHED,
+    });
+  } else {
+    const radiusInMeters =
+      (radiusInKm && !isNaN(radiusInKm) ? radiusInKm : 10) * 1000;
+
+    baseQuery = Listing.find({
+      location: {
+        $near: {
+          $geometry: {
+            type: "Point",
+            coordinates: [lng, lat], // IMPORTANT: [lng, lat]
+          },
+          $maxDistance: radiusInMeters,
         },
-        $maxDistance: radiusInMeters,
       },
-    },
-    isDeleted: { $ne: true },
-    status: LISTING_STATUS.PUBLISHED,
-  }).populate("agentId");
+      isDeleted: { $ne: true },
+      status: LISTING_STATUS.PUBLISHED,
+    });
+  }
 
-  return listings;
+  const listingQuery = new QueryBuilder(baseQuery, query)
+    .search(["title", "city", "country"])
+    .filter()
+    .paginate()
+    .fields();
+
+  const result = await listingQuery.modelQuery.populate("agentId");
+  const meta = await listingQuery.countTotal();
+
+  return {
+    data: result,
+    meta,
+  };
 };
 
 const getleListingServiceByIdFromDB = async (
@@ -372,7 +397,11 @@ const searchListingsServiceFromDB = async (
   }
 
   /* ================= GEO SEARCH ================= */
-  const isGeoSearch = numericLat !== undefined && numericLng !== undefined;
+  const isGeoSearch =
+    numericLat !== undefined &&
+    numericLng !== undefined &&
+    !isNaN(numericLat) &&
+    !isNaN(numericLng);
 
   if (isGeoSearch) {
     const safeRadius =

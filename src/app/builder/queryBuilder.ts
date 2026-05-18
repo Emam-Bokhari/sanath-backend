@@ -138,7 +138,42 @@ class QueryBuilder<T> {
   async countTotal() {
     const filter = this.modelQuery.getFilter();
 
-    const total = await this.modelQuery.model.countDocuments(filter);
+    // Fix: countDocuments does not support $near/$nearSphere
+    // We convert these to $geoWithin for counting purposes to keep the radius filter
+    const recursiveFixGeo = (obj: any) => {
+      if (!obj || typeof obj !== "object") return;
+
+      Object.keys(obj).forEach((key) => {
+        const val = obj[key];
+        if (val && typeof val === "object") {
+          if (val.$near || val.$nearSphere) {
+            const near = val.$near || val.$nearSphere;
+            if (near.$geometry && near.$maxDistance !== undefined) {
+              const coordinates = near.$geometry.coordinates;
+              const radiusInRadians = near.$maxDistance / 6378100;
+
+              // Replace $near with $geoWithin
+              delete val.$near;
+              delete val.$nearSphere;
+              val.$geoWithin = {
+                $centerSphere: [coordinates, radiusInRadians],
+              };
+            } else {
+              // If we can't convert it accurately, just remove it to avoid crash
+              delete val.$near;
+              delete val.$nearSphere;
+            }
+          } else {
+            recursiveFixGeo(val);
+          }
+        }
+      });
+    };
+
+    const countFilter = JSON.parse(JSON.stringify(filter));
+    recursiveFixGeo(countFilter);
+
+    const total = await this.modelQuery.model.countDocuments(countFilter);
 
     const page = Number(this.query.page) || 1;
     const limit = Number(this.query.limit) || 10;
