@@ -60,7 +60,7 @@ const createUserToDB = async (payload: any) => {
   );
 
   const result = {
-    token: createToken,
+    // token: createToken,
     user: createUser,
   };
 

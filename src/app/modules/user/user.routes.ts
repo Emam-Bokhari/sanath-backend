@@ -11,7 +11,7 @@ router
   .get(isAuthenticated, UserControllers.getUserProfile)
   .delete(isAuthenticated, UserControllers.deleteProfile);
 
-  router.post(
+router.post(
   "/create-admin",
   isAdmin,
   UserControllers.createAdmin,
@@ -29,7 +29,13 @@ router
     parseFileData({
       fieldName: "profileImage",
       mode: "single",
-    }),
+    },
+      {
+        fieldName: "agencyLogo",
+        mode: "single"
+      }
+    ),
+
     UserControllers.updateProfile,
   );
 

@@ -132,7 +132,14 @@ const userSchema = new Schema<IUser, IUserModel>(
       default: null,
     },
 
-
+    // =================AGENCY PROFILE =================
+    agencyName:{
+      type: String,
+    },
+    agencyLogo:{
+      type: String,
+      default: "",
+    },
 
 
 

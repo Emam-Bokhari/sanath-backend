@@ -156,9 +156,15 @@ const getAllEnqueriesFromDB = async (
 
   const listingIds = listings.map((l) => l._id);
 
-  const baseQuery = Enquery.find({
+  const filter: Record<string, any> = {
     listingId: { $in: listingIds },
-  }).populate("listingId userId");
+  };
+
+  if (query.status) {
+    filter.status = query.status;
+  }
+
+  const baseQuery = Enquery.find(filter).populate("listingId userId");
 
   const enqueryQuery = new QueryBuilder(baseQuery, query)
     .search(["name", "email", "phone", "message", "postalCode", "country"])

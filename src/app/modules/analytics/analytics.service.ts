@@ -4,6 +4,7 @@ import { LISTING_STATUS } from "../listing/listing.constant";
 import { Types } from "mongoose";
 import { User } from "../user/user.model";
 import { STATUS, USER_ROLES } from "../../../enums/user";
+import { Enquery } from "../enquery/enquery.model";
 
 const getAgentDashboardStats = async (agentId: string) => {
   const agentObjectId = new Types.ObjectId(agentId);
@@ -56,7 +57,67 @@ const getAdminStatsFromDB=async()=>{
   }
 }
 
+const getAgentEnquiryStatsFromDB = async (agentId: string, year?: string) => {
+  const agentObjectId = new Types.ObjectId(agentId);
+  const targetYear = year ? parseInt(year) : new Date().getFullYear();
+
+  // First, get all listing IDs of this agent
+  const agentListings = await Listing.find({
+    agentId: agentObjectId,
+    isDeleted: false,
+  }).select("_id");
+
+  const listingIds = agentListings.map((listing) => listing._id);
+
+  const startOfYear = new Date(targetYear, 0, 1);
+  const endOfYear = new Date(targetYear, 11, 31, 23, 59, 59, 999);
+
+  const enqueryStats = await Enquery.aggregate([
+    {
+      $match: {
+        listingId: { $in: listingIds },
+        createdAt: { $gte: startOfYear, $lte: endOfYear },
+      },
+    },
+    {
+      $group: {
+        _id: { $month: "$createdAt" },
+        count: { $sum: 1 },
+      },
+    },
+    {
+      $sort: { _id: 1 },
+    },
+  ]);
+
+  const monthNames = [
+    "Jan",
+    "Feb",
+    "Mar",
+    "Apr",
+    "May",
+    "Jun",
+    "Jul",
+    "Aug",
+    "Sep",
+    "Oct",
+    "Nov",
+    "Dec",
+  ];
+
+  const formattedStats = monthNames.map((month, index) => {
+    const monthData = enqueryStats.find((stat) => stat._id === index + 1);
+    return {
+      month,
+      totalEnquiries: monthData ? monthData.count : 0,
+    };
+  });
+
+  return formattedStats;
+};
+
 export const AnalyticsServices = {
   getAgentDashboardStats,
   getAdminStatsFromDB,
+  getAgentEnquiryStatsFromDB,
 };

@@ -62,6 +62,16 @@ export const FILE_CONFIG = {
       "image/svg+xml",
     ]),
   },
+  agencyLogo: {
+    dir: "agencyLogo",
+    maxCount: 1,
+    mimeTypes: new Set([
+      "image/png",
+      "image/jpeg",
+      "image/webp",
+      "image/svg+xml",
+    ]),
+  },
   banner: {
     dir: "banner",
     maxCount: 5,

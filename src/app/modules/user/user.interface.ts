@@ -33,6 +33,10 @@ export type IUser = {
   firebaseUid?: string;
   deviceToken?: string;
 
+  // =================AGENCY PROFILE =================
+  agencyName?:string;
+  agencyLogo?:string;
+
   /* ================= LOCATION ================= */
   location?: {
     type: "Point";

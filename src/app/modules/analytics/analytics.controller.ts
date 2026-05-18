@@ -24,7 +24,24 @@ const getAdminStats = catchAsync(async (req, res) => {
   });
 });
 
+const getAgentEnquiryStats = catchAsync(async (req, res) => {
+  const { id: agentId } = req.user as { id: string };
+  const { year } = req.query;
+  const result = await AnalyticsServices.getAgentEnquiryStatsFromDB(
+    agentId,
+    year as string
+  );
+
+  sendResponse(res, {
+    success: true,
+    statusCode: 200,
+    message: "Agent enquiry stats retrieved successfully",
+    data: result,
+  });
+});
+
 export const AnalyticsControllers = {
   getAgentDashboardStats,
   getAdminStats,
+  getAgentEnquiryStats,
 };
