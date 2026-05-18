@@ -184,6 +184,25 @@ const deleteListingServiceByIdFromDB = async (
   return result;
 };
 
+const updateListingStatusToSoldServiceToDB = async (
+  listingId: string,
+  agentId: string,
+) => {
+  const listing = await Listing.findOne({
+    _id: listingId,
+    agentId: new Types.ObjectId(agentId),
+  });
+
+  if (!listing) {
+    throw new Error("Listing not found or unauthorized");
+  }
+
+  listing.status = LISTING_STATUS.SOLD;
+  await listing.save();
+
+  return listing;
+};
+
 const getNearbyListingsServiceFromDB = async (
   {
     lat,
@@ -558,6 +577,7 @@ export const ListingServices = {
   getMyleListingServiceByIdFromDB,
   updateListingServiceToDB,
   deleteListingServiceByIdFromDB,
+  updateListingStatusToSoldServiceToDB,
   getNearbyListingsServiceFromDB,
   getleListingServiceByIdFromDB,
   searchListingsServiceFromDB,

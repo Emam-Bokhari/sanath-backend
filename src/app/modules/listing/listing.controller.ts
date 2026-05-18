@@ -84,6 +84,23 @@ const deleteListing = catchAsync(async (req, res) => {
 
 });
 
+const updateListingStatusToSold = catchAsync(async (req, res) => {
+  const { id: agentId } = req.user as { id: string };
+  const { listingId } = req.params;
+
+  const result = await ListingServices.updateListingStatusToSoldServiceToDB(
+    listingId,
+    agentId,
+  );
+
+  sendResponse(res, {
+    success: true,
+    statusCode: 200,
+    message: "Listing status updated to SOLD successfully",
+    data: result,
+  });
+});
+
 const getNearbyListingsService = catchAsync(async (req, res) => {
   const { lat, lng, radiusInKm, ...query } = req.query;
   const result = await ListingServices.getNearbyListingsServiceFromDB(
@@ -146,6 +163,7 @@ export const ListingControllers = {
   getListingById,
   updateListing,
   deleteListing,
+  updateListingStatusToSold,
   getNearbyListingsService,
   getleListingById,
   searchListingsService,

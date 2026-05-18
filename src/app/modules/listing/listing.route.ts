@@ -76,6 +76,10 @@ router
   .delete(isAgent, ListingControllers.deleteListing);
 
 router
+  .route("/my/status-sold/:listingId")
+  .patch(isAgent, ListingControllers.updateListingStatusToSold);
+
+router
   .route("/:listingId")
   .get(isAuthenticated, ListingControllers.getleListingById);
 
