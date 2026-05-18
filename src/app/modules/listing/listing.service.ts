@@ -5,6 +5,7 @@ import { canPublishListing, generateChecklist } from "./listing.utils";
 import { LISTING_STATUS } from "./listing.constant";
 import { FilterQuery, Types } from "mongoose";
 import QueryBuilder from "../../builder/queryBuilder";
+import { Enquery } from "../enquery/enquery.model";
 
 const createListingServiceToDB = async (payload: TListing, agentId: string) => {
   // force status to DRAFT or PENDING_APPROVAL if PUBLISHED is requested by agent
@@ -59,13 +60,30 @@ const getMyListingsServiceFromDB = async (
     .fields();
 
   // execute query
-  const result = await listingQuery.modelQuery;
+  const result = await listingQuery.modelQuery.lean();
 
   // meta count
   const meta = await listingQuery.countTotal();
 
+  // add leads info for each listing
+  const resultWithLeads = await Promise.all(
+    result.map(async (listing: any) => {
+      const leads = await Enquery.find({ listingId: listing._id })
+        .populate({
+          path: "userId",
+          select: "name email profileImage",
+        })
+        .lean();
+      return {
+        ...listing,
+        leadsCount: leads.length,
+        leads: leads,
+      };
+    }),
+  );
+
   return {
-    data: result,
+    data: resultWithLeads,
     meta,
   };
 };
@@ -77,13 +95,24 @@ const getMyleListingServiceByIdFromDB = async (
   const listing = await Listing.findOne({
     _id: listingId,
     agentId: new Types.ObjectId(agentId),
-  });
+  }).lean();
 
   if (!listing) {
     throw new Error("Listing not found or unauthorized");
   }
 
-  return listing;
+  const leads = await Enquery.find({ listingId: listing._id })
+    .populate({
+      path: "userId",
+      select: "name email profileImage",
+    })
+    .lean();
+
+  return {
+    ...listing,
+    leadsCount: leads.length,
+    leads: leads,
+  };
 };
 
 const updateListingServiceToDB = async (

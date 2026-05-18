@@ -8,6 +8,7 @@ import {
   TENURE,
 } from "./listing.constant";
 import { ISoftDeleteModel } from "../../../types/softDelete";
+import { TEnquery } from "../enquery/enquery.interface";
 
 export type TListingChecklist = {
   basicInfo: boolean;
@@ -55,6 +56,9 @@ export type TListing = {
   description: string;
   status: LISTING_STATUS;
   isFeatured: boolean;
+  // leads info
+  leadsCount?: number;
+  leads?: TEnquery[];
   // listing checklist
   listingCheckList?: TListingChecklist;
   isDeleted?: boolean;

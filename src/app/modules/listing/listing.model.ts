@@ -134,6 +134,15 @@ const listingSchema = new Schema<TListing, TListingModel>(
       type: Boolean,
       default: false,
     },
+    leadsCount: {
+      type: Number,
+      default: 0,
+    },
+    leads: {
+      type: [Schema.Types.ObjectId],
+      ref: "Enquery",
+      default: [],
+    },
     listingCheckList: {
       basicInfo: {
         type: Boolean,
