@@ -135,6 +135,18 @@ const planSchema = new Schema<IPlan, TPlanModel>(
       type: planTrialSchema,
     },
 
+    paymentLink: {
+      type: String,
+    },
+
+    productId: {
+      type: String,
+    },
+
+    priceId: {
+      type: String,
+    },
+
     sortOrder: {
       type: Number,
       default: 0,

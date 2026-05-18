@@ -2,8 +2,8 @@ import { StatusCodes } from "http-status-codes";
 import Stripe from "stripe";
 import ApiError from "../errors/ApiErrors";
 import stripe from "../config/stripe";
-const User: any = "";
-const Subscription: any = "";
+import { User } from "../app/modules/user/user.model";
+import { Subscription } from "../app/modules/subscription/subscription.model";
 
 export const handleSubscriptionDeleted = async (data: Stripe.Subscription) => {
   // Retrieve the subscription from Stripe
@@ -11,15 +11,14 @@ export const handleSubscriptionDeleted = async (data: Stripe.Subscription) => {
 
   // Find the current active subscription
   const userSubscription = await Subscription.findOne({
-    customerId: subscription.customer,
-    status: "active",
+    subscriptionId: subscription.id,
   });
 
   if (userSubscription) {
     // Deactivate the subscription
     await Subscription.findByIdAndUpdate(
       userSubscription._id,
-      { status: "deactivated" },
+      { status: "canceled" },
       { new: true },
     );
 
@@ -29,13 +28,13 @@ export const handleSubscriptionDeleted = async (data: Stripe.Subscription) => {
     if (existingUser) {
       await User.findByIdAndUpdate(
         existingUser._id,
-        { hasAccess: false },
+        { hasAccess: false, isSubscribed: false },
         { new: true },
       );
     } else {
-      throw new ApiError(StatusCodes.NOT_FOUND, `User not found.`);
+      console.error(`User not found for subscription ${subscription.id}`);
     }
   } else {
-    throw new ApiError(StatusCodes.NOT_FOUND, `Subscription not found.`);
+    console.error(`Subscription record not found for ${subscription.id}`);
   }
 };

@@ -44,6 +44,14 @@ export type IUser = {
     address: string;
   };
 
+  // ================= SUBSCRIPTION =================
+  isSubscribed?: boolean;
+  plan?: string; // Plan ID
+  subscriptionId?: string;
+  customerId?: string;
+  trialEndsAt?: Date;
+  hasAccess?: boolean;
+
   /* ================= AUTH ================= */
   authentication?: {
     isResetPassword?: boolean;

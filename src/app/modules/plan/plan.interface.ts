@@ -43,7 +43,9 @@ export interface IPlan {
     limits: IPlanLimits;
     features: IPlanFeatures;
     sortOrder?: number;
-
+    paymentLink?: string;
+    productId?: string;
+    priceId?: string;
     trial?: IPlanTrial;
     isDeleted?: boolean;
 }

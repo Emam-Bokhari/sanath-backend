@@ -143,6 +143,29 @@ const userSchema = new Schema<IUser, IUserModel>(
 
 
 
+    // ================= SUBSCRIPTION =================
+    isSubscribed: {
+      type: Boolean,
+      default: false,
+    },
+    plan: {
+      type: Schema.Types.ObjectId,
+      ref: "Plan",
+    },
+    subscriptionId: {
+      type: String,
+    },
+    customerId: {
+      type: String,
+    },
+    trialEndsAt: {
+      type: Date,
+    },
+    hasAccess: {
+      type: Boolean,
+      default: false,
+    },
+
     /* ================= AUTH ================= */
     authentication: {
       type: {

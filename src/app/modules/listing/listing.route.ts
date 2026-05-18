@@ -6,6 +6,7 @@ import express from "express";
 import { ListingControllers } from "./listing.controller";
 import fileUploadHandler from "../../middlewares/fileUploaderHandler";
 import { parseFileData } from "../../middlewares/parseFileData";
+import optionalAuth from "../../middlewares/optionalAuth";
 
 const router = express.Router();
 
@@ -39,11 +40,11 @@ router.route("/").post(
 
 router
   .route("/nearby")
-  .get(isAuthenticated, ListingControllers.getNearbyListingsService);
+  .get(optionalAuth(), ListingControllers.getNearbyListingsService);
 
 router
   .route("/search")
-  .get(isAuthenticated, ListingControllers.searchListingsService);
+  .get(optionalAuth(), ListingControllers.searchListingsService);
 
 router.route("/my").get(isAgent, ListingControllers.getMyListingsService);
 
@@ -81,6 +82,6 @@ router
 
 router
   .route("/:listingId")
-  .get(isAuthenticated, ListingControllers.getleListingById);
+  .get(optionalAuth(), ListingControllers.getListingById);
 
 export const ListingRoutes = router;
