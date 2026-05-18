@@ -1,5 +1,6 @@
 import { Model } from "mongoose";
-import { PLAN_STATUS, PLAN_TIER, PLATFORM_PLAN_DURATION } from "./package.constant";
+import { PLAN_STATUS, PLAN_TIER, PLATFORM_PLAN_DURATION } from "./plan.constant";
+import { ISoftDeleteModel } from "../../../types/softDelete";
 
 
 
@@ -48,4 +49,4 @@ export interface IPlan {
     isDeleted?: boolean;
 }
 
-export type PlanModel = Model<IPlan, Record<string, unknown>>;
+export type TPackageModel = ISoftDeleteModel<IPlan>;
