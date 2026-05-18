@@ -20,7 +20,7 @@ const stripeWebhook = async (req: Request, res: Response) => {
     return res.status(400).send(`Webhook Error: ${err.message}`);
   }
 
-  // Handle the event
+  // handle the event
   try {
     switch (event.type) {
       case "customer.subscription.created":
@@ -45,7 +45,7 @@ const stripeWebhook = async (req: Request, res: Response) => {
     }
   } catch (error: any) {
     console.error(`Error handling event ${event.type}:`, error.message);
-    // We still return 200 to Stripe to avoid retries if we've logged the error
+    // we still return 200 to Stripe to avoid retries if we've logged the error
   }
 
   res.json({ received: true });

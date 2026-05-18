@@ -16,6 +16,7 @@ import { EnqueryRoutes } from "../modules/enquery/enquery.route";
 import { SavedSearchRoutes } from "../modules/savedSearch/savedSearch.route";
 import { AnalyticsRoutes } from "../modules/analytics/analytics.route";
 import { PlanRoutes } from "../modules/plan/plan.route";
+import { SubscriptionRoutes } from "../modules/subscription/subscription.route";
 
 const router = express.Router();
 
@@ -87,6 +88,10 @@ const apiRoutes = [
   {
     path: "/plans",
     route: PlanRoutes,
+  },
+  {
+    path: "/subscriptions",
+    route: SubscriptionRoutes,
   },
 ];
 
