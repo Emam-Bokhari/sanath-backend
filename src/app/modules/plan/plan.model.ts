@@ -15,9 +15,6 @@ const planLimitsSchema = new Schema(
       required: true,
       default: -1,
     },
-    loginLimit: {
-      type: Number,
-    },
   },
   { _id: false }
 );

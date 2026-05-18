@@ -9,7 +9,7 @@ import { IUser } from "../user.interface";
 const getUserProfileFromDB = async (user: JwtPayload): Promise<any> => {
   const { id } = user;
 
-  const result: any = await User.isExistUserById(id);
+  const result: any = await User.findById(id).populate("plan");
   if (!result) {
     throw new ApiError(StatusCodes.BAD_REQUEST, "User doesn't exist!");
   }

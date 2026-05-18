@@ -165,6 +165,14 @@ const userSchema = new Schema<IUser, IUserModel>(
       type: Boolean,
       default: false,
     },
+    isAgentVerified: {
+      type: Boolean,
+      default: false,
+    },
+    maxListings: {
+      type: Number,
+      default: 0,
+    },
 
     /* ================= AUTH ================= */
     authentication: {

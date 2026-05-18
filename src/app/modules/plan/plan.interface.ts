@@ -5,7 +5,6 @@ import { ISoftDeleteModel } from "../../../types/softDelete";
 
 export interface IPlanLimits {
     maxListings: number;   // -1 = unlimited
-    loginLimit?: number;
 }
 
 export interface IPlanFeatures {

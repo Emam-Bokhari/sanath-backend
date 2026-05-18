@@ -51,6 +51,9 @@ export type IUser = {
   customerId?: string;
   trialEndsAt?: Date;
   hasAccess?: boolean;
+  isAgentVerified?: boolean;
+  maxListings?: number;
+  
 
   /* ================= AUTH ================= */
   authentication?: {

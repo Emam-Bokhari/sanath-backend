@@ -316,7 +316,7 @@ const resendVerificationEmailToDB = async (email: string) => {
     );
   }
 
-  if (existingUser?.isVerified) {
+  if (existingUser?.verified) {
     throw new ApiError(StatusCodes.BAD_REQUEST, "User is already verified!");
   }
 

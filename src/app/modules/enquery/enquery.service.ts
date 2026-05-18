@@ -149,6 +149,16 @@ const getAllEnqueriesFromDB = async (
   agentId: string,
   query: Record<string, unknown>,
 ) => {
+  const user = await User.findById(agentId).populate("plan");
+  const plan = user?.plan as any;
+
+  if (!plan?.features?.leadAccess) {
+    throw new ApiError(
+      StatusCodes.FORBIDDEN,
+      "Your current plan does not support lead access"
+    );
+  }
+
   const listings = await Listing.find({
     agentId: new Types.ObjectId(agentId),
     isDeleted: { $ne: true },
@@ -183,6 +193,16 @@ const getAllEnqueriesFromDB = async (
 };
 
 const getEnqueryByIdFromDB = async (agentId: string, enqueryId: string) => {
+  const user = await User.findById(agentId).populate("plan");
+  const plan = user?.plan as any;
+
+  if (!plan?.features?.leadAccess) {
+    throw new ApiError(
+      StatusCodes.FORBIDDEN,
+      "Your current plan does not support lead access"
+    );
+  }
+
   const enquery = await Enquery.findById(enqueryId)
     .populate("listingId userId")
     .lean();

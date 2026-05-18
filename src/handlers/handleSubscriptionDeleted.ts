@@ -28,7 +28,12 @@ export const handleSubscriptionDeleted = async (data: Stripe.Subscription) => {
     if (existingUser) {
       await User.findByIdAndUpdate(
         existingUser._id,
-        { hasAccess: false, isSubscribed: false },
+        {
+          hasAccess: false,
+          isSubscribed: false,
+          isAgentVerified: false,
+          maxListings: 0,
+        },
         { new: true },
       );
     } else {

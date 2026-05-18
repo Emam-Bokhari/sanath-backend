@@ -14,7 +14,6 @@ const createPlanValidationSchema = z.object({
     }),
     limits: z.object({
       maxListings: z.number({ required_error: "Max listings is required" }),
-      loginLimit: z.number().optional(),
     }),
     features: z.object({
       leadAccess: z.boolean().default(false),
@@ -47,7 +46,6 @@ const updatePlanValidationSchema = z.object({
     }).optional(),
     limits: z.object({
       maxListings: z.number().optional(),
-      loginLimit: z.number().optional(),
     }).optional(),
     features: z.object({
       leadAccess: z.boolean().optional(),

@@ -7,11 +7,13 @@ import { ListingControllers } from "./listing.controller";
 import fileUploadHandler from "../../middlewares/fileUploaderHandler";
 import { parseFileData } from "../../middlewares/parseFileData";
 import optionalAuth from "../../middlewares/optionalAuth";
+import checkSubscription from "../../middlewares/checkSubscription";
 
 const router = express.Router();
 
 router.route("/").post(
   isAgent,
+  checkSubscription(),
   fileUploadHandler(),
   parseFileData(
     {
@@ -53,6 +55,7 @@ router
   .get(isAgent, ListingControllers.getListingById)
   .patch(
     isAgent,
+    checkSubscription(),
     fileUploadHandler(),
     parseFileData(
       {

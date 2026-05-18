@@ -4,7 +4,6 @@ import stripe from "../../../config/stripe";
 import { User } from "../user/user.model";
 import { Plan } from "../plan/plan.model";
 import { Subscription } from "./subscription.model";
-import config from "../../../config";
 
 const createCheckoutSession = async (userId: string, planId: string) => {
   const user = await User.findById(userId);
@@ -81,7 +80,9 @@ const getMySubscription = async (userId: string) => {
   const result = await Subscription.findOne({
     userId,
     status: { $in: ["active", "trialing"] },
-  }).populate("planId");
+  })
+    .populate("planId")
+    .sort({ createdAt: -1 });
   return result;
 };
 

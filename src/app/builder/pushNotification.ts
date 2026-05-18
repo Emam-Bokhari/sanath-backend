@@ -41,7 +41,7 @@ class NotificationHelper {
       // 1. Filter Users: Only get users who exist, are verified, and have notifications ON
       const validUsers = await User.find({
         _id: { $in: userIds },
-        // isVerified: true,
+        // isAgentVerified: true,
         // notificationStatus: true,
       })
         .select("_id")

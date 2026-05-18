@@ -61,9 +61,12 @@ export const handleSubscriptionUpdated = async (data: Stripe.Subscription) => {
             });
 
             // Update user
+            const hasAccess = status === 'active' || status === 'trialing';
             await User.findByIdAndUpdate(existingUser._id, {
                 plan: pricingPlan._id,
-                hasAccess: status === 'active' || status === 'trialing',
+                hasAccess,
+                isAgentVerified: hasAccess ? !!pricingPlan.features?.verifiedBadge : false,
+                maxListings: hasAccess ? (pricingPlan.limits?.maxListings || 0) : 0,
             });
         } else {
             // Create if not exists and it's active
@@ -92,6 +95,8 @@ export const handleSubscriptionUpdated = async (data: Stripe.Subscription) => {
                 plan: pricingPlan._id,
                 subscriptionId: subscription.id,
                 customerId: customer.id,
+                isAgentVerified: !!pricingPlan.features?.verifiedBadge,
+                maxListings: pricingPlan.limits?.maxListings || 0,
             });
         }
       } else {

@@ -1,3 +1,6 @@
+import { StatusCodes } from "http-status-codes";
+import ApiError from "../../../errors/ApiErrors";
+import { User } from "../user/user.model";
 import { TListing, TSearchParams } from "./listing.interface";
 import { Listing } from "./listing.model";
 import { SavedSearch } from "../savedSearch/savedSearch.model";
@@ -8,11 +11,48 @@ import QueryBuilder from "../../builder/queryBuilder";
 import { Enquery } from "../enquery/enquery.model";
 
 const createListingServiceToDB = async (payload: TListing, agentId: string) => {
+  // Check subscription and limits
+  const user = await User.findById(agentId).populate("plan");
+  if (!user) {
+    throw new ApiError(StatusCodes.NOT_FOUND, "User not found");
+  }
+
+  if (!user.isSubscribed || !user.hasAccess || !user.plan) {
+    throw new ApiError(
+      StatusCodes.PAYMENT_REQUIRED,
+      "You need an active subscription to create listings"
+    );
+  }
+
+  const plan = user.plan as any;
+  const maxListings = plan.limits?.maxListings || 0;
+
+  if (maxListings !== -1) {
+    const currentListingsCount = await Listing.countDocuments({
+      agentId,
+      isDeleted: false,
+    });
+    if (currentListingsCount >= maxListings) {
+      throw new ApiError(
+        StatusCodes.FORBIDDEN,
+        `You have reached the maximum listing limit for your ${plan.title} plan (${maxListings} listings).`
+      );
+    }
+  }
+
   // force status to DRAFT or PENDING_APPROVAL if PUBLISHED is requested by agent
   let initialStatus = payload.status || LISTING_STATUS.DRAFT;
 
   if (initialStatus === LISTING_STATUS.PUBLISHED) {
     initialStatus = LISTING_STATUS.PENDING_APPROVAL;
+  }
+
+  // Check for featured listing permission
+  if (payload.isFeatured && !plan?.features?.featuredListing) {
+    throw new ApiError(
+      StatusCodes.FORBIDDEN,
+      "Your current plan does not support featured listings"
+    );
   }
 
   // always create listing first (safe default)
@@ -66,18 +106,32 @@ const getMyListingsServiceFromDB = async (
   const meta = await listingQuery.countTotal();
 
   // add leads info for each listing
+  const user = await User.findById(agentId).populate("plan");
+  const plan = user?.plan as any;
+  const hasLeadAccess = plan?.features?.leadAccess;
+
   const resultWithLeads = await Promise.all(
     result.map(async (listing: any) => {
-      const leads = await Enquery.find({ listingId: listing._id })
-        .populate({
-          path: "userId",
-          select: "name email profileImage",
-        })
-        .lean();
+      let leads: any[] = [];
+      let leadsCount = 0;
+
+      if (hasLeadAccess) {
+        leads = await Enquery.find({ listingId: listing._id })
+          .populate({
+            path: "userId",
+            select: "name email profileImage",
+          })
+          .lean();
+        leadsCount = leads.length;
+      } else {
+        // If no lead access, we can still show the count if we want, or just 0
+        leadsCount = await Enquery.countDocuments({ listingId: listing._id });
+      }
+
       return {
         ...listing,
-        leadsCount: leads.length,
-        leads: leads,
+        leadsCount,
+        leads: hasLeadAccess ? leads : [],
       };
     }),
   );
@@ -101,17 +155,29 @@ const getMyleListingServiceByIdFromDB = async (
     throw new Error("Listing not found or unauthorized");
   }
 
-  const leads = await Enquery.find({ listingId: listing._id })
-    .populate({
-      path: "userId",
-      select: "name email profileImage",
-    })
-    .lean();
+  const user = await User.findById(agentId).populate("plan");
+  const plan = user?.plan as any;
+  const hasLeadAccess = plan?.features?.leadAccess;
+
+  let leads: any[] = [];
+  let leadsCount = 0;
+
+  if (hasLeadAccess) {
+    leads = await Enquery.find({ listingId: listing._id })
+      .populate({
+        path: "userId",
+        select: "name email profileImage",
+      })
+      .lean();
+    leadsCount = leads.length;
+  } else {
+    leadsCount = await Enquery.countDocuments({ listingId: listing._id });
+  }
 
   return {
     ...listing,
-    leadsCount: leads.length,
-    leads: leads,
+    leadsCount,
+    leads: hasLeadAccess ? leads : [],
   };
 };
 
@@ -131,6 +197,18 @@ const updateListingServiceToDB = async (
 
   if (payload.status === LISTING_STATUS.PUBLISHED) {
     payload.status = LISTING_STATUS.PENDING_APPROVAL;
+  }
+
+  // Check for featured listing permission
+  if (payload.isFeatured) {
+    const user = await User.findById(agentId).populate("plan");
+    const plan = user?.plan as any;
+    if (!plan?.features?.featuredListing) {
+      throw new ApiError(
+        StatusCodes.FORBIDDEN,
+        "Your current plan does not support featured listings"
+      );
+    }
   }
 
   Object.assign(existingListing, payload);
@@ -248,7 +326,23 @@ const getNearbyListingsServiceFromDB = async (
     .paginate()
     .fields();
 
-  const result = await listingQuery.modelQuery.populate("agentId");
+  const result = await listingQuery.modelQuery.populate({
+    path: "agentId",
+    populate: {
+      path: "plan",
+    },
+  });
+
+  // Add feature flags to agent data
+  result.forEach((listing: any) => {
+    if (listing.agentId && listing.agentId.plan) {
+      const agent = listing.agentId;
+      const agentPlan = agent.plan;
+      agent.isAgentVerified = !!agentPlan.features?.verifiedBadge;
+      agent.hasProfilePage = !!agentPlan.features?.agentProfilePage;
+    }
+  });
+
   const meta = await listingQuery.countTotal();
 
   return {
@@ -268,10 +362,24 @@ const getleListingServiceByIdFromDB = async (
   const listing = await Listing.findOne({
     _id: listingId,
     isDeleted: { $ne: true },
-  }).populate("agentId");
+  }).populate({
+    path: "agentId",
+    populate: {
+      path: "plan",
+    },
+  });
 
   if (!listing) {
     throw new Error("Listing not found");
+  }
+
+  // Add feature flags to agent data
+  if (listing.agentId && (listing.agentId as any).plan) {
+    const agent = listing.agentId as any;
+    const agentPlan = agent.plan;
+    
+    agent.isAgentVerified = !!agentPlan.features?.verifiedBadge;
+    agent.hasProfilePage = !!agentPlan.features?.agentProfilePage;
   }
 
   if (userId) {
@@ -504,6 +612,26 @@ const searchListingsServiceFromDB = async (
           preserveNullAndEmptyArrays: true,
         },
       },
+      {
+        $lookup: {
+          from: "plans",
+          localField: "agentId.plan",
+          foreignField: "_id",
+          as: "agentId.plan",
+        },
+      },
+      {
+        $unwind: {
+          path: "$agentId.plan",
+          preserveNullAndEmptyArrays: true,
+        },
+      },
+      {
+        $addFields: {
+          "agentId.isAgentVerified": { $ifNull: ["$agentId.plan.features.verifiedBadge", false] },
+          "agentId.hasProfilePage": { $ifNull: ["$agentId.plan.features.agentProfilePage", false] }
+        }
+      }
     ];
 
     /* ================= SORT INSIDE GEO ================= */
@@ -563,8 +691,23 @@ const searchListingsServiceFromDB = async (
   /* ================= EXECUTE ================= */
   const listings = await Listing.find(query)
     .sort(sortQuery)
-    .populate("agentId")
+    .populate({
+      path: "agentId",
+      populate: {
+        path: "plan",
+      },
+    })
     .lean();
+
+  // Add feature flags to agent data
+  listings.forEach((listing: any) => {
+    if (listing.agentId && listing.agentId.plan) {
+      const agent = listing.agentId;
+      const agentPlan = agent.plan;
+      agent.isAgentVerified = !!agentPlan.features?.verifiedBadge;
+      agent.hasProfilePage = !!agentPlan.features?.agentProfilePage;
+    }
+  });
 
   return listings;
 };
