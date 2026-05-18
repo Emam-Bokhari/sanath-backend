@@ -55,7 +55,7 @@ export const createSubscriptionProduct = async (payload: {
       priceId: price.id,
     };
   } catch (error: any) {
-    console.error("Stripe Product Creation Error:", error);
-    return null;
+    console.error("Stripe Product/Price Creation Error:", error);
+    throw error; // Re-throw the error so the service can catch it or let it propagate
   }
 };

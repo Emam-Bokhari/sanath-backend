@@ -17,12 +17,8 @@ const createPlanToDB = async (payload: IPlan): Promise<IPlan | null> => {
 
   const stripeData = await createSubscriptionProduct(productPayload);
 
-  if (!stripeData) {
-    throw new ApiError(
-      StatusCodes.BAD_REQUEST,
-      "Failed to create subscription product in Stripe"
-    );
-  }
+  // If stripeData creation fails, createSubscriptionProduct will throw an error,
+  // preventing the execution from reaching this point and ensuring no Plan is created in DB.
 
   payload.productId = stripeData.productId;
   payload.priceId = stripeData.priceId;

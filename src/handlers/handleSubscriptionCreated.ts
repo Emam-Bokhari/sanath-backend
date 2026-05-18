@@ -16,10 +16,14 @@ export const handleSubscriptionCreated = async (data: Stripe.Subscription) => {
     const priceId = subscription.items.data[0]?.price?.id;
 
     // Retrieve the invoice to get the transaction ID and amount paid
-    const invoice = await stripe.invoices.retrieve(subscription.latest_invoice as string);
+    let trxId: string | undefined;
+    let amountPaid = 0;
 
-    const trxId = typeof invoice?.payment_intent === 'string' ? invoice.payment_intent : undefined;
-    const amountPaid = invoice?.total ? invoice.total / 100 : 0;
+    if (subscription.latest_invoice) {
+        const invoice = await stripe.invoices.retrieve(subscription.latest_invoice as string);
+        trxId = typeof invoice?.payment_intent === 'string' ? invoice.payment_intent : undefined;
+        amountPaid = invoice?.total ? invoice.total / 100 : 0;
+    }
 
     if (customer?.email) {
         
@@ -43,9 +47,10 @@ export const handleSubscriptionCreated = async (data: Stripe.Subscription) => {
                     await Subscription.findByIdAndUpdate(currentActiveSubscription._id, { status: 'deactivated' });
                 }
     
-                let status = subscription.status;
-                if (status === 'past_due' || status === 'unpaid' || status === 'incomplete' || status === 'incomplete_expired') {
-                    status = 'canceled' as any;
+                const status = subscription.status;
+                if (status !== 'active' && status !== 'trialing') {
+                    console.log(`Subscription ${subscription.id} is not active (status: ${status}). Skipping database creation.`);
+                    return;
                 }
 
                 // Create a new subscription record
