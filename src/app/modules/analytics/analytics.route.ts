@@ -29,6 +29,18 @@ router.get(
 );
 
 router.get(
+  "/user-monthly-stats",
+  isAdmin,
+  AnalyticsControllers.getMonthlyUserStats
+);
+
+router.get(
+  "/agent-monthly-stats",
+  isAdmin,
+  AnalyticsControllers.getMonthlyAgentStats
+);
+
+router.get(
   "/overview-stats",
   isAdmin,
   AnalyticsControllers.getOverviewStats

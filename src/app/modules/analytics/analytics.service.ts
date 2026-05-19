@@ -263,6 +263,104 @@ const getMonthlyRevenueStatsFromDB = async (year?: string) => {
   return formattedStats;
 };
 
+const getMonthlyUserStatsFromDB = async (year?: string) => {
+  const targetYear = year ? parseInt(year) : new Date().getFullYear();
+  const startOfYear = new Date(targetYear, 0, 1);
+  const endOfYear = new Date(targetYear, 11, 31, 23, 59, 59, 999);
+
+  const userStats = await User.aggregate([
+    {
+      $match: {
+        role: USER_ROLES.USER,
+        isDeleted: { $ne: true },
+        verified: true,
+        createdAt: { $gte: startOfYear, $lte: endOfYear },
+      },
+    },
+    {
+      $group: {
+        _id: { $month: "$createdAt" },
+        count: { $sum: 1 },
+      },
+    },
+    {
+      $sort: { _id: 1 },
+    },
+  ]);
+
+  const monthNames = [
+    "Jan",
+    "Feb",
+    "Mar",
+    "Apr",
+    "May",
+    "Jun",
+    "Jul",
+    "Aug",
+    "Sep",
+    "Oct",
+    "Nov",
+    "Dec",
+  ];
+
+  return monthNames.map((month, index) => {
+    const monthData = userStats.find((stat) => stat._id === index + 1);
+    return {
+      month,
+      totalUsers: monthData ? monthData.count : 0,
+    };
+  });
+};
+
+const getMonthlyAgentStatsFromDB = async (year?: string) => {
+  const targetYear = year ? parseInt(year) : new Date().getFullYear();
+  const startOfYear = new Date(targetYear, 0, 1);
+  const endOfYear = new Date(targetYear, 11, 31, 23, 59, 59, 999);
+
+  const agentStats = await User.aggregate([
+    {
+      $match: {
+        role: USER_ROLES.AGENT,
+        isDeleted: { $ne: true },
+        verified: true,
+        createdAt: { $gte: startOfYear, $lte: endOfYear },
+      },
+    },
+    {
+      $group: {
+        _id: { $month: "$createdAt" },
+        count: { $sum: 1 },
+      },
+    },
+    {
+      $sort: { _id: 1 },
+    },
+  ]);
+
+  const monthNames = [
+    "Jan",
+    "Feb",
+    "Mar",
+    "Apr",
+    "May",
+    "Jun",
+    "Jul",
+    "Aug",
+    "Sep",
+    "Oct",
+    "Nov",
+    "Dec",
+  ];
+
+  return monthNames.map((month, index) => {
+    const monthData = agentStats.find((stat) => stat._id === index + 1);
+    return {
+      month,
+      totalAgents: monthData ? monthData.count : 0,
+    };
+  });
+};
+
 const getOverviewStatsFromDB = async () => {
   const [totalUsers, totalAgents, totalRevenueData] = await Promise.all([
     User.countDocuments({
@@ -299,5 +397,7 @@ export const AnalyticsServices = {
   getUserManagementStatsFromDB,
   getRevenueStatsFromDB,
   getMonthlyRevenueStatsFromDB,
+  getMonthlyUserStatsFromDB,
+  getMonthlyAgentStatsFromDB,
   getOverviewStatsFromDB,
 };

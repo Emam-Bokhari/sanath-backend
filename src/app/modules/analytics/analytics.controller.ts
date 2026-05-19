@@ -75,6 +75,30 @@ const getMonthlyRevenueStats = catchAsync(async (req, res) => {
   });
 });
 
+const getMonthlyUserStats = catchAsync(async (req, res) => {
+  const { year } = req.query;
+  const result = await AnalyticsServices.getMonthlyUserStatsFromDB(year as string);
+
+  sendResponse(res, {
+    success: true,
+    statusCode: 200,
+    message: "Monthly user stats retrieved successfully",
+    data: result,
+  });
+});
+
+const getMonthlyAgentStats = catchAsync(async (req, res) => {
+  const { year } = req.query;
+  const result = await AnalyticsServices.getMonthlyAgentStatsFromDB(year as string);
+
+  sendResponse(res, {
+    success: true,
+    statusCode: 200,
+    message: "Monthly agent stats retrieved successfully",
+    data: result,
+  });
+});
+
 const getOverviewStats = catchAsync(async (req, res) => {
   const result = await AnalyticsServices.getOverviewStatsFromDB();
 
@@ -93,5 +117,7 @@ export const AnalyticsControllers = {
   getUserManagementStats,
   getRevenueStats,
   getMonthlyRevenueStats,
+  getMonthlyUserStats,
+  getMonthlyAgentStats,
   getOverviewStats,
 };
