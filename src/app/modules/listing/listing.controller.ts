@@ -103,6 +103,7 @@ const updateListingStatusToSold = catchAsync(async (req, res) => {
 
 const getNearbyListingsService = catchAsync(async (req, res) => {
   const { lat, lng, radiusInKm, ...query } = req.query;
+  const user = req.user as { id: string } | undefined;
   const result = await ListingServices.getNearbyListingsServiceFromDB(
     {
       lat: lat ? Number(lat) : undefined,
@@ -110,6 +111,7 @@ const getNearbyListingsService = catchAsync(async (req, res) => {
       radiusInKm: radiusInKm ? Number(radiusInKm) : undefined,
     },
     query,
+    user?.id,
   );
 
   sendResponse(res, {
@@ -119,7 +121,6 @@ const getNearbyListingsService = catchAsync(async (req, res) => {
     data: result.data,
     meta: result.meta,
   });
-
 });
 
 const getMyListingById = catchAsync(async (req, res) => {

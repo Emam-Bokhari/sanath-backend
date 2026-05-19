@@ -9,6 +9,7 @@ import { LISTING_STATUS } from "./listing.constant";
 import { FilterQuery, Types } from "mongoose";
 import QueryBuilder from "../../builder/queryBuilder";
 import { Enquery } from "../enquery/enquery.model";
+import { FavoriteProperty } from "../favoriteProperty/favoriteProperty.model";
 
 const createListingServiceToDB = async (payload: TListing, agentId: string) => {
   // Check subscription and limits
@@ -110,6 +111,12 @@ const getMyListingsServiceFromDB = async (
   const plan = user?.plan as any;
   const hasLeadAccess = plan?.features?.leadAccess;
 
+  let favoriteListingIds: string[] = [];
+  const favorites = await FavoriteProperty.find({ userId: agentId }).select(
+    "listingId",
+  );
+  favoriteListingIds = favorites.map((f) => f.listingId.toString());
+
   const resultWithLeads = await Promise.all(
     result.map(async (listing: any) => {
       let leads: any[] = [];
@@ -132,6 +139,7 @@ const getMyListingsServiceFromDB = async (
         ...listing,
         leadsCount,
         leads: hasLeadAccess ? leads : [],
+        isFavorite: favoriteListingIds.includes(listing._id.toString()),
       };
     }),
   );
@@ -174,10 +182,16 @@ const getAgentListingByIdFromDB = async (
     leadsCount = await Enquery.countDocuments({ listingId: listing._id });
   }
 
+  const isFavorite = await FavoriteProperty.exists({
+    userId: agentId,
+    listingId,
+  });
+
   return {
     ...listing,
     leadsCount,
     leads: hasLeadAccess ? leads : [],
+    isFavorite: !!isFavorite,
   };
 };
 
@@ -292,6 +306,7 @@ const getNearbyListingsServiceFromDB = async (
     radiusInKm?: number;
   },
   query: Record<string, unknown>,
+  userId?: string,
 ) => {
   let baseQuery;
 
@@ -326,20 +341,34 @@ const getNearbyListingsServiceFromDB = async (
     .paginate()
     .fields();
 
-  const result = await listingQuery.modelQuery.populate({
-    path: "agentId",
-    populate: {
-      path: "plan",
-    },
-  });
+  const result = await listingQuery.modelQuery
+    .populate({
+      path: "agentId",
+      populate: {
+        path: "plan",
+      },
+    })
+    .lean();
 
-  // Add feature flags to agent data
+  let favoriteListingIds: string[] = [];
+  if (userId) {
+    const favorites = await FavoriteProperty.find({ userId }).select("listingId");
+    favoriteListingIds = favorites.map((f) => f.listingId.toString());
+  }
+
+  // Add feature flags to agent data and isFavorite flag
   result.forEach((listing: any) => {
     if (listing.agentId && listing.agentId.plan) {
       const agent = listing.agentId;
       const agentPlan = agent.plan;
       agent.isAgentVerified = !!agentPlan.features?.verifiedBadge;
       agent.hasProfilePage = !!agentPlan.features?.agentProfilePage;
+    }
+
+    if (userId) {
+      listing.isFavorite = favoriteListingIds.includes(listing._id.toString());
+    } else {
+      listing.isFavorite = false;
     }
   });
 
@@ -362,12 +391,14 @@ const getSingleListingByIdFromDB = async (
   const listing = await Listing.findOne({
     _id: listingId,
     isDeleted: { $ne: true },
-  }).populate({
-    path: "agentId",
-    populate: {
-      path: "plan",
-    },
-  });
+  })
+    .populate({
+      path: "agentId",
+      populate: {
+        path: "plan",
+      },
+    })
+    .lean();
 
   if (!listing) {
     throw new Error("Listing not found");
@@ -377,29 +408,38 @@ const getSingleListingByIdFromDB = async (
   if (listing.agentId && (listing.agentId as any).plan) {
     const agent = listing.agentId as any;
     const agentPlan = agent.plan;
-    
+
     agent.isAgentVerified = !!agentPlan.features?.verifiedBadge;
     agent.hasProfilePage = !!agentPlan.features?.agentProfilePage;
   }
 
+  let isFavorite = false;
   if (userId) {
+    const favorite = await FavoriteProperty.exists({
+      userId,
+      listingId,
+    });
+    isFavorite = !!favorite;
+
     const agentId = (listing.agentId as any)?._id || listing.agentId;
     const isOwner = agentId.toString() === userId;
-    const hasViewed = listing.viewedBy?.some((id) => id.toString() === userId);
-    console.log(hasViewed);
+    const hasViewed = (listing.viewedBy as any)?.some(
+      (id: any) => id.toString() === userId,
+    );
 
     if (!isOwner && !hasViewed) {
       await Listing.findByIdAndUpdate(listingId, {
         $inc: { views: 1 },
         $push: { viewedBy: new Types.ObjectId(userId) },
       });
-      listing.views = (listing.views || 0) + 1;
+      (listing as any).views = (listing.views || 0) + 1;
     }
   }
 
-  console.log(listing);
-
-  return listing;
+  return {
+    ...listing,
+    isFavorite,
+  };
 };
 
 const searchListingsServiceFromDB = async (
@@ -634,6 +674,46 @@ const searchListingsServiceFromDB = async (
       }
     ];
 
+    if (userId) {
+      pipeline.push(
+        {
+          $lookup: {
+            from: "favoriteproperties",
+            let: { listingId: "$_id" },
+            pipeline: [
+              {
+                $match: {
+                  $expr: {
+                    $and: [
+                      { $eq: ["$userId", new Types.ObjectId(userId)] },
+                      { $eq: ["$listingId", "$$listingId"] },
+                    ],
+                  },
+                },
+              },
+            ],
+            as: "favorites",
+          },
+        },
+        {
+          $addFields: {
+            isFavorite: { $gt: [{ $size: "$favorites" }, 0] },
+          },
+        },
+        {
+          $project: {
+            favorites: 0,
+          },
+        },
+      );
+    } else {
+      pipeline.push({
+        $addFields: {
+          isFavorite: false,
+        },
+      });
+    }
+
     /* ================= SORT INSIDE GEO ================= */
     if (sort && sort !== "nearest") {
       let sortQuery: any = {};
@@ -699,13 +779,25 @@ const searchListingsServiceFromDB = async (
     })
     .lean();
 
-  // Add feature flags to agent data
+  let favoriteListingIds: string[] = [];
+  if (userId) {
+    const favorites = await FavoriteProperty.find({ userId }).select("listingId");
+    favoriteListingIds = favorites.map((f) => f.listingId.toString());
+  }
+
+  // Add feature flags to agent data and isFavorite flag
   listings.forEach((listing: any) => {
     if (listing.agentId && listing.agentId.plan) {
       const agent = listing.agentId;
       const agentPlan = agent.plan;
       agent.isAgentVerified = !!agentPlan.features?.verifiedBadge;
       agent.hasProfilePage = !!agentPlan.features?.agentProfilePage;
+    }
+
+    if (userId) {
+      listing.isFavorite = favoriteListingIds.includes(listing._id.toString());
+    } else {
+      listing.isFavorite = false;
     }
   });
 
