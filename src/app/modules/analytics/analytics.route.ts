@@ -14,4 +14,10 @@ router.get(
 
 router.get("/stats", isAdmin, AnalyticsControllers.getAdminStats);
 
+router.get(
+  "/user-management-stats",
+  isAdmin,
+  AnalyticsControllers.getUserManagementStats
+);
+
 export const AnalyticsRoutes = router;

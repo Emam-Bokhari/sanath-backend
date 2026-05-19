@@ -5,6 +5,7 @@ import { Types } from "mongoose";
 import { User } from "../user/user.model";
 import { STATUS, USER_ROLES } from "../../../enums/user";
 import { Enquery } from "../enquery/enquery.model";
+import { Subscription } from "../subscription/subscription.model";
 
 const getAgentDashboardStats = async (agentId: string) => {
   const agentObjectId = new Types.ObjectId(agentId);
@@ -116,8 +117,64 @@ const getAgentEnquiryStatsFromDB = async (agentId: string, year?: string) => {
   return formattedStats;
 };
 
+const getUserManagementStatsFromDB = async (role: string) => {
+  if (role === USER_ROLES.USER) {
+    const [totalUsers, activeUsers, totalEnquiries, totalSavedProperty] =
+      await Promise.all([
+        User.countDocuments({ role: USER_ROLES.USER, isDeleted: { $ne: true },verified: true }),
+        User.countDocuments({
+          role: USER_ROLES.USER,
+          status: STATUS.ACTIVE,
+          isDeleted: { $ne: true },
+          verified: true,
+        }),
+        Enquery.countDocuments({}),
+        FavoriteProperty.countDocuments({}),
+      ]);
+
+    return {
+      totalUsers,
+      activeUsers,
+      totalEnquiries,
+      totalSavedProperty,
+    };
+  } else if (role === USER_ROLES.AGENT) {
+    const [totalAgents, activeAgents, inactiveAgents, revenueData] =
+      await Promise.all([
+        User.countDocuments({
+          role: USER_ROLES.AGENT,
+          isDeleted: { $ne: true },
+          verified: true,
+        }),
+        User.countDocuments({
+          role: USER_ROLES.AGENT,
+          status: STATUS.ACTIVE,
+          isDeleted: { $ne: true },
+          verified: true,
+        }),
+        User.countDocuments({
+          role: USER_ROLES.AGENT,
+          status: STATUS.INACTIVE,
+          isDeleted: { $ne: true },
+          verified: true,
+        }),
+        Subscription.aggregate([
+          { $group: { _id: null, total: { $sum: "$amountPaid" } } },
+        ]),
+      ]);
+
+    return {
+      totalAgents,
+      activeAgents,
+      inactiveAgents,
+      totalRevenue: revenueData.length > 0 ? revenueData[0].total : 0,
+    };
+  }
+};
+
 export const AnalyticsServices = {
   getAgentDashboardStats,
   getAdminStatsFromDB,
   getAgentEnquiryStatsFromDB,
+  getUserManagementStatsFromDB,
 };

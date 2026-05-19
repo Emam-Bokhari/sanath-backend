@@ -40,8 +40,21 @@ const getAgentEnquiryStats = catchAsync(async (req, res) => {
   });
 });
 
+const getUserManagementStats = catchAsync(async (req, res) => {
+  const { role } = req.query;
+  const result = await AnalyticsServices.getUserManagementStatsFromDB(role as string);
+
+  sendResponse(res, {
+    success: true,
+    statusCode: 200,
+    message: "Dashboard stats retrieved successfully",
+    data: result,
+  });
+});
+
 export const AnalyticsControllers = {
   getAgentDashboardStats,
   getAdminStats,
   getAgentEnquiryStats,
+  getUserManagementStats,
 };
