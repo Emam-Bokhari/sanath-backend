@@ -1,9 +1,11 @@
 import express from "express";
 import { EnqueryControllers } from "./enquery.controller";
-import { isAgent, isAuthenticated } from "../../../helpers/authHelper";
+import { isAdmin, isAgent, isAuthenticated } from "../../../helpers/authHelper";
 import checkSubscription from "../../middlewares/checkSubscription";
 
 const router = express.Router();
+
+
 
 router
   .route("/")
@@ -13,6 +15,9 @@ router
 router
   .route("/my-enqueries")
   .get(isAuthenticated, EnqueryControllers.getMyEnqueries);
+
+router.get("/admin/all-enqueries", isAdmin, EnqueryControllers.getAllEnqueriesForAdmin);
+router.get("/admin/all-enqueries/:enqueryId", isAdmin, EnqueryControllers.getEnqueryByIdForAdmin);
 
 router
   .route("/my-enqueries/:enqueryId")

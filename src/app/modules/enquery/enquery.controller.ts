@@ -97,6 +97,33 @@ const updateEnqueryStatus = catchAsync(async (req, res) => {
   });
 });
 
+const getAllEnqueriesForAdmin = catchAsync(async (req, res) => {
+  const query = req.query;
+
+  const result = await EnqueryServices.getAllEnqueriesForAdminFromDB(query);
+
+  sendResponse(res, {
+    success: true,
+    statusCode: StatusCodes.OK,
+    message: "All enquiries retrieved successfully",
+    data: result.data,
+    meta: result.meta,
+  });
+});
+
+const getEnqueryByIdForAdmin = catchAsync(async (req, res) => {
+  const { enqueryId } = req.params;
+
+  const result = await EnqueryServices.getEnqueryByIdForAdminFromDB(enqueryId);
+
+  sendResponse(res, {
+    success: true,
+    statusCode: StatusCodes.OK,
+    message: "Enquiry retrieved successfully",
+    data: result,
+  });
+});
+
 export const EnqueryControllers = {
   createEnquery,
   getAllEnqueries,
@@ -104,4 +131,6 @@ export const EnqueryControllers = {
   getMyEnqueries,
   getMyEnqueryById,
   updateEnqueryStatus,
+  getAllEnqueriesForAdmin,
+  getEnqueryByIdForAdmin,
 };

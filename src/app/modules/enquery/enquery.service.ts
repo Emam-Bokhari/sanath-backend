@@ -309,6 +309,63 @@ const updateEnqueryStatus = async (
   return updatedEnqueryStatus;
 };
 
+const getAllEnqueriesForAdminFromDB = async (
+  query: Record<string, unknown>,
+) => {
+  const baseQuery = Enquery.find().populate([
+    {
+      path: "listingId",
+      populate: {
+        path: "agentId",
+        select: "name email phone profileImage agencyName agencyLogo",
+      },
+    },
+    {
+      path: "userId",
+      select: "name email phone profileImage",
+    },
+  ]);
+
+  const enqueryQuery = new QueryBuilder(baseQuery, query)
+    .search(["name", "email", "phone", "message", "postalCode", "country"])
+    .filter()
+    .sort()
+    .paginate()
+    .fields();
+
+  const result = await enqueryQuery.modelQuery;
+  const meta = await enqueryQuery.countTotal();
+
+  return {
+    data: result,
+    meta,
+  };
+};
+
+const getEnqueryByIdForAdminFromDB = async (enqueryId: string) => {
+  const enquery = await Enquery.findById(enqueryId)
+    .populate([
+      {
+        path: "listingId",
+        populate: {
+          path: "agentId",
+          select: "name email phone profileImage agencyName agencyLogo",
+        },
+      },
+      {
+        path: "userId",
+        select: "name email phone profileImage",
+      },
+    ])
+    .lean();
+
+  if (!enquery) {
+    throw new ApiError(StatusCodes.NOT_FOUND, "Enquiry not found");
+  }
+
+  return enquery;
+};
+
 export const EnqueryServices = {
   createEnquery,
   getAllEnqueriesFromDB,
@@ -316,4 +373,6 @@ export const EnqueryServices = {
   getMyEnqueriesFromDB,
   getMyEnqueryByIdFromDB,
   updateEnqueryStatus,
+  getAllEnqueriesForAdminFromDB,
+  getEnqueryByIdForAdminFromDB,
 };
