@@ -181,6 +181,23 @@ const getSingleListingForAdmin = catchAsync(async (req, res) => {
   });
 });
 
+const updateListingStatusForAdmin = catchAsync(async (req, res) => {
+  const { listingId } = req.params;
+  const { status } = req.body;
+
+  const result = await ListingServices.updateListingStatusForAdminServiceToDB(
+    listingId,
+    status,
+  );
+
+  sendResponse(res, {
+    success: true,
+    statusCode: 200,
+    message: "Listing status updated successfully",
+    data: result,
+  });
+});
+
 export const ListingControllers = {
   createListing,
   getMyListingsService,
@@ -193,4 +210,5 @@ export const ListingControllers = {
   searchListingsService,
   getAllListings,
   getSingleListingForAdmin,
+  updateListingStatusForAdmin,
 };

@@ -751,6 +751,22 @@ const getSingleListingForAdminFromDB = async (listingId: string) => {
   return listing;
 };
 
+const updateListingStatusForAdminServiceToDB = async (
+  listingId: string,
+  status: LISTING_STATUS,
+) => {
+  const listing = await Listing.findById(listingId);
+
+  if (!listing) {
+    throw new ApiError(StatusCodes.NOT_FOUND, "Listing not found");
+  }
+
+  listing.status = status;
+  await listing.save();
+
+  return listing;
+};
+
 export const ListingServices = {
   createListingServiceToDB,
   getMyListingsServiceFromDB,
@@ -763,4 +779,5 @@ export const ListingServices = {
   searchListingsServiceFromDB,
   getAllListingsServiceFromDB,
   getSingleListingForAdminFromDB,
+  updateListingStatusForAdminServiceToDB,
 };

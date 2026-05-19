@@ -91,6 +91,10 @@ router
   .get(isAdmin, ListingControllers.getSingleListingForAdmin);
 
 router
+  .route("/admin/change-status/:listingId")
+  .patch(isAdmin, ListingControllers.updateListingStatusForAdmin);
+
+router
   .route("/:listingId")
   .get(optionalAuth(), ListingControllers.getListingById);
 
