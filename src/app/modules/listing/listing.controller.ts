@@ -198,6 +198,17 @@ const updateListingStatusForAdmin = catchAsync(async (req, res) => {
   });
 });
 
+const getListingStats = catchAsync(async (req, res) => {
+  const result = await ListingServices.getListingStatsServiceFromDB();
+
+  sendResponse(res, {
+    success: true,
+    statusCode: 200,
+    message: "Listing statistics retrieved successfully",
+    data: result,
+  });
+});
+
 export const ListingControllers = {
   createListing,
   getMyListingsService,
@@ -211,4 +222,5 @@ export const ListingControllers = {
   getAllListings,
   getSingleListingForAdmin,
   updateListingStatusForAdmin,
+  getListingStats,
 };

@@ -767,6 +767,29 @@ const updateListingStatusForAdminServiceToDB = async (
   return listing;
 };
 
+const getListingStatsServiceFromDB = async () => {
+  const total = await Listing.countDocuments({ isDeleted: { $ne: true } });
+  const published = await Listing.countDocuments({
+    status: LISTING_STATUS.PUBLISHED,
+    isDeleted: { $ne: true },
+  });
+  const pendingApproval = await Listing.countDocuments({
+    status: LISTING_STATUS.PENDING_APPROVAL,
+    isDeleted: { $ne: true },
+  });
+  const rejected = await Listing.countDocuments({
+    status: LISTING_STATUS.REJECTED,
+    isDeleted: { $ne: true },
+  });
+
+  return {
+    total,
+    published,
+    pendingApproval,
+    rejected,
+  };
+};
+
 export const ListingServices = {
   createListingServiceToDB,
   getMyListingsServiceFromDB,
@@ -780,4 +803,5 @@ export const ListingServices = {
   getAllListingsServiceFromDB,
   getSingleListingForAdminFromDB,
   updateListingStatusForAdminServiceToDB,
+  getListingStatsServiceFromDB,
 };

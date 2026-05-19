@@ -87,6 +87,10 @@ router
   .get(isAdmin, ListingControllers.getAllListings);
 
 router
+  .route("/admin/stats")
+  .get(isAdmin, ListingControllers.getListingStats);
+
+router
   .route("/admin/:listingId")
   .get(isAdmin, ListingControllers.getSingleListingForAdmin);
 
