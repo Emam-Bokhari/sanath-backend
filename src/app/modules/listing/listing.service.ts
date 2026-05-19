@@ -714,6 +714,28 @@ const searchListingsServiceFromDB = async (
 
 
 
+const getAllListingsServiceFromDB = async (query: Record<string, unknown>) => {
+  const listingQuery = new QueryBuilder(Listing.find(), query)
+    .search(["title", "city", "country"])
+    .filter()
+    .sort()
+    .paginate()
+    .fields();
+
+  const result = await listingQuery.modelQuery.populate({
+    path: "agentId",
+    // populate: {
+    //   path: "plan",
+    // },
+  });
+  const meta = await listingQuery.countTotal();
+
+  return {
+    data: result,
+    meta,
+  };
+};
+
 export const ListingServices = {
   createListingServiceToDB,
   getMyListingsServiceFromDB,
@@ -724,4 +746,5 @@ export const ListingServices = {
   getNearbyListingsServiceFromDB,
   getAgentListingByIdFromDB,
   searchListingsServiceFromDB,
+  getAllListingsServiceFromDB,
 };

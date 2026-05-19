@@ -156,6 +156,19 @@ const searchListingsService = catchAsync(async (req, res) => {
   
 });
 
+const getAllListings = catchAsync(async (req, res) => {
+  const query = req.query;
+  const result = await ListingServices.getAllListingsServiceFromDB(query);
+
+  sendResponse(res, {
+    success: true,
+    statusCode: 200,
+    message: "All listings retrieved successfully",
+    data: result.data,
+    meta: result.meta,
+  });
+});
+
 export const ListingControllers = {
   createListing,
   getMyListingsService,
@@ -166,4 +179,5 @@ export const ListingControllers = {
   getNearbyListingsService,
   getListingById,
   searchListingsService,
+  getAllListings,
 };

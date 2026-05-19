@@ -1,4 +1,5 @@
 import {
+  isAdmin,
   isAgent,
   isAuthenticated,
 } from "./../../../helpers/authHelper";
@@ -79,9 +80,11 @@ router
   )
   .delete(isAgent, ListingControllers.deleteListing);
 
+router.route("/my/status-sold/:listingId").patch(isAgent, ListingControllers.updateListingStatusToSold);
+
 router
-  .route("/my/status-sold/:listingId")
-  .patch(isAgent, ListingControllers.updateListingStatusToSold);
+  .route("/admin/all")
+  .get(isAdmin, ListingControllers.getAllListings);
 
 router
   .route("/:listingId")
