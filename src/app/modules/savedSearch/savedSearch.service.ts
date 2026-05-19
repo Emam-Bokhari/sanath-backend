@@ -21,6 +21,19 @@ const toggleSavedSearchService = async (payload: TSavedSearch) => {
   } else {
     // If it doesn't exist, we save it (toggle on)
     await SavedSearch.create(payload);
+
+    // Limit to last 20 saved searches
+    const userSavedSearches = await SavedSearch.find({ userId }).sort({
+      createdAt: -1,
+    });
+
+    if (userSavedSearches.length > 20) {
+      const idsToDelete = userSavedSearches
+        .slice(20)
+        .map((search) => search._id);
+      await SavedSearch.deleteMany({ _id: { $in: idsToDelete } });
+    }
+
     return {
       message: "Search saved successfully",
       isSaved: true,
@@ -29,9 +42,11 @@ const toggleSavedSearchService = async (payload: TSavedSearch) => {
 };
 
 const getMySavedSearchesService = async (userId: string) => {
-  const savedSearches = await SavedSearch.find({ userId }).sort({
-    createdAt: -1,
-  });
+  const savedSearches = await SavedSearch.find({ userId })
+    .sort({
+      createdAt: -1,
+    })
+    .limit(20);
 
   const result: any[] = [];
 
