@@ -45,12 +45,17 @@ const getAgentDashboardStats = async (agentId: string) => {
 };
 
 const getAdminStatsFromDB = async () => {
-  const [totalAdmins, totalSuperAdmins, totalActiveAdmins] = await Promise.all([
+  const [totalAdmins, totalSuperAdmins, totalActiveAdmins,totalInactiveAdmins] = await Promise.all([
     User.countDocuments({ role: USER_ROLES.ADMIN, verified: true }),
     User.countDocuments({ role: USER_ROLES.SUPER_ADMIN, verified: true }),
     User.countDocuments({
       role: USER_ROLES.ADMIN,
       status: STATUS.ACTIVE,
+      verified: true,
+    }),
+    User.countDocuments({
+      role: USER_ROLES.ADMIN,
+      status: STATUS.INACTIVE,
       verified: true,
     }),
   ]);
@@ -59,6 +64,7 @@ const getAdminStatsFromDB = async () => {
     totalAdmins,
     totalSuperAdmins,
     totalActiveAdmins,
+    totalInactiveAdmins,
   };
 };
 

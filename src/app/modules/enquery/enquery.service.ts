@@ -50,6 +50,14 @@ const createEnquery = async (userId: string, payload: any) => {
     email: user.email,
   });
 
+  // Update listing leads and leadsCount
+  if (payload.listingId) {
+    await Listing.findByIdAndUpdate(payload.listingId, {
+      $push: { leads: enquery._id },
+      $inc: { leadsCount: 1 },
+    });
+  }
+
   const emailPayload: ISendEmail = {
     to:
       agentEmail || config.support_receiver_email || "support@yourplatform.com",

@@ -820,33 +820,66 @@ const getAllListingsServiceFromDB = async (query: Record<string, unknown>) => {
     .paginate()
     .fields();
 
-  const result = await listingQuery.modelQuery.populate({
-    path: "agentId",
-    // populate: {
-    //   path: "plan",
-    // },
-  });
+  const result = await listingQuery.modelQuery
+    .populate({
+      path: "agentId",
+      // populate: {
+      //   path: "plan",
+      // },
+    })
+    .lean();
+
+  const resultWithLeads = await Promise.all(
+    result.map(async (listing: any) => {
+      const leads = await Enquery.find({ listingId: listing._id })
+        .populate({
+          path: "userId",
+          select: "name email profileImage",
+        })
+        .lean();
+
+      return {
+        ...listing,
+        leadsCount: leads.length,
+        leads: leads,
+      };
+    }),
+  );
+
   const meta = await listingQuery.countTotal();
 
   return {
-    data: result,
+    data: resultWithLeads,
     meta,
   };
 };
 
 const getSingleListingForAdminFromDB = async (listingId: string) => {
-  const listing = await Listing.findById(listingId).populate({
-    path: "agentId",
-    // populate: {
-    //   path: "plan",
-    // },
-  });
+  const listing = await Listing.findById(listingId)
+    .populate({
+      path: "agentId",
+      // populate: {
+      //   path: "plan",
+      // },
+    })
+    .lean();
 
   if (!listing) {
     throw new ApiError(StatusCodes.NOT_FOUND, "Listing not found");
   }
 
-  return listing;
+  const leads = await Enquery.find({ listingId: listing._id })
+    .populate({
+      path: "userId",
+      select: "name email profileImage",
+    })
+    .lean();
+
+  return {
+    ...listing,
+    leadsCount: leads.length,
+    leads: leads,
+  };
 };
 
 const updateListingStatusForAdminServiceToDB = async (

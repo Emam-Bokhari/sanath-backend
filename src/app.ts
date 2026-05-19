@@ -20,9 +20,9 @@ app.use(Morgan.errorHandler);
 
 //body parser
 app.use(
-  cors({
-    origin: "*",
-    credentials: true,
+  cors({ 
+    origin: true, 
+    credentials: true 
   }),
 );
 
