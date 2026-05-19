@@ -17,6 +17,7 @@ import { SavedSearchRoutes } from "../modules/savedSearch/savedSearch.route";
 import { AnalyticsRoutes } from "../modules/analytics/analytics.route";
 import { PlanRoutes } from "../modules/plan/plan.route";
 import { SubscriptionRoutes } from "../modules/subscription/subscription.route";
+import { TransactionRoutes } from "../modules/transaction/transaction.route";
 
 const router = express.Router();
 
@@ -92,6 +93,10 @@ const apiRoutes = [
   {
     path: "/subscriptions",
     route: SubscriptionRoutes,
+  },
+  {
+    path: "/transactions",
+    route: TransactionRoutes,
   },
 ];
 
