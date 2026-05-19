@@ -4,28 +4,24 @@ import { isAdmin, isAgent } from "../../../helpers/authHelper";
 
 const router = Router();
 
-router.get(
-  "/",
-  isAdmin,
-  TransactionController.getAllTransactions
-);
+router.get("/", isAdmin, TransactionController.getAllTransactions);
 
 router.get(
   "/my-transactions",
   isAgent,
-  TransactionController.getMyTransactions
+  TransactionController.getMyTransactions,
 );
 
 router.get(
   "/my-transactions/:transactionId",
   isAgent,
-  TransactionController.getMyTransactionById
+  TransactionController.getMyTransactionById,
 );
 
 router.get(
   "/:transactionId",
   isAdmin,
-  TransactionController.getTransactionById
+  TransactionController.getTransactionById,
 );
 
 export const TransactionRoutes = router;

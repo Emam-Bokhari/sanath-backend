@@ -162,8 +162,6 @@ const deleteAdmin = catchAsync(async (req, res) => {
   });
 });
 
-
-
 export const UserControllers = {
   createUser,
   getUserProfile,

@@ -60,7 +60,7 @@ const cancelSubscription = async (userId: string) => {
   if (!user || !user.subscriptionId) {
     throw new ApiError(
       StatusCodes.NOT_FOUND,
-      "No active subscription found for this user"
+      "No active subscription found for this user",
     );
   }
 

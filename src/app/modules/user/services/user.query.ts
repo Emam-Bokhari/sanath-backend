@@ -162,7 +162,7 @@ const getUserByIdFromDB = async (id: string) => {
 
 const getAdminFromDB = async (query: any) => {
   const baseQuery = User.find({
-    role: { $in: [USER_ROLES.ADMIN,USER_ROLES.SUPER_ADMIN] },
+    role: { $in: [USER_ROLES.ADMIN, USER_ROLES.SUPER_ADMIN] },
     status: STATUS.ACTIVE,
     verified: true,
   }).select("name email role profileImage createdAt updatedAt status");

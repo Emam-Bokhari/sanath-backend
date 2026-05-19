@@ -26,7 +26,7 @@ const checkSubscription = (requiredFeature?: keyof IPlanFeatures) => {
       if (!user.hasAccess || !user.isSubscribed || !user.plan) {
         throw new ApiError(
           StatusCodes.PAYMENT_REQUIRED,
-          "You need an active subscription to access this feature"
+          "You need an active subscription to access this feature",
         );
       }
 
@@ -39,15 +39,18 @@ const checkSubscription = (requiredFeature?: keyof IPlanFeatures) => {
       if (!activeSubscription) {
         throw new ApiError(
           StatusCodes.PAYMENT_REQUIRED,
-          "No active subscription record found"
+          "No active subscription record found",
         );
       }
 
       // Check if current date is past currentPeriodEnd
-      if (activeSubscription.currentPeriodEnd && new Date() > activeSubscription.currentPeriodEnd) {
+      if (
+        activeSubscription.currentPeriodEnd &&
+        new Date() > activeSubscription.currentPeriodEnd
+      ) {
         throw new ApiError(
           StatusCodes.PAYMENT_REQUIRED,
-          "Your subscription has expired. Please renew to continue."
+          "Your subscription has expired. Please renew to continue.",
         );
       }
 
@@ -57,7 +60,7 @@ const checkSubscription = (requiredFeature?: keyof IPlanFeatures) => {
       if (requiredFeature && !plan.features?.[requiredFeature]) {
         throw new ApiError(
           StatusCodes.FORBIDDEN,
-          `Your current plan does not support ${requiredFeature}`
+          `Your current plan does not support ${requiredFeature}`,
         );
       }
 

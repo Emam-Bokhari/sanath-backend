@@ -13,7 +13,6 @@ const createListing = catchAsync(async (req, res) => {
     message: "Listing created successfully",
     data: listing,
   });
-
 });
 
 const getMyListingsService = catchAsync(async (req, res) => {
@@ -31,7 +30,6 @@ const getMyListingsService = catchAsync(async (req, res) => {
     data: result.data,
     meta: result.meta,
   });
-
 });
 
 const getListingById = catchAsync(async (req, res) => {
@@ -48,7 +46,6 @@ const getListingById = catchAsync(async (req, res) => {
     message: "Listing retrieved successfully",
     data: listing,
   });
-
 });
 
 const updateListing = catchAsync(async (req, res) => {
@@ -67,7 +64,6 @@ const updateListing = catchAsync(async (req, res) => {
     message: "Listing updated successfully",
     data: updatedListing,
   });
-
 });
 
 const deleteListing = catchAsync(async (req, res) => {
@@ -81,7 +77,6 @@ const deleteListing = catchAsync(async (req, res) => {
     statusCode: 200,
     message: "Listing deleted successfully",
   });
-
 });
 
 const updateListingStatusToSold = catchAsync(async (req, res) => {
@@ -137,7 +132,6 @@ const getMyListingById = catchAsync(async (req, res) => {
     message: "Listing retrieved successfully",
     data: listing,
   });
-
 });
 
 const searchListingsService = catchAsync(async (req, res) => {
@@ -154,7 +148,6 @@ const searchListingsService = catchAsync(async (req, res) => {
     message: "Listings retrieved successfully",
     data: result,
   });
-  
 });
 
 const getAllListings = catchAsync(async (req, res) => {
@@ -172,7 +165,8 @@ const getAllListings = catchAsync(async (req, res) => {
 
 const getSingleListingForAdmin = catchAsync(async (req, res) => {
   const { listingId } = req.params;
-  const result = await ListingServices.getSingleListingForAdminFromDB(listingId);
+  const result =
+    await ListingServices.getSingleListingForAdminFromDB(listingId);
 
   sendResponse(res, {
     success: true,

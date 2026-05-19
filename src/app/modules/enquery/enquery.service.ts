@@ -155,7 +155,7 @@ const getAllEnqueriesFromDB = async (
   if (!plan?.features?.leadAccess) {
     throw new ApiError(
       StatusCodes.FORBIDDEN,
-      "Your current plan does not support lead access"
+      "Your current plan does not support lead access",
     );
   }
 
@@ -199,7 +199,7 @@ const getEnqueryByIdFromDB = async (agentId: string, enqueryId: string) => {
   if (!plan?.features?.leadAccess) {
     throw new ApiError(
       StatusCodes.FORBIDDEN,
-      "Your current plan does not support lead access"
+      "Your current plan does not support lead access",
     );
   }
 

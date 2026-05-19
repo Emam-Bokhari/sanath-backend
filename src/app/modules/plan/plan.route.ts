@@ -11,7 +11,7 @@ router
   .post(
     isAdmin,
     validateRequest(PlanValidations.createPlanValidationSchema),
-    PlanControllers.createPlan
+    PlanControllers.createPlan,
   )
   .get(PlanControllers.getAllPlans);
 
@@ -21,7 +21,7 @@ router
   .patch(
     isAdmin,
     validateRequest(PlanValidations.updatePlanValidationSchema),
-    PlanControllers.updatePlan
+    PlanControllers.updatePlan,
   )
   .delete(isAdmin, PlanControllers.deletePlan);
 

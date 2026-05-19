@@ -29,7 +29,7 @@ const getAgentEnquiryStats = catchAsync(async (req, res) => {
   const { year } = req.query;
   const result = await AnalyticsServices.getAgentEnquiryStatsFromDB(
     agentId,
-    year as string
+    year as string,
   );
 
   sendResponse(res, {
@@ -42,7 +42,9 @@ const getAgentEnquiryStats = catchAsync(async (req, res) => {
 
 const getUserManagementStats = catchAsync(async (req, res) => {
   const { role } = req.query;
-  const result = await AnalyticsServices.getUserManagementStatsFromDB(role as string);
+  const result = await AnalyticsServices.getUserManagementStatsFromDB(
+    role as string,
+  );
 
   sendResponse(res, {
     success: true,
@@ -65,7 +67,9 @@ const getRevenueStats = catchAsync(async (req, res) => {
 
 const getMonthlyRevenueStats = catchAsync(async (req, res) => {
   const { year } = req.query;
-  const result = await AnalyticsServices.getMonthlyRevenueStatsFromDB(year as string);
+  const result = await AnalyticsServices.getMonthlyRevenueStatsFromDB(
+    year as string,
+  );
 
   sendResponse(res, {
     success: true,
@@ -77,7 +81,9 @@ const getMonthlyRevenueStats = catchAsync(async (req, res) => {
 
 const getMonthlyUserStats = catchAsync(async (req, res) => {
   const { year } = req.query;
-  const result = await AnalyticsServices.getMonthlyUserStatsFromDB(year as string);
+  const result = await AnalyticsServices.getMonthlyUserStatsFromDB(
+    year as string,
+  );
 
   sendResponse(res, {
     success: true,
@@ -89,7 +95,9 @@ const getMonthlyUserStats = catchAsync(async (req, res) => {
 
 const getMonthlyAgentStats = catchAsync(async (req, res) => {
   const { year } = req.query;
-  const result = await AnalyticsServices.getMonthlyAgentStatsFromDB(year as string);
+  const result = await AnalyticsServices.getMonthlyAgentStatsFromDB(
+    year as string,
+  );
 
   sendResponse(res, {
     success: true,

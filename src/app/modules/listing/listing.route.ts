@@ -80,15 +80,13 @@ router
   )
   .delete(isAgent, ListingControllers.deleteListing);
 
-router.route("/my/status-sold/:listingId").patch(isAgent, ListingControllers.updateListingStatusToSold);
-
 router
-  .route("/admin/all")
-  .get(isAdmin, ListingControllers.getAllListings);
+  .route("/my/status-sold/:listingId")
+  .patch(isAgent, ListingControllers.updateListingStatusToSold);
 
-router
-  .route("/admin/stats")
-  .get(isAdmin, ListingControllers.getListingStats);
+router.route("/admin/all").get(isAdmin, ListingControllers.getAllListings);
+
+router.route("/admin/stats").get(isAdmin, ListingControllers.getListingStats);
 
 router
   .route("/admin/:listingId")

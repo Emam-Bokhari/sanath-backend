@@ -1,7 +1,6 @@
 import { Schema, model } from "mongoose";
 import { ISubscription } from "./subscription.interface";
 
-
 const subscriptionSchema = new Schema<ISubscription>(
   {
     userId: {
@@ -45,7 +44,10 @@ const subscriptionSchema = new Schema<ISubscription>(
   {
     timestamps: true,
     versionKey: false,
-  }
+  },
 );
 
-export const Subscription = model<ISubscription>("Subscription", subscriptionSchema);
+export const Subscription = model<ISubscription>(
+  "Subscription",
+  subscriptionSchema,
+);

@@ -26,7 +26,10 @@ export const handleSubscriptionUpdated = async (data: Stripe.Subscription) => {
     const invoice = await stripe.invoices.retrieve(
       subscription.latest_invoice as string,
     );
-    trxId = typeof invoice?.payment_intent === 'string' ? invoice.payment_intent : undefined;
+    trxId =
+      typeof invoice?.payment_intent === "string"
+        ? invoice.payment_intent
+        : undefined;
     amountPaid = invoice?.total ? invoice.total / 100 : 0;
   }
 
@@ -45,59 +48,72 @@ export const handleSubscriptionUpdated = async (data: Stripe.Subscription) => {
         });
 
         if (currentActiveSubscription) {
-            // Update existing subscription record
-            let status = subscription.status;
-            if (status === 'past_due' || status === 'unpaid' || status === 'incomplete' || status === 'incomplete_expired') {
-                status = 'canceled' as any;
-            }
+          // Update existing subscription record
+          let status = subscription.status;
+          if (
+            status === "past_due" ||
+            status === "unpaid" ||
+            status === "incomplete" ||
+            status === "incomplete_expired"
+          ) {
+            status = "canceled" as any;
+          }
 
-            await Subscription.findByIdAndUpdate(currentActiveSubscription._id, {
-                status: status as any,
-                planId: pricingPlan._id,
-                amountPaid,
-                trxId,
-                currentPeriodStart: new Date(subscription.current_period_start * 1000),
-                currentPeriodEnd: new Date(subscription.current_period_end * 1000),
-            });
+          await Subscription.findByIdAndUpdate(currentActiveSubscription._id, {
+            status: status as any,
+            planId: pricingPlan._id,
+            amountPaid,
+            trxId,
+            currentPeriodStart: new Date(
+              subscription.current_period_start * 1000,
+            ),
+            currentPeriodEnd: new Date(subscription.current_period_end * 1000),
+          });
 
-            // Update user
-            const hasAccess = status === 'active' || status === 'trialing';
-            await User.findByIdAndUpdate(existingUser._id, {
-                plan: pricingPlan._id,
-                hasAccess,
-                isAgentVerified: hasAccess ? !!pricingPlan.features?.verifiedBadge : false,
-                maxListings: hasAccess ? (pricingPlan.limits?.maxListings || 0) : 0,
-            });
+          // Update user
+          const hasAccess = status === "active" || status === "trialing";
+          await User.findByIdAndUpdate(existingUser._id, {
+            plan: pricingPlan._id,
+            hasAccess,
+            isAgentVerified: hasAccess
+              ? !!pricingPlan.features?.verifiedBadge
+              : false,
+            maxListings: hasAccess ? pricingPlan.limits?.maxListings || 0 : 0,
+          });
         } else {
-            // Create if not exists and it's active
-            const status = subscription.status;
-            if (status !== 'active' && status !== 'trialing') {
-                console.log(`Subscription ${subscription.id} is not active (status: ${status}). Skipping database creation in update handler.`);
-                return;
-            }
+          // Create if not exists and it's active
+          const status = subscription.status;
+          if (status !== "active" && status !== "trialing") {
+            console.log(
+              `Subscription ${subscription.id} is not active (status: ${status}). Skipping database creation in update handler.`,
+            );
+            return;
+          }
 
-            const newSubscription = new Subscription({
-                userId: existingUser._id,
-                customerId: customer?.id,
-                planId: pricingPlan._id,
-                subscriptionId: subscription.id,
-                status: status as any,
-                amountPaid,
-                trxId,
-                currentPeriodStart: new Date(subscription.current_period_start * 1000),
-                currentPeriodEnd: new Date(subscription.current_period_end * 1000),
-            });
-            await newSubscription.save();
+          const newSubscription = new Subscription({
+            userId: existingUser._id,
+            customerId: customer?.id,
+            planId: pricingPlan._id,
+            subscriptionId: subscription.id,
+            status: status as any,
+            amountPaid,
+            trxId,
+            currentPeriodStart: new Date(
+              subscription.current_period_start * 1000,
+            ),
+            currentPeriodEnd: new Date(subscription.current_period_end * 1000),
+          });
+          await newSubscription.save();
 
-            await User.findByIdAndUpdate(existingUser._id, {
-                isSubscribed: true,
-                hasAccess: status === 'active' || status === 'trialing',
-                plan: pricingPlan._id,
-                subscriptionId: subscription.id,
-                customerId: customer.id,
-                isAgentVerified: !!pricingPlan.features?.verifiedBadge,
-                maxListings: pricingPlan.limits?.maxListings || 0,
-            });
+          await User.findByIdAndUpdate(existingUser._id, {
+            isSubscribed: true,
+            hasAccess: status === "active" || status === "trialing",
+            plan: pricingPlan._id,
+            subscriptionId: subscription.id,
+            customerId: customer.id,
+            isAgentVerified: !!pricingPlan.features?.verifiedBadge,
+            maxListings: pricingPlan.limits?.maxListings || 0,
+          });
         }
       } else {
         console.error(`Pricing plan with Price ID: ${priceId} not found!`);

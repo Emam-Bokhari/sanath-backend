@@ -80,7 +80,7 @@ const updatePlanToDB = async (planId: string, payload: Partial<IPlan>) => {
     if (!isExist.productId) {
       throw new ApiError(
         StatusCodes.BAD_REQUEST,
-        "Cannot update price: No Stripe Product ID found for this plan"
+        "Cannot update price: No Stripe Product ID found for this plan",
       );
     }
 
@@ -108,7 +108,7 @@ const updatePlanToDB = async (planId: string, payload: Partial<IPlan>) => {
 
   // handle: Prevent manual update of Stripe IDs if they leaked into payload
   delete (payload as any).productId;
-  // Note: we allow priceId if we just created a new one above, 
+  // Note: we allow priceId if we just created a new one above,
   // but if it was in the original payload it should be ignored or handled.
   if (!isPriceChanged && !isCurrencyChanged && !isDurationChanged) {
     delete payload.priceId;
@@ -147,7 +147,7 @@ const deletePlanFromDB = async (planId: string) => {
   const result = await Plan.findByIdAndUpdate(
     planId,
     { isDeleted: true, status: PLAN_STATUS.INACTIVE },
-    { new: true }
+    { new: true },
   );
 
   // handle: Deactivate plan in Stripe

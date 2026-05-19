@@ -44,19 +44,23 @@ const getAgentDashboardStats = async (agentId: string) => {
   };
 };
 
-const getAdminStatsFromDB=async()=>{
-  const [totalAdmins,totalSuperAdmins,totalActiveAdmins]=await Promise.all([
-    User.countDocuments({ role: USER_ROLES.ADMIN,verified:true }),
-    User.countDocuments({ role: USER_ROLES.SUPER_ADMIN,verified:true }),
-    User.countDocuments({ role: USER_ROLES.ADMIN, status: STATUS.ACTIVE,verified:true }),
-  ])
+const getAdminStatsFromDB = async () => {
+  const [totalAdmins, totalSuperAdmins, totalActiveAdmins] = await Promise.all([
+    User.countDocuments({ role: USER_ROLES.ADMIN, verified: true }),
+    User.countDocuments({ role: USER_ROLES.SUPER_ADMIN, verified: true }),
+    User.countDocuments({
+      role: USER_ROLES.ADMIN,
+      status: STATUS.ACTIVE,
+      verified: true,
+    }),
+  ]);
 
   return {
     totalAdmins,
     totalSuperAdmins,
     totalActiveAdmins,
-  }
-}
+  };
+};
 
 const getAgentEnquiryStatsFromDB = async (agentId: string, year?: string) => {
   const agentObjectId = new Types.ObjectId(agentId);
@@ -121,7 +125,11 @@ const getUserManagementStatsFromDB = async (role: string) => {
   if (role === USER_ROLES.USER) {
     const [totalUsers, activeUsers, totalEnquiries, totalSavedProperty] =
       await Promise.all([
-        User.countDocuments({ role: USER_ROLES.USER, isDeleted: { $ne: true },verified: true }),
+        User.countDocuments({
+          role: USER_ROLES.USER,
+          isDeleted: { $ne: true },
+          verified: true,
+        }),
         User.countDocuments({
           role: USER_ROLES.USER,
           status: STATUS.ACTIVE,
@@ -175,42 +183,52 @@ const getUserManagementStatsFromDB = async (role: string) => {
 const getRevenueStatsFromDB = async () => {
   const now = new Date();
   const startOfMonth = new Date(now.getFullYear(), now.getMonth(), 1);
-  const endOfMonth = new Date(now.getFullYear(), now.getMonth() + 1, 0, 23, 59, 59, 999);
+  const endOfMonth = new Date(
+    now.getFullYear(),
+    now.getMonth() + 1,
+    0,
+    23,
+    59,
+    59,
+    999,
+  );
 
-  const [totalRevenueData, monthlyRevenueData, totalTransactions] = await Promise.all([
-    // Total Revenue
-    Subscription.aggregate([
-      {
-        $group: {
-          _id: null,
-          total: { $sum: "$amountPaid" },
-        },
-      },
-    ]),
-    // Total Revenue This Month
-    Subscription.aggregate([
-      {
-        $match: {
-          createdAt: {
-            $gte: startOfMonth,
-            $lte: endOfMonth,
+  const [totalRevenueData, monthlyRevenueData, totalTransactions] =
+    await Promise.all([
+      // Total Revenue
+      Subscription.aggregate([
+        {
+          $group: {
+            _id: null,
+            total: { $sum: "$amountPaid" },
           },
         },
-      },
-      {
-        $group: {
-          _id: null,
-          total: { $sum: "$amountPaid" },
+      ]),
+      // Total Revenue This Month
+      Subscription.aggregate([
+        {
+          $match: {
+            createdAt: {
+              $gte: startOfMonth,
+              $lte: endOfMonth,
+            },
+          },
         },
-      },
-    ]),
-    // Total Transactions
-    Subscription.countDocuments({}),
-  ]);
+        {
+          $group: {
+            _id: null,
+            total: { $sum: "$amountPaid" },
+          },
+        },
+      ]),
+      // Total Transactions
+      Subscription.countDocuments({}),
+    ]);
 
   return {
     totalRevenue: totalRevenueData.length > 0 ? totalRevenueData[0].total : 0,
-    totalRevenueThisMonth: monthlyRevenueData.length > 0 ? monthlyRevenueData[0].total : 0,
+    totalRevenueThisMonth:
+      monthlyRevenueData.length > 0 ? monthlyRevenueData[0].total : 0,
     totalTransactions,
   };
 };

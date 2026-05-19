@@ -16,9 +16,8 @@ const planLimitsSchema = new Schema(
       default: -1,
     },
   },
-  { _id: false }
+  { _id: false },
 );
-
 
 const planFeaturesSchema = new Schema(
   {
@@ -39,9 +38,8 @@ const planFeaturesSchema = new Schema(
       default: false,
     },
   },
-  { _id: false }
+  { _id: false },
 );
-
 
 const planTrialSchema = new Schema(
   {
@@ -63,9 +61,8 @@ const planTrialSchema = new Schema(
       },
     },
   },
-  { _id: false }
+  { _id: false },
 );
-
 
 const planPricingSchema = new Schema(
   {
@@ -79,9 +76,8 @@ const planPricingSchema = new Schema(
       default: "GBP",
     },
   },
-  { _id: false }
+  { _id: false },
 );
-
 
 const planSchema = new Schema<IPlan, TPlanModel>(
   {
@@ -157,9 +153,8 @@ const planSchema = new Schema<IPlan, TPlanModel>(
   {
     timestamps: true,
     versionKey: false,
-  }
+  },
 );
-
 
 planSchema.plugin(softDeletePlugin);
 

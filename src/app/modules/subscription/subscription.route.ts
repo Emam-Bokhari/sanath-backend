@@ -11,20 +11,22 @@ const router = express.Router();
 router.post(
   "/create-checkout-session",
   isAgent,
-  validateRequest(SubscriptionValidations.createCheckoutSessionValidationSchema),
-  SubscriptionController.createCheckoutSession
+  validateRequest(
+    SubscriptionValidations.createCheckoutSessionValidationSchema,
+  ),
+  SubscriptionController.createCheckoutSession,
 );
 
 router.post(
   "/cancel-subscription",
   isAgent,
-  SubscriptionController.cancelSubscription
+  SubscriptionController.cancelSubscription,
 );
 
 router.get(
   "/my-subscription",
   isAgent,
-  SubscriptionController.getMySubscription
+  SubscriptionController.getMySubscription,
 );
 
 export const SubscriptionRoutes = router;

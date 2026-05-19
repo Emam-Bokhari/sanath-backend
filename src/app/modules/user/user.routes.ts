@@ -11,11 +11,7 @@ router
   .get(isAuthenticated, UserControllers.getUserProfile)
   .delete(isAuthenticated, UserControllers.deleteProfile);
 
-router.post(
-  "/create-admin",
-  isAdmin,
-  UserControllers.createAdmin,
-);
+router.post("/create-admin", isAdmin, UserControllers.createAdmin);
 
 router.get("/admins", isAdmin, UserControllers.getAdmin);
 
@@ -26,14 +22,15 @@ router
   .patch(
     isAuthenticated,
     fileUploadHandler(),
-    parseFileData({
-      fieldName: "profileImage",
-      mode: "single",
-    },
+    parseFileData(
+      {
+        fieldName: "profileImage",
+        mode: "single",
+      },
       {
         fieldName: "agencyLogo",
-        mode: "single"
-      }
+        mode: "single",
+      },
     ),
 
     UserControllers.updateProfile,
@@ -41,11 +38,9 @@ router
 
 router.patch("/status/:id", isAdmin, UserControllers.updateUserStatusById);
 
-
 router.delete("/admins/:id", isAdmin, UserControllers.deleteAdmin);
 
 /* ---------------------------- ADMINS LIST ------------------------------- */
-
 
 router
   .route("/:id")

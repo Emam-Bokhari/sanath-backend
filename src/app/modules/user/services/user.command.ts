@@ -9,11 +9,13 @@ import config from "../../../../config";
 import { JwtPayload, Secret } from "jsonwebtoken";
 import { STATUS, USER_ROLES } from "../../../../enums/user";
 import { sendNotifications } from "../../../../helpers/notificationsHelper";
-import { NOTIFICATION_REFERENCE_MODEL, NOTIFICATION_TYPE } from "../../notification/notification.constant";
+import {
+  NOTIFICATION_REFERENCE_MODEL,
+  NOTIFICATION_TYPE,
+} from "../../notification/notification.constant";
 import { IUser } from "../user.interface";
 import unlinkFile from "../../../../shared/unlinkFile";
 import bcrypt from "bcrypt";
-
 
 const createUserToDB = async (payload: any) => {
   const isExistUser = await User.findOne({ email: payload.email });
@@ -114,7 +116,10 @@ const updateUserStatusByIdToDB = async (
 
   const user = await User.findById(id);
   if (!user) {
-    throw new ApiError(StatusCodes.NOT_FOUND, "No user is found by this user ID");
+    throw new ApiError(
+      StatusCodes.NOT_FOUND,
+      "No user is found by this user ID",
+    );
   }
 
   if (user.role === USER_ROLES.SUPER_ADMIN) {

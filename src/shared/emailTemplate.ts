@@ -1,5 +1,9 @@
 import config from "../config";
-import { IAdminCredentials, ICreateAccount, IResetPassword } from "../types/emailTemplate";
+import {
+  IAdminCredentials,
+  ICreateAccount,
+  IResetPassword,
+} from "../types/emailTemplate";
 
 const PRIMARY_COLOR = "#a90707";
 const BG_COLOR = "#ffffff";

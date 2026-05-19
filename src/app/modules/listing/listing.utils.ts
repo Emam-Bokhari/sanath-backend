@@ -9,7 +9,7 @@ export const generateChecklist = (listing: TListing) => {
     hasValue(listing.country) &&
     hasValue(listing.city) &&
     hasValue(listing.postalCode);
-  
+
   const media =
     (listing.photos?.length || 0) >= 6 && (listing.videos?.length || 0) > 0;
 

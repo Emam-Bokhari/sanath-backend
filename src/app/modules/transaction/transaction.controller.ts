@@ -17,7 +17,8 @@ const getAllTransactions = catchAsync(async (req: Request, res: Response) => {
 
 const getTransactionById = catchAsync(async (req: Request, res: Response) => {
   const { transactionId } = req.params;
-  const result = await TransactionService.getTransactionByIdFromDB(transactionId);
+  const result =
+    await TransactionService.getTransactionByIdFromDB(transactionId);
 
   sendResponse(res, {
     statusCode: 200,
@@ -28,8 +29,11 @@ const getTransactionById = catchAsync(async (req: Request, res: Response) => {
 });
 
 const getMyTransactions = catchAsync(async (req: Request, res: Response) => {
-  const {id:agentId} = req.user as {id:string};
-  const result = await TransactionService.getMyTransactionsFromDB(agentId, req.query);
+  const { id: agentId } = req.user as { id: string };
+  const result = await TransactionService.getMyTransactionsFromDB(
+    agentId,
+    req.query,
+  );
 
   sendResponse(res, {
     statusCode: 200,
@@ -41,9 +45,12 @@ const getMyTransactions = catchAsync(async (req: Request, res: Response) => {
 });
 
 const getMyTransactionById = catchAsync(async (req: Request, res: Response) => {
-  const {id:agentId} = req.user as {id:string};
+  const { id: agentId } = req.user as { id: string };
   const { transactionId } = req.params;
-  const result = await TransactionService.getMyTransactionByIdFromDB(agentId, transactionId);
+  const result = await TransactionService.getMyTransactionByIdFromDB(
+    agentId,
+    transactionId,
+  );
 
   sendResponse(res, {
     statusCode: 200,

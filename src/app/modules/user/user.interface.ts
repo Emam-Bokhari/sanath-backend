@@ -34,8 +34,8 @@ export type IUser = {
   deviceToken?: string;
 
   // =================AGENCY PROFILE =================
-  agencyName?:string;
-  agencyLogo?:string;
+  agencyName?: string;
+  agencyLogo?: string;
 
   /* ================= LOCATION ================= */
   location?: {
@@ -53,7 +53,6 @@ export type IUser = {
   hasAccess?: boolean;
   isAgentVerified?: boolean;
   maxListings?: number;
-  
 
   /* ================= AUTH ================= */
   authentication?: {

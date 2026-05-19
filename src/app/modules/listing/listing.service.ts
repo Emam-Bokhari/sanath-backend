@@ -21,7 +21,7 @@ const createListingServiceToDB = async (payload: TListing, agentId: string) => {
   if (!user.isSubscribed || !user.hasAccess || !user.plan) {
     throw new ApiError(
       StatusCodes.PAYMENT_REQUIRED,
-      "You need an active subscription to create listings"
+      "You need an active subscription to create listings",
     );
   }
 
@@ -36,7 +36,7 @@ const createListingServiceToDB = async (payload: TListing, agentId: string) => {
     if (currentListingsCount >= maxListings) {
       throw new ApiError(
         StatusCodes.FORBIDDEN,
-        `You have reached the maximum listing limit for your ${plan.title} plan (${maxListings} listings).`
+        `You have reached the maximum listing limit for your ${plan.title} plan (${maxListings} listings).`,
       );
     }
   }
@@ -52,7 +52,7 @@ const createListingServiceToDB = async (payload: TListing, agentId: string) => {
   if (payload.isFeatured && !plan?.features?.featuredListing) {
     throw new ApiError(
       StatusCodes.FORBIDDEN,
-      "Your current plan does not support featured listings"
+      "Your current plan does not support featured listings",
     );
   }
 
@@ -220,7 +220,7 @@ const updateListingServiceToDB = async (
     if (!plan?.features?.featuredListing) {
       throw new ApiError(
         StatusCodes.FORBIDDEN,
-        "Your current plan does not support featured listings"
+        "Your current plan does not support featured listings",
       );
     }
   }
@@ -352,7 +352,9 @@ const getNearbyListingsServiceFromDB = async (
 
   let favoriteListingIds: string[] = [];
   if (userId) {
-    const favorites = await FavoriteProperty.find({ userId }).select("listingId");
+    const favorites = await FavoriteProperty.find({ userId }).select(
+      "listingId",
+    );
     favoriteListingIds = favorites.map((f) => f.listingId.toString());
   }
 
@@ -668,10 +670,14 @@ const searchListingsServiceFromDB = async (
       },
       {
         $addFields: {
-          "agentId.isAgentVerified": { $ifNull: ["$agentId.plan.features.verifiedBadge", false] },
-          "agentId.hasProfilePage": { $ifNull: ["$agentId.plan.features.agentProfilePage", false] }
-        }
-      }
+          "agentId.isAgentVerified": {
+            $ifNull: ["$agentId.plan.features.verifiedBadge", false],
+          },
+          "agentId.hasProfilePage": {
+            $ifNull: ["$agentId.plan.features.agentProfilePage", false],
+          },
+        },
+      },
     ];
 
     if (userId) {
@@ -781,7 +787,9 @@ const searchListingsServiceFromDB = async (
 
   let favoriteListingIds: string[] = [];
   if (userId) {
-    const favorites = await FavoriteProperty.find({ userId }).select("listingId");
+    const favorites = await FavoriteProperty.find({ userId }).select(
+      "listingId",
+    );
     favoriteListingIds = favorites.map((f) => f.listingId.toString());
   }
 
@@ -803,8 +811,6 @@ const searchListingsServiceFromDB = async (
 
   return listings;
 };
-
-
 
 const getAllListingsServiceFromDB = async (query: Record<string, unknown>) => {
   const listingQuery = new QueryBuilder(Listing.find(), query)

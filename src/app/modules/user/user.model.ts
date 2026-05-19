@@ -133,15 +133,13 @@ const userSchema = new Schema<IUser, IUserModel>(
     },
 
     // =================AGENCY PROFILE =================
-    agencyName:{
+    agencyName: {
       type: String,
     },
-    agencyLogo:{
+    agencyLogo: {
       type: String,
       default: "",
     },
-
-
 
     // ================= SUBSCRIPTION =================
     isSubscribed: {
