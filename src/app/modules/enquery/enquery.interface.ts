@@ -12,6 +12,8 @@ export type TEnquery = {
   country: string;
   message: string;
   status: ENQUERY_STATUS;
+  createdAt: Date;
+  updatedAt: Date;
 };
 
 export type TEnqueryModel = ISoftDeleteModel<TEnquery>;

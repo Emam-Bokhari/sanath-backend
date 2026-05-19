@@ -366,6 +366,33 @@ const getEnqueryByIdForAdminFromDB = async (enqueryId: string) => {
   return enquery;
 };
 
+const getEnqueryStatsForAdminFromDB = async () => {
+  const now = new Date();
+
+  // Start of this month
+  const startOfMonth = new Date(now.getFullYear(), now.getMonth(), 1);
+
+  // Start of this week (Sunday as start of week)
+  const startOfWeek = new Date(now);
+  const day = now.getDay();
+  const diff = now.getDate() - day;
+  startOfWeek.setDate(diff);
+  startOfWeek.setHours(0, 0, 0, 0);
+
+  const [totalEnqueries, thisWeekEnqueries, thisMonthEnqueries] =
+    await Promise.all([
+      Enquery.countDocuments(),
+      Enquery.countDocuments({ createdAt: { $gte: startOfWeek } }),
+      Enquery.countDocuments({ createdAt: { $gte: startOfMonth } }),
+    ]);
+
+  return {
+    totalEnqueries,
+    thisWeekEnqueries,
+    thisMonthEnqueries,
+  };
+};
+
 export const EnqueryServices = {
   createEnquery,
   getAllEnqueriesFromDB,
@@ -375,4 +402,5 @@ export const EnqueryServices = {
   updateEnqueryStatus,
   getAllEnqueriesForAdminFromDB,
   getEnqueryByIdForAdminFromDB,
+  getEnqueryStatsForAdminFromDB,
 };

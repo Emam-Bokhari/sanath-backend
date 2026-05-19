@@ -124,6 +124,17 @@ const getEnqueryByIdForAdmin = catchAsync(async (req, res) => {
   });
 });
 
+const getEnqueryStatsForAdmin = catchAsync(async (req, res) => {
+  const result = await EnqueryServices.getEnqueryStatsForAdminFromDB();
+
+  sendResponse(res, {
+    success: true,
+    statusCode: StatusCodes.OK,
+    message: "Enquiry stats retrieved successfully",
+    data: result,
+  });
+});
+
 export const EnqueryControllers = {
   createEnquery,
   getAllEnqueries,
@@ -133,4 +144,5 @@ export const EnqueryControllers = {
   updateEnqueryStatus,
   getAllEnqueriesForAdmin,
   getEnqueryByIdForAdmin,
+  getEnqueryStatsForAdmin,
 };
