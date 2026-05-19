@@ -736,6 +736,21 @@ const getAllListingsServiceFromDB = async (query: Record<string, unknown>) => {
   };
 };
 
+const getSingleListingForAdminFromDB = async (listingId: string) => {
+  const listing = await Listing.findById(listingId).populate({
+    path: "agentId",
+    // populate: {
+    //   path: "plan",
+    // },
+  });
+
+  if (!listing) {
+    throw new ApiError(StatusCodes.NOT_FOUND, "Listing not found");
+  }
+
+  return listing;
+};
+
 export const ListingServices = {
   createListingServiceToDB,
   getMyListingsServiceFromDB,
@@ -747,4 +762,5 @@ export const ListingServices = {
   getAgentListingByIdFromDB,
   searchListingsServiceFromDB,
   getAllListingsServiceFromDB,
+  getSingleListingForAdminFromDB,
 };

@@ -169,6 +169,18 @@ const getAllListings = catchAsync(async (req, res) => {
   });
 });
 
+const getSingleListingForAdmin = catchAsync(async (req, res) => {
+  const { listingId } = req.params;
+  const result = await ListingServices.getSingleListingForAdminFromDB(listingId);
+
+  sendResponse(res, {
+    success: true,
+    statusCode: 200,
+    message: "Listing retrieved successfully",
+    data: result,
+  });
+});
+
 export const ListingControllers = {
   createListing,
   getMyListingsService,
@@ -180,4 +192,5 @@ export const ListingControllers = {
   getListingById,
   searchListingsService,
   getAllListings,
+  getSingleListingForAdmin,
 };
