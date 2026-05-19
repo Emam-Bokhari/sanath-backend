@@ -20,4 +20,6 @@ router.get(
   AnalyticsControllers.getUserManagementStats
 );
 
+router.get("/revenue-stats", isAdmin, AnalyticsControllers.getRevenueStats);
+
 export const AnalyticsRoutes = router;

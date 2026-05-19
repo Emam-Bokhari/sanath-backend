@@ -172,9 +172,54 @@ const getUserManagementStatsFromDB = async (role: string) => {
   }
 };
 
+const getRevenueStatsFromDB = async () => {
+  const now = new Date();
+  const startOfMonth = new Date(now.getFullYear(), now.getMonth(), 1);
+  const endOfMonth = new Date(now.getFullYear(), now.getMonth() + 1, 0, 23, 59, 59, 999);
+
+  const [totalRevenueData, monthlyRevenueData, totalTransactions] = await Promise.all([
+    // Total Revenue
+    Subscription.aggregate([
+      {
+        $group: {
+          _id: null,
+          total: { $sum: "$amountPaid" },
+        },
+      },
+    ]),
+    // Total Revenue This Month
+    Subscription.aggregate([
+      {
+        $match: {
+          createdAt: {
+            $gte: startOfMonth,
+            $lte: endOfMonth,
+          },
+        },
+      },
+      {
+        $group: {
+          _id: null,
+          total: { $sum: "$amountPaid" },
+        },
+      },
+    ]),
+    // Total Transactions
+    Subscription.countDocuments({}),
+  ]);
+
+  return {
+    totalRevenue: totalRevenueData.length > 0 ? totalRevenueData[0].total : 0,
+    totalRevenueThisMonth: monthlyRevenueData.length > 0 ? monthlyRevenueData[0].total : 0,
+    totalTransactions,
+  };
+};
+
+
 export const AnalyticsServices = {
   getAgentDashboardStats,
   getAdminStatsFromDB,
   getAgentEnquiryStatsFromDB,
   getUserManagementStatsFromDB,
+  getRevenueStatsFromDB,
 };

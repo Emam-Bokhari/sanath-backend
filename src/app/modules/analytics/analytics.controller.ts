@@ -52,9 +52,21 @@ const getUserManagementStats = catchAsync(async (req, res) => {
   });
 });
 
+const getRevenueStats = catchAsync(async (req, res) => {
+  const result = await AnalyticsServices.getRevenueStatsFromDB();
+
+  sendResponse(res, {
+    success: true,
+    statusCode: 200,
+    message: "Revenue stats retrieved successfully",
+    data: result,
+  });
+});
+
 export const AnalyticsControllers = {
   getAgentDashboardStats,
   getAdminStats,
   getAgentEnquiryStats,
   getUserManagementStats,
+  getRevenueStats,
 };
