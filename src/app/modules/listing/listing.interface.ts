@@ -89,7 +89,7 @@ export type TSearchParams = {
   sort?: TSort;
   lat?: number;
   lng?: number;
-  radiusInKm?: number;
+  radiusInMiles?: number;
 };
 
 export type TListingModel = ISoftDeleteModel<TListing>;

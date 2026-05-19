@@ -263,6 +263,35 @@ const getMonthlyRevenueStatsFromDB = async (year?: string) => {
   return formattedStats;
 };
 
+const getOverviewStatsFromDB = async () => {
+  const [totalUsers, totalAgents, totalRevenueData] = await Promise.all([
+    User.countDocuments({
+      role: USER_ROLES.USER,
+      isDeleted: { $ne: true },
+      verified: true,
+    }),
+    User.countDocuments({
+      role: USER_ROLES.AGENT,
+      isDeleted: { $ne: true },
+      verified: true,
+    }),
+    Subscription.aggregate([
+      {
+        $group: {
+          _id: null,
+          total: { $sum: "$amountPaid" },
+        },
+      },
+    ]),
+  ]);
+
+  return {
+    totalUsers,
+    totalAgents,
+    totalRevenue: totalRevenueData.length > 0 ? totalRevenueData[0].total : 0,
+  };
+};
+
 export const AnalyticsServices = {
   getAgentDashboardStats,
   getAdminStatsFromDB,
@@ -270,4 +299,5 @@ export const AnalyticsServices = {
   getUserManagementStatsFromDB,
   getRevenueStatsFromDB,
   getMonthlyRevenueStatsFromDB,
+  getOverviewStatsFromDB,
 };

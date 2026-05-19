@@ -75,6 +75,17 @@ const getMonthlyRevenueStats = catchAsync(async (req, res) => {
   });
 });
 
+const getOverviewStats = catchAsync(async (req, res) => {
+  const result = await AnalyticsServices.getOverviewStatsFromDB();
+
+  sendResponse(res, {
+    success: true,
+    statusCode: 200,
+    message: "Overview stats retrieved successfully",
+    data: result,
+  });
+});
+
 export const AnalyticsControllers = {
   getAgentDashboardStats,
   getAdminStats,
@@ -82,4 +93,5 @@ export const AnalyticsControllers = {
   getUserManagementStats,
   getRevenueStats,
   getMonthlyRevenueStats,
+  getOverviewStats,
 };

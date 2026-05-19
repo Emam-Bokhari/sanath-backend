@@ -25,7 +25,7 @@ const savedSearchSchema = new Schema<TSavedSearch, TSavedSearchModel>(
       sort: { type: String },
       lat: { type: Number },
       lng: { type: Number },
-      radiusInKm: { type: Number },
+      radiusInMiles: { type: Number },
     },
     name: {
       type: String,

@@ -16,7 +16,7 @@ const toggleSavedSearchZodSchema = z.object({
     sort: z.string().optional(),
     lat: z.number().optional(),
     lng: z.number().optional(),
-    radiusInKm: z.number().optional(),
+    radiusInMiles: z.number().optional(),
   }),
 });
 

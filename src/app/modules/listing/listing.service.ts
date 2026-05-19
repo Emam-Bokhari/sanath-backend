@@ -299,11 +299,11 @@ const getNearbyListingsServiceFromDB = async (
   {
     lat,
     lng,
-    radiusInKm,
+    radiusInMiles,
   }: {
     lat?: number;
     lng?: number;
-    radiusInKm?: number;
+    radiusInMiles?: number;
   },
   query: Record<string, unknown>,
   userId?: string,
@@ -318,7 +318,7 @@ const getNearbyListingsServiceFromDB = async (
     });
   } else {
     const radiusInMeters =
-      (radiusInKm && !isNaN(radiusInKm) ? radiusInKm : 10) * 1000;
+      (radiusInMiles && !isNaN(radiusInMiles) ? radiusInMiles : 10) * 1609.34;
 
     baseQuery = Listing.find({
       location: {
@@ -462,7 +462,7 @@ const searchListingsServiceFromDB = async (
     sort,
     lat,
     lng,
-    radiusInKm,
+    radiusInMiles,
   } = params;
 
   // Save search to history if userId is provided
@@ -493,8 +493,8 @@ const searchListingsServiceFromDB = async (
     bathrooms !== undefined ? Number(bathrooms) : undefined;
   const numericLat = lat !== undefined ? Number(lat) : undefined;
   const numericLng = lng !== undefined ? Number(lng) : undefined;
-  const numericRadiusInKm =
-    radiusInKm !== undefined ? Number(radiusInKm) : undefined;
+  const numericRadiusInMiles =
+    radiusInMiles !== undefined ? Number(radiusInMiles) : undefined;
 
   /* ================= BASE QUERY ================= */
   const query: FilterQuery<any> = {
@@ -612,11 +612,11 @@ const searchListingsServiceFromDB = async (
 
   if (isGeoSearch) {
     const safeRadius =
-      numericRadiusInKm && numericRadiusInKm > 0
-        ? Math.min(numericRadiusInKm, 100)
+      numericRadiusInMiles && numericRadiusInMiles > 0
+        ? Math.min(numericRadiusInMiles, 100)
         : 5;
 
-    const radiusInMeters = safeRadius * 1000;
+    const radiusInMeters = safeRadius * 1609.34;
 
     const pipeline: any[] = [
       {
@@ -633,8 +633,8 @@ const searchListingsServiceFromDB = async (
       },
       {
         $addFields: {
-          distanceInKm: {
-            $divide: ["$distance", 1000],
+          distanceInMiles: {
+            $divide: ["$distance", 1609.34],
           },
         },
       },

@@ -28,4 +28,10 @@ router.get(
   AnalyticsControllers.getMonthlyRevenueStats
 );
 
+router.get(
+  "/overview-stats",
+  isAdmin,
+  AnalyticsControllers.getOverviewStats
+);
+
 export const AnalyticsRoutes = router;
