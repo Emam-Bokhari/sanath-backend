@@ -85,7 +85,7 @@ export const FILE_CONFIG = {
   threeSixtyTour: {
     dir: "threeSixtyTour",
     maxCount: 1,
-    mimeTypes: new Set(["image/png", "image/jpeg", "image/webp"]),
+    mimeTypes: new Set(["video/mp4", "video/webm"]),
   },
   attachment: {
     dir: "attachment",
