@@ -4,25 +4,26 @@ import { USER_ROLES } from "../../../enums/user";
 import { SubscriptionController } from "./subscription.controller";
 import validateRequest from "../../middlewares/validateRequest";
 import { SubscriptionValidations } from "./subscription.validation";
+import { isAgent } from "../../../helpers/authHelper";
 
 const router = express.Router();
 
 router.post(
   "/create-checkout-session",
-  auth(USER_ROLES.USER, USER_ROLES.AGENT),
+  isAgent,
   validateRequest(SubscriptionValidations.createCheckoutSessionValidationSchema),
   SubscriptionController.createCheckoutSession
 );
 
 router.post(
   "/cancel-subscription",
-  auth(USER_ROLES.USER, USER_ROLES.AGENT),
+  isAgent,
   SubscriptionController.cancelSubscription
 );
 
 router.get(
   "/my-subscription",
-  auth(USER_ROLES.USER, USER_ROLES.AGENT),
+  isAgent,
   SubscriptionController.getMySubscription
 );
 

@@ -18,7 +18,7 @@ const createCheckoutSession = catchAsync(async (req: Request, res: Response) => 
 });
 
 const cancelSubscription = catchAsync(async (req: Request, res: Response) => {
-  const userId = req.user._id;
+  const { id: userId } = req.user as { id: string };
   const result = await SubscriptionService.cancelSubscription(userId);
 
   sendResponse(res, {
@@ -30,7 +30,7 @@ const cancelSubscription = catchAsync(async (req: Request, res: Response) => {
 });
 
 const getMySubscription = catchAsync(async (req: Request, res: Response) => {
-  const userId = req.user._id;
+  const { id: userId } = req.user as { id: string };
   const result = await SubscriptionService.getMySubscription(userId);
 
   sendResponse(res, {
