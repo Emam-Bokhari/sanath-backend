@@ -215,6 +215,53 @@ const getRevenueStatsFromDB = async () => {
   };
 };
 
+const getMonthlyRevenueStatsFromDB = async (year?: string) => {
+  const targetYear = year ? parseInt(year) : new Date().getFullYear();
+  const startOfYear = new Date(targetYear, 0, 1);
+  const endOfYear = new Date(targetYear, 11, 31, 23, 59, 59, 999);
+
+  const revenueStats = await Subscription.aggregate([
+    {
+      $match: {
+        createdAt: { $gte: startOfYear, $lte: endOfYear },
+      },
+    },
+    {
+      $group: {
+        _id: { $month: "$createdAt" },
+        totalRevenue: { $sum: "$amountPaid" },
+      },
+    },
+    {
+      $sort: { _id: 1 },
+    },
+  ]);
+
+  const monthNames = [
+    "Jan",
+    "Feb",
+    "Mar",
+    "Apr",
+    "May",
+    "Jun",
+    "Jul",
+    "Aug",
+    "Sep",
+    "Oct",
+    "Nov",
+    "Dec",
+  ];
+
+  const formattedStats = monthNames.map((month, index) => {
+    const monthData = revenueStats.find((stat) => stat._id === index + 1);
+    return {
+      month,
+      totalRevenue: monthData ? monthData.totalRevenue : 0,
+    };
+  });
+
+  return formattedStats;
+};
 
 export const AnalyticsServices = {
   getAgentDashboardStats,
@@ -222,4 +269,5 @@ export const AnalyticsServices = {
   getAgentEnquiryStatsFromDB,
   getUserManagementStatsFromDB,
   getRevenueStatsFromDB,
+  getMonthlyRevenueStatsFromDB,
 };

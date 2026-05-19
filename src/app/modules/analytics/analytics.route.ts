@@ -22,4 +22,10 @@ router.get(
 
 router.get("/revenue-stats", isAdmin, AnalyticsControllers.getRevenueStats);
 
+router.get(
+  "/revenue-monthly-stats",
+  isAdmin,
+  AnalyticsControllers.getMonthlyRevenueStats
+);
+
 export const AnalyticsRoutes = router;

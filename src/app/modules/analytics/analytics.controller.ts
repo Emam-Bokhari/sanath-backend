@@ -63,10 +63,23 @@ const getRevenueStats = catchAsync(async (req, res) => {
   });
 });
 
+const getMonthlyRevenueStats = catchAsync(async (req, res) => {
+  const { year } = req.query;
+  const result = await AnalyticsServices.getMonthlyRevenueStatsFromDB(year as string);
+
+  sendResponse(res, {
+    success: true,
+    statusCode: 200,
+    message: "Monthly revenue stats retrieved successfully",
+    data: result,
+  });
+});
+
 export const AnalyticsControllers = {
   getAgentDashboardStats,
   getAdminStats,
   getAgentEnquiryStats,
   getUserManagementStats,
   getRevenueStats,
+  getMonthlyRevenueStats,
 };
