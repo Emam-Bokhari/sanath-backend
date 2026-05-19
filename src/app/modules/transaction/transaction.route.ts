@@ -1,6 +1,6 @@
 import { Router } from "express";
 import { TransactionController } from "./transaction.controller";
-import { isAdmin } from "../../../helpers/authHelper";
+import { isAdmin, isAgent } from "../../../helpers/authHelper";
 
 const router = Router();
 
@@ -8,6 +8,18 @@ router.get(
   "/",
   isAdmin,
   TransactionController.getAllTransactions
+);
+
+router.get(
+  "/my-transactions",
+  isAgent,
+  TransactionController.getMyTransactions
+);
+
+router.get(
+  "/my-transactions/:transactionId",
+  isAgent,
+  TransactionController.getMyTransactionById
 );
 
 router.get(

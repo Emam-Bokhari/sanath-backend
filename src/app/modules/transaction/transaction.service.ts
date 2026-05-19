@@ -62,7 +62,42 @@ const getTransactionByIdFromDB = async (transactionId: string) => {
     return result;
 };
 
+const getMyTransactionsFromDB = async (agentId: string, query: Record<string, unknown>) => {
+    const transactionQuery = new QueryBuilder(
+        Subscription.find({ userId: agentId })
+            .populate("userId", "name email profileImage")
+            .populate("planId"),
+        query
+    )
+        .filter()
+        .sort()
+        .paginate()
+        .fields();
+
+    const result = await transactionQuery.modelQuery;
+    const meta = await transactionQuery.countTotal();
+
+    return {
+        meta,
+        result,
+    };
+};
+
+const getMyTransactionByIdFromDB = async (agentId: string, transactionId: string) => {
+    const result = await Subscription.findOne({ _id: transactionId, userId: agentId })
+        .populate("userId", "name email profileImage")
+        .populate("planId");
+
+    if (!result) {
+        throw new Error("Transaction not found");
+    }
+
+    return result;
+};
+
 export const TransactionService = {
     getAllTransactionsFromDB,
     getTransactionByIdFromDB,
+    getMyTransactionsFromDB,
+    getMyTransactionByIdFromDB,
 };
