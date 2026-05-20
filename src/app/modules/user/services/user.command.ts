@@ -177,7 +177,7 @@ const deleteProfileFromDB = async (id: string, password: string) => {
   // check password
   const isPasswordMatch = await bcrypt.compare(password, user.password!);
   if (!isPasswordMatch) {
-    throw new ApiError(StatusCodes.UNAUTHORIZED, "Password is incorrect!");
+    throw new ApiError(StatusCodes.BAD_REQUEST, "Password is incorrect!");
   }
 
   // delete user

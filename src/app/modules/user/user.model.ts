@@ -38,8 +38,8 @@ const userSchema = new Schema<IUser, IUserModel>(
 
     phone: {
       type: String,
-      sparse: true,
-      unique: true,
+      // sparse: true,
+      // unique: true,
       trim: true,
     },
 
@@ -189,7 +189,7 @@ const userSchema = new Schema<IUser, IUserModel>(
 );
 
 /* ================= INDEX ================= */
-userSchema.index({ email: 1, phone: 1 });
+userSchema.index({ email: 1 });
 userSchema.index({ location: "2dsphere" });
 
 /* ================= PLUGIN ================= */

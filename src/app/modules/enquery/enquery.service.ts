@@ -94,11 +94,10 @@ const createEnquery = async (userId: string, payload: any) => {
               <p><b>User:</b> ${user.name}</p>
               <p><b>Email:</b> ${user.email}</p>
 
-              ${
-                agentName
-                  ? `<p><b>Agent:</b> ${agentName} (${agentEmail})</p>`
-                  : ""
-              }
+              ${agentName
+        ? `<p><b>Agent:</b> ${agentName} (${agentEmail})</p>`
+        : ""
+      }
 
               <p><b>Phone:</b> ${payload.phone}</p>
               <p><b>Country:</b> ${payload.country}</p>
@@ -243,7 +242,7 @@ const getMyEnqueriesFromDB = async (
 ) => {
   const baseQuery = Enquery.find({
     userId: new Types.ObjectId(userId),
-  }).populate("listingId userId");
+  }).populate({ path: "listingId", populate: "agentId" });
 
   const enqueryQuery = new QueryBuilder(baseQuery, query)
     .search(["name", "email", "phone", "message", "postalCode", "country"])
@@ -266,14 +265,14 @@ const getMyEnqueryByIdFromDB = async (userId: string, enqueryId: string) => {
     _id: new Types.ObjectId(enqueryId),
     userId: new Types.ObjectId(userId),
   })
-    .populate("listingId userId")
-    .lean();
+    .populate({ path: "listingId", populate: "agentId" })
+  .lean();
 
-  if (!enquery) {
-    throw new ApiError(StatusCodes.NOT_FOUND, "Enquiry not found");
-  }
+if (!enquery) {
+  throw new ApiError(StatusCodes.NOT_FOUND, "Enquiry not found");
+}
 
-  return enquery;
+return enquery;
 };
 
 const updateEnqueryStatus = async (
