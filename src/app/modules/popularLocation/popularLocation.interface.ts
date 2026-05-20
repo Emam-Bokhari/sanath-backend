@@ -1,4 +1,5 @@
 import { Types } from "mongoose";
+import { ISoftDeleteModel } from "../../../types/softDelete";
 
 export type TPopularLocation = {
     name: string;
@@ -7,3 +8,5 @@ export type TPopularLocation = {
     totalListing?: number;
     isDeleted: boolean;
 }
+
+export type TPopularLocationModel = ISoftDeleteModel<TPopularLocation>;
