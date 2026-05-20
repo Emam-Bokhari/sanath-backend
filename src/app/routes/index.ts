@@ -18,6 +18,7 @@ import { AnalyticsRoutes } from "../modules/analytics/analytics.route";
 import { PlanRoutes } from "../modules/plan/plan.route";
 import { SubscriptionRoutes } from "../modules/subscription/subscription.route";
 import { TransactionRoutes } from "../modules/transaction/transaction.route";
+import { PopularLocationRoutes } from "../modules/popularLocation/popularLocation.route";
 
 const router = express.Router();
 
@@ -97,6 +98,10 @@ const apiRoutes = [
   {
     path: "/transactions",
     route: TransactionRoutes,
+  },
+  {
+    path: "/popular-locations",
+    route: PopularLocationRoutes,
   },
 ];
 

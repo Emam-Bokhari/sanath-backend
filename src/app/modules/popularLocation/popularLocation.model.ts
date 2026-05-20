@@ -1,8 +1,14 @@
 import { Schema, model } from "mongoose";
-import { TPopularLocation, TPopularLocationModel } from "./popularLocation.interface";
+import {
+  TPopularLocation,
+  TPopularLocationModel,
+} from "./popularLocation.interface";
 import { softDeletePlugin } from "../../../DB/plugins/softDeletePlugin";
 
-const popularLocationSchema = new Schema<TPopularLocation,TPopularLocationModel>(
+const popularLocationSchema = new Schema<
+  TPopularLocation,
+  TPopularLocationModel
+>(
   {
     name: {
       type: String,
@@ -16,12 +22,12 @@ const popularLocationSchema = new Schema<TPopularLocation,TPopularLocationModel>
       trim: true,
     },
 
-    listingId: {
-      type: Schema.Types.ObjectId,
-      ref: "Listing",
-      required: true,
-      index: true,
-    },
+    listings: [
+      {
+        type: Schema.Types.ObjectId,
+        ref: "Listing",
+      },
+    ],
 
     totalListing: {
       type: Number,
@@ -38,9 +44,13 @@ const popularLocationSchema = new Schema<TPopularLocation,TPopularLocationModel>
   {
     timestamps: true,
     versionKey: false,
-  }
+  },
 );
 
+popularLocationSchema.index(
+  { name: 1 },
+  { unique: true, partialFilterExpression: { isDeleted: false } },
+);
 
 popularLocationSchema.index({
   isDeleted: 1,
@@ -49,7 +59,7 @@ popularLocationSchema.index({
 
 popularLocationSchema.plugin(softDeletePlugin);
 
-export const PopularLocation = model<TPopularLocation,TPopularLocationModel>(
+export const PopularLocation = model<TPopularLocation, TPopularLocationModel>(
   "PopularLocation",
-  popularLocationSchema
+  popularLocationSchema,
 );
