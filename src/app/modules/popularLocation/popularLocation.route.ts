@@ -14,13 +14,15 @@ router
         PopularLocationControllers.createPopularLocation)
     .get(PopularLocationControllers.getAllPopularLocations);
 
+router.get("/available-listings", PopularLocationControllers.getAvailableListings);
+
 router
     .route("/:popularLocationId")
     .get(PopularLocationControllers.getSinglePopularLocation)
     .patch(isAdmin,
         fileUploadHandler(),
         parseFileData({ fieldName: "image", mode: "single" }),
-        PopularLocationControllers.addListingsToLocation)
+        PopularLocationControllers.updatePopularLocation)
     .delete(isAdmin, PopularLocationControllers.deletePopularLocation);
 
 export const PopularLocationRoutes = router;

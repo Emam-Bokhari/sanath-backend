@@ -1,72 +1,24 @@
 import { StatusCodes } from "http-status-codes";
+import { Types } from "mongoose";
 import ApiError from "../../../errors/ApiErrors";
 import { Listing } from "../listing/listing.model";
 import { LISTING_STATUS } from "../listing/listing.constant";
 import { TPopularLocation } from "./popularLocation.interface";
 import { PopularLocation } from "./popularLocation.model";
 
-const createPopularLocationIntoDB = async (payload: TPopularLocation) => {
- 
-  const isNameExist = await PopularLocation.findOne({
-    name: { $regex: new RegExp(`^${payload.name}$`, "i") },
-    isDeleted: false,
-  });
-
-  if (isNameExist) {
-    throw new ApiError(
-      StatusCodes.BAD_REQUEST,
-      "A popular location with this name already exists",
-    );
-  }
-
-  if (payload.listings && payload.listings.length > 0) {
-    for (const listingId of payload.listings) {
-      const listing = await Listing.findById(listingId);
-      if (!listing) {
-        throw new ApiError(
-          StatusCodes.NOT_FOUND,
-          `Listing with ID ${listingId} not found`,
-        );
-      }
-      if (listing.status !== LISTING_STATUS.PUBLISHED) {
-        throw new ApiError(
-          StatusCodes.BAD_REQUEST,
-          `Listing ${listing.title} is not published`,
-        );
-      }
-
-
-      const isListingUsed = await PopularLocation.findOne({
-        listings: listingId,
-        isDeleted: false,
-      });
-      if (isListingUsed) {
-        throw new ApiError(
-          StatusCodes.BAD_REQUEST,
-          `Listing ${listing.title} is already added to another popular location`,
-        );
-      }
-    }
-    payload.totalListing = payload.listings.length;
-  }
-
-  const result = await PopularLocation.create(payload);
-  return result;
-};
-
-const addListingsToLocationService = async (
-  popularLocationId: string,
+const validateAndNormalizeListingIds = async (
   listingIds: string[],
-) => {
-  const location = await PopularLocation.findOne({ _id: popularLocationId, isDeleted: false });
-  if (!location) {
-    throw new ApiError(StatusCodes.NOT_FOUND, "Popular location not found");
-  }
+  excludePopularLocationId?: string,
+): Promise<Types.ObjectId[]> => {
+  const uniqueIds = [...new Set(listingIds.map((id) => id.toString()).filter(Boolean))];
+  const validatedIds: Types.ObjectId[] = [];
 
-  for (const listingId of listingIds) {
-
-    if (location.listings.includes(listingId)) {
-      continue; 
+  for (const listingId of uniqueIds) {
+    if (!Types.ObjectId.isValid(listingId)) {
+      throw new ApiError(
+        StatusCodes.BAD_REQUEST,
+        `Invalid listing ID: ${listingId}`,
+      );
     }
 
     const listing = await Listing.findById(listingId);
@@ -84,11 +36,12 @@ const addListingsToLocationService = async (
       );
     }
 
-
     const isListingUsed = await PopularLocation.findOne({
-      listings: listingId,
+      listings: new Types.ObjectId(listingId),
       isDeleted: false,
-      _id: { $ne: popularLocationId },
+      ...(excludePopularLocationId
+        ? { _id: { $ne: excludePopularLocationId } }
+        : {}),
     });
 
     if (isListingUsed) {
@@ -98,11 +51,88 @@ const addListingsToLocationService = async (
       );
     }
 
-    location.listings.push(listingId);
+    validatedIds.push(new Types.ObjectId(listingId));
   }
 
-  location.totalListing = location.listings.length;
+  return validatedIds;
+};
+
+const createPopularLocationIntoDB = async (payload: TPopularLocation) => {
+  const isNameExist = await PopularLocation.findOne({
+    name: { $regex: new RegExp(`^${payload.name}$`, "i") },
+    isDeleted: false,
+  });
+
+  if (isNameExist) {
+    throw new ApiError(
+      StatusCodes.BAD_REQUEST,
+      "A popular location with this name already exists",
+    );
+  }
+
+  if (payload.listings && payload.listings.length > 0) {
+    const listingIdStrings = payload.listings.map((id) => id.toString());
+    const validated = await validateAndNormalizeListingIds(listingIdStrings);
+    payload.listings = validated;
+    payload.totalListing = validated.length;
+  } else {
+    payload.listings = [];
+    payload.totalListing = 0;
+  }
+
+  const result = await PopularLocation.create(payload);
+  return result;
+};
+
+type TUpdatePopularLocationPayload = {
+  name?: string;
+  listingIds: string[];
+  image?: string;
+};
+
+const updatePopularLocationService = async (
+  popularLocationId: string,
+  payload: TUpdatePopularLocationPayload,
+) => {
+  const location = await PopularLocation.findOne({
+    _id: popularLocationId,
+    isDeleted: false,
+  });
+
+  if (!location) {
+    throw new ApiError(StatusCodes.NOT_FOUND, "Popular location not found");
+  }
+
+  if (payload.name?.trim()) {
+    const isNameExist = await PopularLocation.findOne({
+      name: { $regex: new RegExp(`^${payload.name.trim()}$`, "i") },
+      isDeleted: false,
+      _id: { $ne: popularLocationId },
+    });
+
+    if (isNameExist) {
+      throw new ApiError(
+        StatusCodes.BAD_REQUEST,
+        "A popular location with this name already exists",
+      );
+    }
+
+    location.name = payload.name.trim();
+  }
+
+  if (payload.image) {
+    location.image = payload.image;
+  }
+
+  const validatedListings = await validateAndNormalizeListingIds(
+    payload.listingIds,
+    popularLocationId,
+  );
+
+  location.listings = validatedListings;
+  location.totalListing = validatedListings.length;
   await location.save();
+
   return location;
 };
 
@@ -114,7 +144,6 @@ const getAllPopularLocationsFromDB = async () => {
 };
 
 const getSinglePopularLocationFromDB = async (popularLocationId: string) => {
-    console.log(popularLocationId);
   const result = await PopularLocation.findOne({
     _id: popularLocationId,
   }).populate("listings");
@@ -140,10 +169,31 @@ const deletePopularLocationFromDB = async (popularLocationId: string) => {
   return result;
 };
 
+const getAvailableListingsForPopularLocation = async (
+  popularLocationId?: string,
+) => {
+  const popularLocations = await PopularLocation.find({ isDeleted: false }).select(
+    "listings _id",
+  );
+
+  const assignedListingIds = popularLocations
+    .filter((loc) => loc._id.toString() !== popularLocationId)
+    .flatMap((loc) => loc.listings.map((id) => id.toString()));
+
+  const result = await Listing.find({
+    status: LISTING_STATUS.PUBLISHED,
+    isDeleted: false,
+    _id: { $nin: assignedListingIds },
+  }).select("_id title country city location postalCode");
+
+  return result;
+};
+
 export const PopularLocationServices = {
   createPopularLocationIntoDB,
-  addListingsToLocationService,
+  updatePopularLocationService,
   getAllPopularLocationsFromDB,
   getSinglePopularLocationFromDB,
   deletePopularLocationFromDB,
+  getAvailableListingsForPopularLocation,
 };

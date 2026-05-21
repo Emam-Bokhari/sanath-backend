@@ -1,7 +1,27 @@
 import { StatusCodes } from "http-status-codes";
 import catchAsync from "../../../shared/catchAsync";
 import sendResponse from "../../../shared/sendResponse";
+import ApiError from "../../../errors/ApiErrors";
 import { PopularLocationServices } from "./popularLocation.service";
+
+const parseListingIds = (listingIds: unknown): string[] => {
+  if (Array.isArray(listingIds)) {
+    return listingIds.map((id) => String(id));
+  }
+
+  if (typeof listingIds === "string") {
+    try {
+      const parsed = JSON.parse(listingIds);
+      if (Array.isArray(parsed)) {
+        return parsed.map((id) => String(id));
+      }
+    } catch {
+      return [listingIds];
+    }
+  }
+
+  return [];
+};
 
 const createPopularLocation = catchAsync(async (req, res) => {
   const result = await PopularLocationServices.createPopularLocationIntoDB(
@@ -16,18 +36,30 @@ const createPopularLocation = catchAsync(async (req, res) => {
   });
 });
 
-const addListingsToLocation = catchAsync(async (req, res) => {
+const updatePopularLocation = catchAsync(async (req, res) => {
   const { popularLocationId } = req.params;
-  const { listingIds } = req.body;
-  const result = await PopularLocationServices.addListingsToLocationService(
+  const listingIds = parseListingIds(req.body?.listingIds);
+
+  if (!listingIds.length) {
+    throw new ApiError(
+      StatusCodes.BAD_REQUEST,
+      "At least one listingId is required",
+    );
+  }
+
+  const result = await PopularLocationServices.updatePopularLocationService(
     popularLocationId,
-    listingIds,
+    {
+      name: req.body?.name,
+      listingIds,
+      image: req.body?.image,
+    },
   );
 
   sendResponse(res, {
     success: true,
     statusCode: StatusCodes.OK,
-    message: "Listings added to location successfully",
+    message: "Popular location updated successfully",
     data: result,
   });
 });
@@ -45,7 +77,6 @@ const getAllPopularLocations = catchAsync(async (req, res) => {
 
 const getSinglePopularLocation = catchAsync(async (req, res) => {
   const { popularLocationId } = req.params;
-  console.log(popularLocationId,"controller");
   const result = await PopularLocationServices.getSinglePopularLocationFromDB(
     popularLocationId,
   );
@@ -60,7 +91,6 @@ const getSinglePopularLocation = catchAsync(async (req, res) => {
 
 const deletePopularLocation = catchAsync(async (req, res) => {
   const { popularLocationId } = req.params;
-  console.log(popularLocationId,"controller");
   const result = await PopularLocationServices.deletePopularLocationFromDB(
     popularLocationId,
   );
@@ -73,10 +103,26 @@ const deletePopularLocation = catchAsync(async (req, res) => {
   });
 });
 
+const getAvailableListings = catchAsync(async (req, res) => {
+  const popularLocationId = req.query.popularLocationId as string | undefined;
+  const result =
+    await PopularLocationServices.getAvailableListingsForPopularLocation(
+      popularLocationId,
+    );
+
+  sendResponse(res, {
+    success: true,
+    statusCode: StatusCodes.OK,
+    message: "Available listings retrieved successfully",
+    data: result,
+  });
+});
+
 export const PopularLocationControllers = {
   createPopularLocation,
-  addListingsToLocation,
+  updatePopularLocation,
   getAllPopularLocations,
   getSinglePopularLocation,
   deletePopularLocation,
+  getAvailableListings,
 };

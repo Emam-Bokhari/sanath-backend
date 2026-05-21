@@ -334,6 +334,13 @@ const updateEnqueryStatus = async (
   agentId: string,
   status: ENQUERY_STATUS,
 ) => {
+  const user = await User.findById(agentId).populate("plan");
+  const plan = user?.plan as any;
+
+  if (!plan?.features?.leadAccess) {
+    return {} as any;
+  }
+
   const enquery = await Enquery.findById(enqueryId)
     .populate("listingId userId")
     .lean();
@@ -362,10 +369,6 @@ const updateEnqueryStatus = async (
     { status },
     { new: true },
   );
-
-  if (!enquery) {
-    throw new ApiError(StatusCodes.NOT_FOUND, "Enquiry not found");
-  }
 
   return updatedEnqueryStatus;
 };
