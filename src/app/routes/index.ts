@@ -19,6 +19,7 @@ import { PlanRoutes } from "../modules/plan/plan.route";
 import { SubscriptionRoutes } from "../modules/subscription/subscription.route";
 import { TransactionRoutes } from "../modules/transaction/transaction.route";
 import { PopularLocationRoutes } from "../modules/popularLocation/popularLocation.route";
+import { NotificationPreferenceRoutes } from "../modules/notificationPreference/notificationPreference.route";
 
 const router = express.Router();
 
@@ -102,6 +103,10 @@ const apiRoutes = [
   {
     path: "/popular-locations",
     route: PopularLocationRoutes,
+  },
+  {
+    path: "/notification-preferences",
+    route: NotificationPreferenceRoutes,
   },
 ];
 
