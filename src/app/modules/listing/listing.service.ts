@@ -465,7 +465,8 @@ const searchListingsServiceFromDB = async (
     lat,
     lng,
     radiusInMiles,
-  } = params;
+    radiusInMiels, // Handle common typo in frontend
+  } = params as any;
 
   // Save search to history if userId is provided
   if (userId) {
@@ -493,14 +494,21 @@ const searchListingsServiceFromDB = async (
   const numericBedrooms = bedrooms !== undefined ? Number(bedrooms) : undefined;
   const numericBathrooms =
     bathrooms !== undefined ? Number(bathrooms) : undefined;
-  const numericLat = lat !== undefined ? Number(lat) : undefined;
-  const numericLng = lng !== undefined ? Number(lng) : undefined;
+
+  // Fix: Ensure lat/lng are actual numbers and not empty strings
+  const numericLat =
+    lat !== undefined && String(lat).trim() !== "" ? Number(lat) : undefined;
+  const numericLng =
+    lng !== undefined && String(lng).trim() !== "" ? Number(lng) : undefined;
+
+  // Support both correct and typo parameter names
+  const effectiveRadius = radiusInMiles || radiusInMiels;
   const numericRadiusInMiles =
-    radiusInMiles !== undefined ? Number(radiusInMiles) : undefined;
+    effectiveRadius !== undefined ? Number(effectiveRadius) : undefined;
 
   /* ================= BASE QUERY ================= */
   const query: FilterQuery<any> = {
-    isDeleted: { $ne: true },
+    isDeleted: false, // Changed from { $ne: true } for better geo-search compatibility
     status: LISTING_STATUS.PUBLISHED,
   };
 
@@ -615,7 +623,7 @@ const searchListingsServiceFromDB = async (
   if (isGeoSearch) {
     const safeRadius =
       numericRadiusInMiles && numericRadiusInMiles > 0
-        ? Math.min(numericRadiusInMiles, 100)
+        ? Math.min(numericRadiusInMiles, 100000) // Increased limit to allow global search if needed
         : 5;
 
     const radiusInMeters = safeRadius * 1609.34;
@@ -631,6 +639,7 @@ const searchListingsServiceFromDB = async (
           maxDistance: radiusInMeters,
           spherical: true,
           query,
+          key: "location", // Explicitly specify the index key
         },
       },
       {

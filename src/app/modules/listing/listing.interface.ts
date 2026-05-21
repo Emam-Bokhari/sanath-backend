@@ -78,18 +78,18 @@ export type TSearchParams = {
   location?: string;
   listingType?: LISTING_TYPE;
   propertyType?: string;
-  minPrice?: number;
-  maxPrice?: number;
-  bedrooms?: number;
-  bathrooms?: number;
+  minPrice?: number | string;
+  maxPrice?: number | string;
+  bedrooms?: number | string;
+  bathrooms?: number | string;
   tenure?: string | string[];
   features?: string | string[];
   isFeatured?: boolean | string;
   timeFilter?: TTimeFilter;
   sort?: TSort;
-  lat?: number;
-  lng?: number;
-  radiusInMiles?: number;
+  lat?: number | string;
+  lng?: number | string;
+  radiusInMiles?: number | string;
 };
 
 export type TListingModel = ISoftDeleteModel<TListing>;
