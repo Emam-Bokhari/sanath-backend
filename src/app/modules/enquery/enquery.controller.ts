@@ -28,6 +28,7 @@ const getAllEnqueries = catchAsync(async (req, res) => {
     message: "Enquiries retrieved successfully",
     data: result.data,
     meta: result.meta,
+    stats: result.stats,
   });
 });
 
@@ -58,6 +59,7 @@ const getMyEnqueries = catchAsync(async (req, res) => {
     message: "My enquiries retrieved successfully",
     data: result.data,
     meta: result.meta,
+    stats: result.stats,
   });
 });
 

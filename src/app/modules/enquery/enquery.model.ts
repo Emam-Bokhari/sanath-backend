@@ -16,7 +16,7 @@ const enquerySchema = new Schema<TEnquery, TEnqueryModel>(
     status: {
       type: String,
       enum: Object.values(ENQUERY_STATUS),
-      default: ENQUERY_STATUS.ENQUERED,
+      default: ENQUERY_STATUS.ENQUIRED,
     },
     name: {
       type: String,
