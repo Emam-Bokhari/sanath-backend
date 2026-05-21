@@ -168,6 +168,11 @@ const getAllEnqueriesFromDB = async (
         total: 0,
         totalPage: 0,
       },
+      stats: {
+        total: 0,
+        enquired: 0,
+        contacted: 0,
+      },
     };
   }
 
@@ -186,12 +191,14 @@ const getAllEnqueriesFromDB = async (
     filter.status = query.status;
   }
 
-  const baseQuery = Enquery.find(filter).populate({
-    path: "listingId",
-    populate: {
-      path: "agentId",
-    },
-  }).populate("userId");
+  const baseQuery = Enquery.find(filter)
+    .populate({
+      path: "listingId",
+      populate: {
+        path: "agentId",
+      },
+    })
+    .populate("userId");
 
   const enqueryQuery = new QueryBuilder(baseQuery, query)
     .search(["name", "email", "phone", "message", "postalCode", "country"])
@@ -203,9 +210,26 @@ const getAllEnqueriesFromDB = async (
   const result = await enqueryQuery.modelQuery;
   const meta = await enqueryQuery.countTotal();
 
+  const [total, enquired, contacted] = await Promise.all([
+    Enquery.countDocuments({ listingId: { $in: listingIds } }),
+    Enquery.countDocuments({
+      listingId: { $in: listingIds },
+      status: ENQUERY_STATUS.ENQUIRED,
+    }),
+    Enquery.countDocuments({
+      listingId: { $in: listingIds },
+      status: ENQUERY_STATUS.CONTACTED,
+    }),
+  ]);
+
   return {
     data: result,
     meta,
+    stats: {
+      total,
+      enquired,
+      contacted,
+    },
   };
 };
 
@@ -267,9 +291,26 @@ const getMyEnqueriesFromDB = async (
   const result = await enqueryQuery.modelQuery;
   const meta = await enqueryQuery.countTotal();
 
+  const [total, enquired, contacted] = await Promise.all([
+    Enquery.countDocuments({ userId: new Types.ObjectId(userId) }),
+    Enquery.countDocuments({
+      userId: new Types.ObjectId(userId),
+      status: ENQUERY_STATUS.ENQUIRED,
+    }),
+    Enquery.countDocuments({
+      userId: new Types.ObjectId(userId),
+      status: ENQUERY_STATUS.CONTACTED,
+    }),
+  ]);
+
   return {
     data: result,
     meta,
+    stats: {
+      total,
+      enquired,
+      contacted,
+    },
   };
 };
 
