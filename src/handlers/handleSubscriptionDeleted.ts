@@ -33,6 +33,7 @@ export const handleSubscriptionDeleted = async (data: Stripe.Subscription) => {
           isSubscribed: false,
           isAgentVerified: false,
           maxListings: 0,
+          remainingListings: 0,
         },
         { new: true },
       );

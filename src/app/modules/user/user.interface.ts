@@ -53,6 +53,7 @@ export type IUser = {
   hasAccess?: boolean;
   isAgentVerified?: boolean;
   maxListings?: number;
+  remainingListings?: number;
 
   /* ================= AUTH ================= */
   authentication?: {

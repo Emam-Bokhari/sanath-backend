@@ -79,6 +79,9 @@ export const handleSubscriptionUpdated = async (data: Stripe.Subscription) => {
               ? !!pricingPlan.features?.verifiedBadge
               : false,
             maxListings: hasAccess ? pricingPlan.limits?.maxListings || 0 : 0,
+            remainingListings: hasAccess
+              ? pricingPlan.limits?.maxListings || 0
+              : 0,
           });
         } else {
           // Create if not exists and it's active
@@ -113,6 +116,7 @@ export const handleSubscriptionUpdated = async (data: Stripe.Subscription) => {
             customerId: customer.id,
             isAgentVerified: !!pricingPlan.features?.verifiedBadge,
             maxListings: pricingPlan.limits?.maxListings || 0,
+            remainingListings: pricingPlan.limits?.maxListings || 0,
           });
         }
       } else {

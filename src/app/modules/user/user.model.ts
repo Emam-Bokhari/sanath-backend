@@ -171,6 +171,10 @@ const userSchema = new Schema<IUser, IUserModel>(
       type: Number,
       default: 0,
     },
+    remainingListings: {
+      type: Number,
+      default: 0,
+    },
 
     /* ================= AUTH ================= */
     authentication: {

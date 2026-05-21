@@ -23,14 +23,11 @@ const createListingServiceToDB = async (payload: TListing, agentId: string) => {
   }
 
   const plan = user.plan as any;
-  const maxListings = plan.limits?.maxListings || 0;
+  const maxListings = user.maxListings || 0;
+  const remainingListings = user.remainingListings || 0;
 
   if (maxListings !== -1) {
-    const currentListingsCount = await Listing.countDocuments({
-      agentId,
-      isDeleted: false,
-    });
-    if (currentListingsCount >= maxListings) {
+    if (remainingListings <= 0) {
       throw new ApiError(
         StatusCodes.FORBIDDEN,
         `You have reached the maximum listing limit for your ${plan.title} plan (${maxListings} listings).`,
@@ -76,6 +73,13 @@ const createListingServiceToDB = async (payload: TListing, agentId: string) => {
   }
 
   await listing.save();
+
+  // Decrement remaining listings if not unlimited
+  if (maxListings !== -1) {
+    await User.findByIdAndUpdate(agentId, {
+      $inc: { remainingListings: -1 },
+    });
+  }
 
   return listing;
 };

@@ -89,6 +89,7 @@ export const handleSubscriptionCreated = async (data: Stripe.Subscription) => {
             customerId: customer.id,
             isAgentVerified: !!pricingPlan.features?.verifiedBadge,
             maxListings: pricingPlan.limits?.maxListings || 0,
+            remainingListings: pricingPlan.limits?.maxListings || 0,
           },
           { new: true },
         );
