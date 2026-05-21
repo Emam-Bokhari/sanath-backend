@@ -19,10 +19,7 @@ const createListingServiceToDB = async (payload: TListing, agentId: string) => {
   }
 
   if (!user.isSubscribed || !user.hasAccess || !user.plan) {
-    throw new ApiError(
-      StatusCodes.PAYMENT_REQUIRED,
-      "You need an active subscription to create listings",
-    );
+    return {} as TListing;
   }
 
   const plan = user.plan as any;
@@ -218,10 +215,7 @@ const updateListingServiceToDB = async (
     const user = await User.findById(agentId).populate("plan");
     const plan = user?.plan as any;
     if (!plan?.features?.featuredListing) {
-      throw new ApiError(
-        StatusCodes.FORBIDDEN,
-        "Your current plan does not support featured listings",
-      );
+      return {} as any;
     }
   }
 

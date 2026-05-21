@@ -1,18 +1,21 @@
 import express from "express";
 import { isAdmin, isAgent } from "../../../helpers/authHelper";
 import { AnalyticsControllers } from "./analytics.controller";
+import checkSubscription from "../../middlewares/checkSubscription";
 
 const router = express.Router();
 
 router.get(
   "/agent-stats",
   isAgent,
+  checkSubscription(),
   AnalyticsControllers.getAgentDashboardStats,
 );
 
 router.get(
   "/agent-enquiry-monthly-stats",
   isAgent,
+  checkSubscription(),
   AnalyticsControllers.getAgentEnquiryStats,
 );
 

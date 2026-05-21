@@ -49,11 +49,11 @@ router
   .route("/search")
   .get(optionalAuth(), ListingControllers.searchListingsService);
 
-router.route("/my").get(isAgent, ListingControllers.getMyListingsService);
+router.route("/my").get(isAgent, checkSubscription(), ListingControllers.getMyListingsService);
 
 router
   .route("/my/:listingId")
-  .get(isAgent, ListingControllers.getMyListingById)
+  .get(isAgent, checkSubscription(), ListingControllers.getMyListingById)
   .patch(
     isAgent,
     checkSubscription(),
@@ -78,11 +78,11 @@ router
     ),
     ListingControllers.updateListing,
   )
-  .delete(isAgent, ListingControllers.deleteListing);
+  .delete(isAgent, checkSubscription(), ListingControllers.deleteListing);
 
 router
   .route("/my/status-sold/:listingId")
-  .patch(isAgent, ListingControllers.updateListingStatusToSold);
+  .patch(isAgent, checkSubscription(), ListingControllers.updateListingStatusToSold);
 
 router.route("/admin/all").get(isAdmin, ListingControllers.getAllListings);
 

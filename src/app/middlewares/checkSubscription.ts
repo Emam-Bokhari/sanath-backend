@@ -22,12 +22,29 @@ const checkSubscription = (requiredFeature?: keyof IPlanFeatures) => {
         throw new ApiError(StatusCodes.NOT_FOUND, "User not found");
       }
 
+      // Helper to send empty response instead of error
+      const sendEmptyResponse = () => {
+        const isArray =
+          req.method === "GET" &&
+          !req.params.listingId &&
+          !req.params.enqueryId &&
+          !req.params.id &&
+          !req.url.includes("stats") &&
+          !req.url.includes("dashboard");
+
+        return res.status(StatusCodes.OK).json({
+          success: true,
+          message: "Subscription required",
+          data: isArray ? [] : {},
+          ...(isArray && {
+            meta: { page: 1, limit: 10, total: 0, totalPage: 0 },
+          }),
+        });
+      };
+
       // Check if user has active subscription access in user model
       if (!user.hasAccess || !user.isSubscribed || !user.plan) {
-        throw new ApiError(
-          StatusCodes.PAYMENT_REQUIRED,
-          "You need an active subscription to access this feature",
-        );
+        return sendEmptyResponse();
       }
 
       // Double check the subscription record for expiration
@@ -37,10 +54,7 @@ const checkSubscription = (requiredFeature?: keyof IPlanFeatures) => {
       }).sort({ createdAt: -1 });
 
       if (!activeSubscription) {
-        throw new ApiError(
-          StatusCodes.PAYMENT_REQUIRED,
-          "No active subscription record found",
-        );
+        return sendEmptyResponse();
       }
 
       // Check if current date is past currentPeriodEnd
@@ -48,20 +62,14 @@ const checkSubscription = (requiredFeature?: keyof IPlanFeatures) => {
         activeSubscription.currentPeriodEnd &&
         new Date() > activeSubscription.currentPeriodEnd
       ) {
-        throw new ApiError(
-          StatusCodes.PAYMENT_REQUIRED,
-          "Your subscription has expired. Please renew to continue.",
-        );
+        return sendEmptyResponse();
       }
 
       const plan = user.plan as any; // Populated plan
 
       // Check for specific feature if requested
       if (requiredFeature && !plan.features?.[requiredFeature]) {
-        throw new ApiError(
-          StatusCodes.FORBIDDEN,
-          `Your current plan does not support ${requiredFeature}`,
-        );
+        return sendEmptyResponse();
       }
 
       // Attach plan to request for use in controllers

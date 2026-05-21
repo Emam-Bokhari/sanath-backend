@@ -160,10 +160,15 @@ const getAllEnqueriesFromDB = async (
   const plan = user?.plan as any;
 
   if (!plan?.features?.leadAccess) {
-    throw new ApiError(
-      StatusCodes.FORBIDDEN,
-      "Your current plan does not support lead access",
-    );
+    return {
+      data: [],
+      meta: {
+        page: Number(query.page) || 1,
+        limit: Number(query.limit) || 10,
+        total: 0,
+        totalPage: 0,
+      },
+    };
   }
 
   const listings = await Listing.find({
@@ -204,10 +209,7 @@ const getEnqueryByIdFromDB = async (agentId: string, enqueryId: string) => {
   const plan = user?.plan as any;
 
   if (!plan?.features?.leadAccess) {
-    throw new ApiError(
-      StatusCodes.FORBIDDEN,
-      "Your current plan does not support lead access",
-    );
+    return {} as any;
   }
 
   const enquery = await Enquery.findById(enqueryId)
