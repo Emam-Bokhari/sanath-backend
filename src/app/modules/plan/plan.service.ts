@@ -69,10 +69,11 @@ const updatePlanToDB = async (planId: string, payload: Partial<IPlan>) => {
   // stripe prices are immutable, so we must create a new one if price-related fields change
   const isPriceChanged =
     payload.pricing?.amount !== undefined &&
-    payload.pricing.amount !== isExist.pricing.amount;
+    Number(payload.pricing.amount) !== isExist.pricing.amount;
   const isCurrencyChanged =
     payload.pricing?.currency !== undefined &&
-    payload.pricing.currency !== isExist.pricing.currency;
+    payload.pricing.currency.toLowerCase() !==
+      isExist.pricing.currency.toLowerCase();
   const isDurationChanged =
     payload.duration !== undefined && payload.duration !== isExist.duration;
 
@@ -84,7 +85,10 @@ const updatePlanToDB = async (planId: string, payload: Partial<IPlan>) => {
       );
     }
 
-    const newAmount = payload.pricing?.amount ?? isExist.pricing.amount;
+    const newAmount =
+      payload.pricing?.amount !== undefined
+        ? Number(payload.pricing.amount)
+        : isExist.pricing.amount;
     const newCurrency = (
       payload.pricing?.currency ?? isExist.pricing.currency
     ).toLowerCase();
@@ -116,17 +120,26 @@ const updatePlanToDB = async (planId: string, payload: Partial<IPlan>) => {
 
   // update DB using findByIdAndUpdate with runValidators
   // handle: be careful with nested objects to avoid partial overwrites
+  const plainPlan = isExist.toObject();
+
   if (payload.pricing) {
-    payload.pricing = { ...isExist.pricing, ...payload.pricing };
+    payload.pricing = {
+      ...plainPlan.pricing,
+      ...payload.pricing,
+      amount:
+        payload.pricing.amount !== undefined
+          ? Number(payload.pricing.amount)
+          : isExist.pricing.amount,
+    };
   }
   if (payload.limits) {
-    payload.limits = { ...isExist.limits, ...payload.limits };
+    payload.limits = { ...plainPlan.limits, ...payload.limits };
   }
   if (payload.features) {
-    payload.features = { ...isExist.features, ...payload.features };
+    payload.features = { ...plainPlan.features, ...payload.features };
   }
   if (payload.trial) {
-    payload.trial = { ...isExist.trial, ...payload.trial };
+    payload.trial = { ...plainPlan.trial, ...payload.trial };
   }
 
   const result = await Plan.findByIdAndUpdate(planId, payload, {

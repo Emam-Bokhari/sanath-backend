@@ -6,6 +6,8 @@ import { User } from "../user/user.model";
 import { STATUS, USER_ROLES } from "../../../enums/user";
 import { Enquery } from "../enquery/enquery.model";
 import { Subscription } from "../subscription/subscription.model";
+import { Plan } from "../plan/plan.model";
+import { PLAN_STATUS, PLAN_TIER } from "../plan/plan.constant";
 
 const getAgentDashboardStats = async (agentId: string) => {
   const agentObjectId = new Types.ObjectId(agentId);
@@ -414,6 +416,26 @@ const getOverviewStatsFromDB = async () => {
   };
 };
 
+const getPlanStatsFromDB = async () => {
+  const [totalPlans, activePlans, trialPlans, premiumAndProfessionalPlans] =
+    await Promise.all([
+      Plan.countDocuments({ isDeleted: false }),
+      Plan.countDocuments({ status: PLAN_STATUS.ACTIVE, isDeleted: false }),
+      Plan.countDocuments({ tier: PLAN_TIER.TRIAL, isDeleted: false }),
+      Plan.countDocuments({
+        tier: { $in: [PLAN_TIER.PREMIUM, PLAN_TIER.PROFESSIONAL] },
+        isDeleted: false,
+      }),
+    ]);
+
+  return {
+    totalPlans,
+    activePlans,
+    trialPlans,
+    premiumAndProfessionalPlans,
+  };
+};
+
 export const AnalyticsServices = {
   getAgentDashboardStats,
   getAdminStatsFromDB,
@@ -424,4 +446,5 @@ export const AnalyticsServices = {
   getMonthlyUserStatsFromDB,
   getMonthlyAgentStatsFromDB,
   getOverviewStatsFromDB,
+  getPlanStatsFromDB,
 };

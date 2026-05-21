@@ -49,4 +49,6 @@ router.get(
 
 router.get("/overview-stats", isAdmin, AnalyticsControllers.getOverviewStats);
 
+router.get("/plan-stats", isAdmin, AnalyticsControllers.getPlanStats);
+
 export const AnalyticsRoutes = router;

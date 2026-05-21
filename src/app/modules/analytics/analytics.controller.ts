@@ -118,6 +118,17 @@ const getOverviewStats = catchAsync(async (req, res) => {
   });
 });
 
+const getPlanStats = catchAsync(async (req, res) => {
+  const result = await AnalyticsServices.getPlanStatsFromDB();
+
+  sendResponse(res, {
+    success: true,
+    statusCode: 200,
+    message: "Plan stats retrieved successfully",
+    data: result,
+  });
+});
+
 export const AnalyticsControllers = {
   getAgentDashboardStats,
   getAdminStats,
@@ -128,4 +139,5 @@ export const AnalyticsControllers = {
   getMonthlyUserStats,
   getMonthlyAgentStats,
   getOverviewStats,
+  getPlanStats,
 };
