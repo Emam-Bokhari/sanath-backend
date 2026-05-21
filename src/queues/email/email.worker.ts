@@ -5,7 +5,7 @@ import { emailHelper } from "../../helpers/emailHelper";
 export const emailWorker = new Worker(
   "emailQueue",
   async (job) => {
-    const { to, subject, html } = job.data;
+    const { to, subject, html, userId, event } = job.data;
 
     // console.log(to, subject, html);
 
@@ -13,6 +13,8 @@ export const emailWorker = new Worker(
       to,
       subject,
       html,
+      userId,
+      event,
     });
   },
   { connection },

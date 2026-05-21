@@ -10,6 +10,11 @@ import { FilterQuery, Types } from "mongoose";
 import QueryBuilder from "../../builder/queryBuilder";
 import { Enquery } from "../enquery/enquery.model";
 import { FavoriteProperty } from "../favoriteProperty/favoriteProperty.model";
+import { sendNotifications } from "../../../helpers/notificationsHelper";
+import {
+  NOTIFICATION_REFERENCE_MODEL,
+  NOTIFICATION_TYPE,
+} from "../notification/notification.constant";
 
 const createListingServiceToDB = async (payload: TListing, agentId: string) => {
   // Check subscription and limits
@@ -905,6 +910,29 @@ const updateListingStatusForAdminServiceToDB = async (
 
   listing.status = status;
   await listing.save();
+
+  // Send Notification to Agent
+  if (status === LISTING_STATUS.PUBLISHED) {
+    await sendNotifications({
+      receiver: listing.agentId.toString(),
+      title: "Listing Approved",
+      text: `Your listing "${listing.title}" has been approved.`,
+      type: NOTIFICATION_TYPE.AGENT,
+      referenceId: listing._id.toString(),
+      referenceModel: NOTIFICATION_REFERENCE_MODEL.LISTING,
+      event: "listingApproved",
+    });
+  } else if (status === LISTING_STATUS.REJECTED) {
+    await sendNotifications({
+      receiver: listing.agentId.toString(),
+      title: "Listing Rejected",
+      text: `Your listing "${listing.title}" has been rejected.`,
+      type: NOTIFICATION_TYPE.AGENT,
+      referenceId: listing._id.toString(),
+      referenceModel: NOTIFICATION_REFERENCE_MODEL.LISTING,
+      event: "listingRejected",
+    });
+  }
 
   return listing;
 };

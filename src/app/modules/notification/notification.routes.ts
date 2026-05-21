@@ -2,60 +2,53 @@ import express from "express";
 import auth from "../../middlewares/auth";
 import { USER_ROLES } from "../../../enums/user";
 import { NotificationController } from "./notification.controller";
+
 const router = express.Router();
 
+// --- USER & AGENT ROUTES ---
 router
   .route("/")
-  .get(auth(USER_ROLES.USER), NotificationController.getNotificationFromDB)
-  .patch(auth(USER_ROLES.USER), NotificationController.readNotification);
+  .get(
+    auth(USER_ROLES.USER, USER_ROLES.AGENT),
+    NotificationController.getNotifications,
+  )
+  .patch(
+    auth(USER_ROLES.USER, USER_ROLES.AGENT),
+    NotificationController.readNotifications,
+  );
 
-router.get(
-  "/recent",
-  auth(USER_ROLES.USER),
-  NotificationController.getRecentActivities,
-);
+router
+  .route("/:id")
+  .get(
+    auth(USER_ROLES.USER, USER_ROLES.AGENT),
+    NotificationController.getSingleNotification,
+  )
+  .patch(
+    auth(USER_ROLES.USER, USER_ROLES.AGENT),
+    NotificationController.readSingleNotification,
+  );
 
+// --- ADMIN & SUPER_ADMIN ROUTES ---
 router
   .route("/admin")
   .get(
     auth(USER_ROLES.ADMIN, USER_ROLES.SUPER_ADMIN),
-    NotificationController.adminNotificationFromDB,
+    NotificationController.getAdminNotifications,
   )
   .patch(
     auth(USER_ROLES.ADMIN, USER_ROLES.SUPER_ADMIN),
-    NotificationController.adminReadNotification,
+    NotificationController.readAdminNotifications,
   );
 
-router.get(
-  "/admin/recent",
-  auth(USER_ROLES.ADMIN, USER_ROLES.SUPER_ADMIN),
-  NotificationController.adminRecentActivities,
-);
-
-// user routes
-router.get(
-  "/:id",
-  auth(USER_ROLES.USER),
-  NotificationController.getSingleNotification,
-);
-
-router.patch(
-  "/:id/read",
-  auth(USER_ROLES.USER),
-  NotificationController.readSingleNotification,
-);
-
-// admin routes
-router.get(
-  "/admin/:id",
-  auth(USER_ROLES.ADMIN, USER_ROLES.SUPER_ADMIN),
-  NotificationController.adminGetSingleNotification,
-);
-
-router.patch(
-  "/admin/:id/read",
-  auth(USER_ROLES.ADMIN, USER_ROLES.SUPER_ADMIN),
-  NotificationController.adminReadSingleNotification,
-);
+router
+  .route("/admin/:id")
+  .get(
+    auth(USER_ROLES.ADMIN, USER_ROLES.SUPER_ADMIN),
+    NotificationController.getAdminSingleNotification,
+  )
+  .patch(
+    auth(USER_ROLES.ADMIN, USER_ROLES.SUPER_ADMIN),
+    NotificationController.readAdminSingleNotification,
+  );
 
 export const NotificationRoutes = router;

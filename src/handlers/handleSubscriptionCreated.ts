@@ -3,6 +3,11 @@ import stripe from "../config/stripe";
 import { User } from "../app/modules/user/user.model";
 import { Plan } from "../app/modules/plan/plan.model";
 import { Subscription } from "../app/modules/subscription/subscription.model";
+import { sendNotifications } from "../helpers/notificationsHelper";
+import {
+  NOTIFICATION_REFERENCE_MODEL,
+  NOTIFICATION_TYPE,
+} from "../app/modules/notification/notification.constant";
 
 export const handleSubscriptionCreated = async (data: Stripe.Subscription) => {
   // Retrieve the subscription from Stripe
@@ -77,6 +82,17 @@ export const handleSubscriptionCreated = async (data: Stripe.Subscription) => {
         });
 
         await newSubscription.save();
+
+        // Send Notification
+        await sendNotifications({
+          receiver: existingUser._id.toString(),
+          title: "Subscription Purchased",
+          text: `You have successfully purchased the ${pricingPlan.title} plan.`,
+          type: NOTIFICATION_TYPE.AGENT,
+          referenceId: newSubscription._id.toString(),
+          referenceModel: NOTIFICATION_REFERENCE_MODEL.SUBSCRIPTION,
+          event: "subscriptionPurchase",
+        });
 
         // Update the user to reflect the active subscription
         await User.findByIdAndUpdate(

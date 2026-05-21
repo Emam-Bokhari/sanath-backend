@@ -79,6 +79,7 @@ const createUserToDB = async (payload: any) => {
       type: NOTIFICATION_TYPE.ADMIN,
       referenceId: result.user._id.toString(),
       referenceModel: NOTIFICATION_REFERENCE_MODEL.USER,
+      event: "userSignup",
     });
   }
 

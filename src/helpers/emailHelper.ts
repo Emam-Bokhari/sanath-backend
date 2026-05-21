@@ -2,6 +2,7 @@ import nodemailer from "nodemailer";
 import config from "../config";
 import { errorLogger, logger } from "../shared/logger";
 import { ISendEmail } from "../types/email";
+import { notificationPreferenceHelper } from "./notificationPreferenceHelper";
 
 const transporter = nodemailer.createTransport({
   host: config.email.host,
@@ -15,6 +16,20 @@ const transporter = nodemailer.createTransport({
 
 const sendEmail = async (values: ISendEmail) => {
   try {
+    // Check Preference if userId is provided
+    if (values.userId) {
+      const canEmail = await notificationPreferenceHelper.canSendNotification(
+        values.userId,
+        "email",
+        values.event,
+      );
+
+      if (!canEmail) {
+        logger.info(`Email skipped for user ${values.userId} due to preference`);
+        return;
+      }
+    }
+
     const info = await transporter.sendMail({
       from: `"GiftBox" ${config.email.from}`,
       to: values.to,

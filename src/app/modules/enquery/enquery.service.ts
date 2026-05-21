@@ -9,6 +9,11 @@ import config from "../../../config";
 import { emailHelper } from "../../../helpers/emailHelper";
 import QueryBuilder from "../../builder/queryBuilder";
 import { ENQUERY_STATUS } from "./enquery.constant";
+import { sendNotifications } from "../../../helpers/notificationsHelper";
+import {
+  NOTIFICATION_REFERENCE_MODEL,
+  NOTIFICATION_TYPE,
+} from "../notification/notification.constant";
 
 const PRIMARY_COLOR = "#22143b";
 const TEXT_COLOR = "#ffffff";
@@ -23,6 +28,7 @@ const createEnquery = async (userId: string, payload: any) => {
   let agentEmail: string | null = null;
   let agentName: string | null = null;
   let listingTitle: string | null = null;
+  let agentId: string | null = null;
 
   if (payload.listingId) {
     const listing = await Listing.findById(payload.listingId)
@@ -34,6 +40,7 @@ const createEnquery = async (userId: string, payload: any) => {
     }
 
     listingTitle = listing.title;
+    agentId = listing.agentId.toString();
 
     const agent = await User.findById(listing.agentId).select("name email");
 
@@ -62,6 +69,8 @@ const createEnquery = async (userId: string, payload: any) => {
     to:
       agentEmail || config.support_receiver_email || "support@yourplatform.com",
     subject: `New Property Enquiry - ${listingTitle || "General"}`,
+    userId: agentId!, // Added agentId to check preferences
+    event: "enquiryCreated", // Added event type
     html: `
 <body style="margin:0;padding:0;background:#ffffff;font-family:Arial;">
   <table width="100%" cellpadding="0" cellspacing="0" style="padding:40px 0;">
@@ -148,6 +157,19 @@ const createEnquery = async (userId: string, payload: any) => {
   };
 
   await emailHelper.sendEmail(emailPayload);
+
+  // Send Push Notification to Agent
+  if (agentId) {
+    await sendNotifications({
+      receiver: agentId,
+      title: "New Property Enquiry",
+      text: `You have received a new enquiry for "${listingTitle || "your property"}".`,
+      type: NOTIFICATION_TYPE.AGENT,
+      referenceId: enquery._id.toString(),
+      referenceModel: NOTIFICATION_REFERENCE_MODEL.ENQUERY,
+      event: "enquiryCreated",
+    });
+  }
 
   return enquery;
 };
@@ -320,13 +342,13 @@ const getMyEnqueryByIdFromDB = async (userId: string, enqueryId: string) => {
     userId: new Types.ObjectId(userId),
   })
     .populate({ path: "listingId", populate: "agentId" })
-  .lean();
+    .lean();
 
-if (!enquery) {
-  throw new ApiError(StatusCodes.NOT_FOUND, "Enquiry not found");
-}
+  if (!enquery) {
+    throw new ApiError(StatusCodes.NOT_FOUND, "Enquiry not found");
+  }
 
-return enquery;
+  return enquery;
 };
 
 const updateEnqueryStatus = async (
@@ -369,6 +391,21 @@ const updateEnqueryStatus = async (
     { status },
     { new: true },
   );
+
+  // Send notification to User when status changes to CONTACTED
+  if (status === ENQUERY_STATUS.CONTACTED && enquery.userId) {
+    await sendNotifications({
+      receiver:
+        (enquery.userId as any)._id?.toString() || enquery.userId.toString(),
+      title: "Enquiry Update",
+      text: `The agent has contacted you regarding your enquiry for "${(enquery.listingId as any).title || "the property"
+        }".`,
+      type: NOTIFICATION_TYPE.USER,
+      referenceId: enquery._id.toString(),
+      referenceModel: NOTIFICATION_REFERENCE_MODEL.ENQUERY,
+      event: "enquiryReplied",
+    });
+  }
 
   return updatedEnqueryStatus;
 };

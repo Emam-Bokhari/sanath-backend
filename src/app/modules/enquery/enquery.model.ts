@@ -9,6 +9,10 @@ const enquerySchema = new Schema<TEnquery, TEnqueryModel>(
       type: Schema.Types.ObjectId,
       ref: "User",
     },
+    agentId: {
+      type: Schema.Types.ObjectId,
+      ref: "User",
+    },
     listingId: {
       type: Schema.Types.ObjectId,
       ref: "Listing",

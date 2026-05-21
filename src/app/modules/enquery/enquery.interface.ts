@@ -4,6 +4,7 @@ import { ENQUERY_STATUS } from "./enquery.constant";
 
 export type TEnquery = {
   userId?: Types.ObjectId;
+  agentId?: Types.ObjectId;
   listingId?: Types.ObjectId;
   name: string;
   email: string;

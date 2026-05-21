@@ -4,22 +4,16 @@ import { Notification } from "./notification.model";
 import QueryBuilder from "../../builder/queryBuilder";
 import { NOTIFICATION_TYPE } from "./notification.constant";
 
-// get notifications
-const getNotificationFromDB = async (
+// --- USER & AGENT SERVICES (Receiver Based) ---
+
+const getNotificationsFromDB = async (
   user: JwtPayload,
   query: Record<string, unknown>,
 ) => {
   const baseQuery = Notification.find({ receiver: user.id }).populate([
-    { path: "receiver" },
-    { path: "sender" },
-    {
-      path: "referenceId",
-      populate: {
-        path: "carId",
-        model: "Car",
-        strictPopulate: false,
-      },
-    },
+    { path: "receiver", select: "name email profileImage" },
+    { path: "sender", select: "name email profileImage" },
+    { path: "referenceId" },
   ]);
 
   const unreadCount = await Notification.countDocuments({
@@ -28,9 +22,7 @@ const getNotificationFromDB = async (
   });
 
   const queryBuilder = new QueryBuilder(baseQuery, query).sort().paginate();
-
   const result = await queryBuilder.modelQuery;
-
   const meta = await queryBuilder.countTotal();
 
   return {
@@ -42,107 +34,16 @@ const getNotificationFromDB = async (
   };
 };
 
-// read notifications only for user
-const readNotificationToDB = async (
+const readNotificationsToDB = async (
   user: JwtPayload,
-): Promise<INotification | undefined> => {
-  const result: any = await Notification.updateMany(
+) => {
+  const result = await Notification.updateMany(
     { receiver: user.id, read: false },
     { $set: { read: true } },
   );
   return result;
 };
 
-// get recent activities (last 5)
-const getRecentActivitiesFromDB = async (user: JwtPayload) => {
-  const result = await Notification.find({ receiver: user.id })
-    .populate([
-      { path: "receiver" },
-      { path: "sender" },
-      {
-        path: "referenceId",
-        populate: {
-          path: "carId",
-          model: "Car",
-          strictPopulate: false,
-        },
-      },
-    ])
-    .sort({ createdAt: -1 })
-    .limit(5);
-
-  return result;
-};
-
-// get notifications for admin
-const adminNotificationFromDB = async (query: any) => {
-  const baseQuery = Notification.find({
-    type: NOTIFICATION_TYPE.ADMIN,
-  }).populate([
-    { path: "receiver" },
-    { path: "sender" },
-    {
-      path: "referenceId",
-      populate: {
-        path: "carId",
-        model: "Car",
-        strictPopulate: false,
-      },
-    },
-  ]);
-
-  const unreadCount = await Notification.countDocuments({
-    type: NOTIFICATION_TYPE.ADMIN,
-    read: false,
-  });
-
-  const queryBuilder = new QueryBuilder(baseQuery, query).sort().paginate();
-
-  const result = await queryBuilder.modelQuery;
-
-  const meta = await queryBuilder.countTotal();
-
-  return {
-    data: result,
-    meta: {
-      ...meta,
-      unreadCount,
-    },
-  };
-};
-
-// read notifications only for admin
-const adminReadNotificationToDB = async (): Promise<INotification | null> => {
-  const result: any = await Notification.updateMany(
-    { type: NOTIFICATION_TYPE.ADMIN, read: false },
-    { $set: { read: true } },
-    { new: true },
-  );
-  return result;
-};
-
-// get recent activities for admin (last 5)
-const adminRecentActivitiesFromDB = async () => {
-  const result = await Notification.find({ type: NOTIFICATION_TYPE.ADMIN })
-    .populate([
-      { path: "receiver" },
-      { path: "sender" },
-      {
-        path: "referenceId",
-        populate: {
-          path: "carId",
-          model: "Car",
-          strictPopulate: false,
-        },
-      },
-    ])
-    .sort({ createdAt: -1 })
-    .limit(5);
-
-  return result;
-};
-
-// get single notification (user)
 const getSingleNotificationFromDB = async (
   user: JwtPayload,
   id: string,
@@ -151,22 +52,14 @@ const getSingleNotificationFromDB = async (
     _id: id,
     receiver: user.id,
   }).populate([
-    { path: "receiver" },
-    { path: "sender" },
-    {
-      path: "referenceId",
-      populate: {
-        path: "carId",
-        model: "Car",
-        strictPopulate: false,
-      },
-    },
+    { path: "receiver", select: "name email profileImage" },
+    { path: "sender", select: "name email profileImage" },
+    { path: "referenceId" },
   ]);
 
   return result;
 };
 
-// read single notification (user)
 const readSingleNotificationToDB = async (
   user: JwtPayload,
   id: string,
@@ -180,31 +73,59 @@ const readSingleNotificationToDB = async (
   return result;
 };
 
-// admin get single notification
-const adminGetSingleNotificationFromDB = async (
+// --- ADMIN & SUPER_ADMIN SERVICES (Type Based) ---
+
+const getAdminNotificationsFromDB = async (query: any) => {
+  const baseQuery = Notification.find({
+    type: NOTIFICATION_TYPE.ADMIN,
+  }).populate([
+    { path: "receiver", select: "name email profileImage" },
+    { path: "sender", select: "name email profileImage" },
+    { path: "referenceId" },
+  ]);
+
+  const unreadCount = await Notification.countDocuments({
+    type: NOTIFICATION_TYPE.ADMIN,
+    read: false,
+  });
+
+  const queryBuilder = new QueryBuilder(baseQuery, query).sort().paginate();
+  const result = await queryBuilder.modelQuery;
+  const meta = await queryBuilder.countTotal();
+
+  return {
+    data: result,
+    meta: {
+      ...meta,
+      unreadCount,
+    },
+  };
+};
+
+const readAdminNotificationsToDB = async () => {
+  const result = await Notification.updateMany(
+    { type: NOTIFICATION_TYPE.ADMIN, read: false },
+    { $set: { read: true } },
+  );
+  return result;
+};
+
+const getAdminSingleNotificationFromDB = async (
   id: string,
 ): Promise<INotification | null> => {
   const result = await Notification.findOne({
     _id: id,
     type: NOTIFICATION_TYPE.ADMIN,
   }).populate([
-    { path: "receiver" },
-    { path: "sender" },
-    {
-      path: "referenceId",
-      populate: {
-        path: "carId",
-        model: "Car",
-        strictPopulate: false,
-      },
-    },
+    { path: "receiver", select: "name email profileImage" },
+    { path: "sender", select: "name email profileImage" },
+    { path: "referenceId" },
   ]);
 
   return result;
 };
 
-// admin read single notification
-const adminReadSingleNotificationToDB = async (
+const readAdminSingleNotificationToDB = async (
   id: string,
 ): Promise<INotification | null> => {
   const result = await Notification.findOneAndUpdate(
@@ -217,14 +138,12 @@ const adminReadSingleNotificationToDB = async (
 };
 
 export const NotificationService = {
-  adminNotificationFromDB,
-  getNotificationFromDB,
-  readNotificationToDB,
-  adminReadNotificationToDB,
-  getRecentActivitiesFromDB,
-  adminRecentActivitiesFromDB,
+  getNotificationsFromDB,
+  readNotificationsToDB,
   getSingleNotificationFromDB,
   readSingleNotificationToDB,
-  adminGetSingleNotificationFromDB,
-  adminReadSingleNotificationToDB,
+  getAdminNotificationsFromDB,
+  readAdminNotificationsToDB,
+  getAdminSingleNotificationFromDB,
+  readAdminSingleNotificationToDB,
 };

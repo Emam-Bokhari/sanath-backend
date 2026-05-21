@@ -5,6 +5,11 @@ import stripe from "../config/stripe";
 import { User } from "../app/modules/user/user.model";
 import { Subscription } from "../app/modules/subscription/subscription.model";
 import { Plan } from "../app/modules/plan/plan.model";
+import { sendNotifications } from "../helpers/notificationsHelper";
+import {
+  NOTIFICATION_REFERENCE_MODEL,
+  NOTIFICATION_TYPE,
+} from "../app/modules/notification/notification.constant";
 
 export const handleSubscriptionUpdated = async (data: Stripe.Subscription) => {
   // Retrieve the subscription from Stripe
@@ -69,6 +74,19 @@ export const handleSubscriptionUpdated = async (data: Stripe.Subscription) => {
             ),
             currentPeriodEnd: new Date(subscription.current_period_end * 1000),
           });
+
+          // Send Notification
+          if (status === "active" || status === "trialing") {
+            await sendNotifications({
+              receiver: existingUser._id.toString(),
+              title: "Subscription Updated",
+              text: `Your subscription has been updated to the ${pricingPlan.title} plan.`,
+              type: NOTIFICATION_TYPE.AGENT,
+              referenceId: currentActiveSubscription._id.toString(),
+              referenceModel: NOTIFICATION_REFERENCE_MODEL.SUBSCRIPTION,
+              event: "subscriptionPurchase",
+            });
+          }
 
           // Update user
           const hasAccess = status === "active" || status === "trialing";
