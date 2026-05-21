@@ -186,7 +186,12 @@ const getAllEnqueriesFromDB = async (
     filter.status = query.status;
   }
 
-  const baseQuery = Enquery.find(filter).populate("listingId userId");
+  const baseQuery = Enquery.find(filter).populate({
+    path: "listingId",
+    populate: {
+      path: "agentId",
+    },
+  }).populate("userId");
 
   const enqueryQuery = new QueryBuilder(baseQuery, query)
     .search(["name", "email", "phone", "message", "postalCode", "country"])
@@ -213,7 +218,13 @@ const getEnqueryByIdFromDB = async (agentId: string, enqueryId: string) => {
   }
 
   const enquery = await Enquery.findById(enqueryId)
-    .populate("listingId userId")
+    .populate({
+      path: "listingId",
+      populate: {
+        path: "agentId",
+      },
+    })
+    .populate("userId")
     .lean();
 
   if (!enquery) {

@@ -32,7 +32,7 @@ const getAllTransactionsFromDB = async (query: Record<string, unknown>) => {
 
   const transactionQuery = new QueryBuilder(
     Subscription.find(trxSearchQuery)
-      .populate("userId", "name email profileImage")
+      .populate("userId", "name email profileImage isAgentVerified")
       .populate("planId"),
     queryData,
   )
@@ -52,7 +52,7 @@ const getAllTransactionsFromDB = async (query: Record<string, unknown>) => {
 
 const getTransactionByIdFromDB = async (transactionId: string) => {
   const result = await Subscription.findById(transactionId)
-    .populate("userId", "name email profileImage")
+    .populate("userId", "name email profileImage isAgentVerified")
     .populate("planId");
 
   if (!result) {
@@ -68,7 +68,7 @@ const getMyTransactionsFromDB = async (
 ) => {
   const transactionQuery = new QueryBuilder(
     Subscription.find({ userId: agentId })
-      .populate("userId", "name email profileImage")
+      .populate("userId", "name email profileImage isAgentVerified")
       .populate("planId"),
     query,
   )
@@ -94,7 +94,7 @@ const getMyTransactionByIdFromDB = async (
     _id: transactionId,
     userId: agentId,
   })
-    .populate("userId", "name email profileImage")
+    .populate("userId", "name email profileImage isAgentVerified")
     .populate("planId");
 
   if (!result) {

@@ -358,11 +358,11 @@ const getNearbyListingsServiceFromDB = async (
 
   // Add feature flags to agent data and isFavorite flag
   result.forEach((listing: any) => {
-    if (listing.agentId && listing.agentId.plan) {
+    if (listing.agentId) {
       const agent = listing.agentId;
       const agentPlan = agent.plan;
-      agent.isAgentVerified = !!agentPlan.features?.verifiedBadge;
-      agent.hasProfilePage = !!agentPlan.features?.agentProfilePage;
+      agent.isAgentVerified = agent.isAgentVerified ?? !!agentPlan?.features?.verifiedBadge;
+      agent.hasProfilePage = !!agentPlan?.features?.agentProfilePage;
     }
 
     if (userId) {
@@ -405,12 +405,13 @@ const getSingleListingByIdFromDB = async (
   }
 
   // Add feature flags to agent data
-  if (listing.agentId && (listing.agentId as any).plan) {
+  if (listing.agentId) {
     const agent = listing.agentId as any;
     const agentPlan = agent.plan;
 
-    agent.isAgentVerified = !!agentPlan.features?.verifiedBadge;
-    agent.hasProfilePage = !!agentPlan.features?.agentProfilePage;
+    // Use stored isAgentVerified from profile, fallback to plan feature if profile field is not set
+    agent.isAgentVerified = agent.isAgentVerified ?? !!agentPlan?.features?.verifiedBadge;
+    agent.hasProfilePage = !!agentPlan?.features?.agentProfilePage;
   }
 
   let isFavorite = false;
@@ -678,7 +679,10 @@ const searchListingsServiceFromDB = async (
       {
         $addFields: {
           "agentId.isAgentVerified": {
-            $ifNull: ["$agentId.plan.features.verifiedBadge", false],
+            $ifNull: [
+              "$agentId.isAgentVerified",
+              { $ifNull: ["$agentId.plan.features.verifiedBadge", false] },
+            ],
           },
           "agentId.hasProfilePage": {
             $ifNull: ["$agentId.plan.features.agentProfilePage", false],
@@ -802,11 +806,11 @@ const searchListingsServiceFromDB = async (
 
   // Add feature flags to agent data and isFavorite flag
   listings.forEach((listing: any) => {
-    if (listing.agentId && listing.agentId.plan) {
+    if (listing.agentId) {
       const agent = listing.agentId;
       const agentPlan = agent.plan;
-      agent.isAgentVerified = !!agentPlan.features?.verifiedBadge;
-      agent.hasProfilePage = !!agentPlan.features?.agentProfilePage;
+      agent.isAgentVerified = agent.isAgentVerified ?? !!agentPlan?.features?.verifiedBadge;
+      agent.hasProfilePage = !!agentPlan?.features?.agentProfilePage;
     }
 
     if (userId) {

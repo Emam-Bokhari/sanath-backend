@@ -73,7 +73,7 @@ const getAllChatsFromDB = async (
         const otherParticipants = await User.find({
           _id: { $in: otherParticipantIds },
         })
-          .select("_id firstName lastName profileImage email role")
+          .select("_id name profileImage email role isAgentVerified")
           .lean();
 
         const unreadCount = await Message.countDocuments({
@@ -122,7 +122,7 @@ const getAllChatsFromDB = async (
         const otherParticipants = await User.find({
           _id: { $in: otherParticipantIds },
         })
-          .select("_id firstName lastName profileImage email role")
+          .select("_id name profileImage email role isAgentVerified")
           .lean();
 
         // FIXED: Same unread count calculation

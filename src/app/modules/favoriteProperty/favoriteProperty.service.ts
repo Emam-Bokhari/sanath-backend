@@ -69,7 +69,7 @@ const getFavoriteProperties = async (userId: string) => {
       path: "listingId",
       populate: {
         path: "agentId",
-        select: "name email profileImage phone",
+        select: "name email profileImage phone isAgentVerified",
       },
     })
     .sort({ createdAt: -1 })
@@ -90,7 +90,7 @@ const getFavoritePropertyByIdFromDB = async (
       path: "listingId",
       populate: {
         path: "agentId",
-        select: "name email profileImage phone",
+        select: "name email profileImage phone isAgentVerified",
       },
     })
     .lean();

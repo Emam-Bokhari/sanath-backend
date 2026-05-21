@@ -59,12 +59,12 @@ const sendMessageToDB = async (payload: IMessage): Promise<IMessage> => {
 
   // get populated message for socket
   const populatedMessage = await Message.findById(response._id)
-    .populate("sender", "firstName lastName role email profileImage")
+    .populate("sender", "name role email profileImage isAgentVerified")
     .lean();
 
   // get updated chat with populated data for chat list update
   const populatedChat = await Chat.findById(response?.chatId)
-    .populate("participants", "firstName lastName role email profileImage")
+    .populate("participants", "name role email profileImage isAgentVerified")
     .populate("lastMessage")
     .lean();
 
