@@ -65,13 +65,18 @@ const createEnquery = async (userId: string, payload: any) => {
     });
   }
 
-  const emailPayload: ISendEmail = {
-    to:
-      agentEmail || config.support_receiver_email || "support@yourplatform.com",
-    subject: `New Property Enquiry - ${listingTitle || "General"}`,
-    userId: agentId!, // Added agentId to check preferences
-    event: "enquiryCreated", // Added event type
-    html: `
+  // Send Push & Email Notification to Agent
+  if (agentId) {
+    await sendNotifications({
+      receiver: agentId,
+      title: "New Property Enquiry",
+      text: `You have received a new enquiry for "${listingTitle || "your property"}".`,
+      type: NOTIFICATION_TYPE.AGENT,
+      referenceId: enquery._id.toString(),
+      referenceModel: NOTIFICATION_REFERENCE_MODEL.ENQUERY,
+      event: "enquiryCreated",
+      subject: `New Property Enquiry - ${listingTitle || "General"}`,
+      html: `
 <body style="margin:0;padding:0;background:#ffffff;font-family:Arial;">
   <table width="100%" cellpadding="0" cellspacing="0" style="padding:40px 0;">
     <tr>
@@ -97,6 +102,10 @@ const createEnquery = async (userId: string, payload: any) => {
           <!-- BODY -->
           <tr>
             <td style="padding:35px 30px;font-size:15px;color:#333;line-height:1.6;">
+              <p style="font-size:18px;font-weight:bold;margin-top:0;">
+                Hello ${agentName || "Agent"},
+              </p>
+              <p>You have received a new property enquiry. Here are the details:</p>
 
               <p><b>Listing:</b> ${listingTitle || "N/A"}</p>
 
@@ -154,20 +163,6 @@ const createEnquery = async (userId: string, payload: any) => {
   </table>
 </body>
 `,
-  };
-
-  await emailHelper.sendEmail(emailPayload);
-
-  // Send Push Notification to Agent
-  if (agentId) {
-    await sendNotifications({
-      receiver: agentId,
-      title: "New Property Enquiry",
-      text: `You have received a new enquiry for "${listingTitle || "your property"}".`,
-      type: NOTIFICATION_TYPE.AGENT,
-      referenceId: enquery._id.toString(),
-      referenceModel: NOTIFICATION_REFERENCE_MODEL.ENQUERY,
-      event: "enquiryCreated",
     });
   }
 

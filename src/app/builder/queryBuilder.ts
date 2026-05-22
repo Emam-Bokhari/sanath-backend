@@ -71,11 +71,13 @@ class QueryBuilder<T> {
       finalFilter.status = queryObj.status;
     }
 
-    // isFeatured
+    // isFeatured (COMMENTED FOR FUTURE USE)
+    /*
     if (queryObj.isFeatured !== undefined) {
       finalFilter.isFeatured =
         queryObj.isFeatured === "true" || queryObj.isFeatured === true;
     }
+    */
 
     // SELL / RENT FILTER (IMPORTANT PART)
     if (queryObj.listingType) {

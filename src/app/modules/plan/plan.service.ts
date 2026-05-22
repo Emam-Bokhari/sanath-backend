@@ -35,7 +35,7 @@ const createPlanToDB = async (payload: IPlan): Promise<IPlan | null> => {
 };
 
 const getAllPlansFromDB = async (query: any) => {
-  const result = await Plan.find({ isDeleted: false, ...query }).sort({
+  const result = await Plan.find({ ...query, isDeleted: false }).sort({
     sortOrder: 1,
   });
   return result;
@@ -55,13 +55,19 @@ const updatePlanToDB = async (planId: string, payload: Partial<IPlan>) => {
     throw new ApiError(StatusCodes.NOT_FOUND, "Plan not found");
   }
 
-  // handle Stripe Product Update (Title/Description)
-  if (payload.title || payload.description) {
+  // handle Stripe Product Update (Title/Description/Status)
+  if (payload.title || payload.description || payload.status) {
     if (isExist.productId) {
-      await stripe.products.update(isExist.productId, {
-        name: payload.title || isExist.title,
-        description: payload.description || isExist.description,
-      });
+      const stripeUpdatePayload: any = {};
+      if (payload.title) stripeUpdatePayload.name = payload.title;
+      if (payload.description)
+        stripeUpdatePayload.description = payload.description;
+      if (payload.status)
+        stripeUpdatePayload.active = payload.status === PLAN_STATUS.ACTIVE;
+      if (payload.sortOrder !== undefined)
+        stripeUpdatePayload.metadata = { sortOrder: payload.sortOrder.toString() };
+
+      await stripe.products.update(isExist.productId, stripeUpdatePayload);
     }
   }
 

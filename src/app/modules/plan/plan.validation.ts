@@ -24,8 +24,9 @@ const createPlanValidationSchema = z.object({
       maxListings: z.number({ required_error: "Max listings is required" }),
     }),
     features: z.object({
+      listings: z.boolean().default(false),
       leadAccess: z.boolean().default(false),
-      featuredListing: z.boolean().default(false),
+      // featuredListing: z.boolean().default(false),
       verifiedBadge: z.boolean().default(false),
       agentProfilePage: z.boolean().default(false),
     }),
@@ -36,7 +37,7 @@ const createPlanValidationSchema = z.object({
         durationInMonths: z.number().optional(),
         restrictions: z
           .object({
-            featuredListing: z.boolean().default(false),
+            // featuredListing: z.boolean().default(false),
             leadAccess: z.boolean().default(false),
           })
           .optional(),
@@ -65,8 +66,9 @@ const updatePlanValidationSchema = z.object({
       .optional(),
     features: z
       .object({
+        listings: z.boolean().optional(),
         leadAccess: z.boolean().optional(),
-        featuredListing: z.boolean().optional(),
+        // featuredListing: z.boolean().optional(),
         verifiedBadge: z.boolean().optional(),
         agentProfilePage: z.boolean().optional(),
       })
@@ -78,7 +80,7 @@ const updatePlanValidationSchema = z.object({
         durationInMonths: z.number().optional(),
         restrictions: z
           .object({
-            featuredListing: z.boolean().optional(),
+            // featuredListing: z.boolean().optional(),
             leadAccess: z.boolean().optional(),
           })
           .optional(),

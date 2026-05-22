@@ -10,8 +10,9 @@ export interface IPlanLimits {
 }
 
 export interface IPlanFeatures {
+  listings: boolean;
   leadAccess: boolean;
-  featuredListing: boolean;
+  // featuredListing: boolean;
   verifiedBadge: boolean;
   agentProfilePage: boolean;
 }
@@ -20,7 +21,7 @@ export interface IPlanTrial {
   enabled: boolean;
   durationInMonths?: number; // only for TRIAL (e.g. 6)
   restrictions?: {
-    featuredListing: boolean;
+    // featuredListing: boolean;
     leadAccess: boolean;
   };
 }

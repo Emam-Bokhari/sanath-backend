@@ -21,13 +21,12 @@ const NotificationPreferenceSchema = new Schema<INotificationPreference>(
     // system events
     listingApproved: { type: Boolean, default: false },
     listingRejected: { type: Boolean, default: false },
-    subscriptionPurchase: { type: Boolean, default: false },
+    subscription: { type: Boolean, default: false },
     userSignup: { type: Boolean, default: false },
 
     // enquiry flow
     enquiryCreated: { type: Boolean, default: false },
     enquiryReplied: { type: Boolean, default: false },
-    enquiryAssigned: { type: Boolean, default: false },
   },
   {
     timestamps: true,

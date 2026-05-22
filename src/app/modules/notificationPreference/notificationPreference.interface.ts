@@ -13,13 +13,12 @@ export interface INotificationPreference {
   // system events (flat)
   listingApproved: boolean;
   listingRejected: boolean;
-  subscriptionPurchase: boolean;
+  subscription: boolean;
   userSignup: boolean;
 
   // enquiry flow
-  enquiryCreated: boolean;     // নতুন enquiry তৈরি হলে
-  enquiryReplied: boolean;     // যাকে enquiry পাঠানো হয়েছে সে reply করলে
-  enquiryAssigned: boolean;    // agent/vendor কে assign করা হলে
+  enquiryCreated: boolean;     
+  enquiryReplied: boolean;   
 
   createdAt?: Date;
   updatedAt?: Date;

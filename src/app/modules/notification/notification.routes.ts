@@ -1,54 +1,53 @@
 import express from "express";
-import auth from "../../middlewares/auth";
-import { USER_ROLES } from "../../../enums/user";
 import { NotificationController } from "./notification.controller";
+import { isAdmin, isUserOrAgent } from "../../../helpers/authHelper";
 
 const router = express.Router();
-
-// --- USER & AGENT ROUTES ---
-router
-  .route("/")
-  .get(
-    auth(USER_ROLES.USER, USER_ROLES.AGENT),
-    NotificationController.getNotifications,
-  )
-  .patch(
-    auth(USER_ROLES.USER, USER_ROLES.AGENT),
-    NotificationController.readNotifications,
-  );
-
-router
-  .route("/:id")
-  .get(
-    auth(USER_ROLES.USER, USER_ROLES.AGENT),
-    NotificationController.getSingleNotification,
-  )
-  .patch(
-    auth(USER_ROLES.USER, USER_ROLES.AGENT),
-    NotificationController.readSingleNotification,
-  );
 
 // --- ADMIN & SUPER_ADMIN ROUTES ---
 router
   .route("/admin")
   .get(
-    auth(USER_ROLES.ADMIN, USER_ROLES.SUPER_ADMIN),
+    isAdmin,
     NotificationController.getAdminNotifications,
   )
   .patch(
-    auth(USER_ROLES.ADMIN, USER_ROLES.SUPER_ADMIN),
+    isAdmin,
     NotificationController.readAdminNotifications,
   );
 
 router
   .route("/admin/:id")
   .get(
-    auth(USER_ROLES.ADMIN, USER_ROLES.SUPER_ADMIN),
+    isAdmin,
     NotificationController.getAdminSingleNotification,
   )
   .patch(
-    auth(USER_ROLES.ADMIN, USER_ROLES.SUPER_ADMIN),
+    isAdmin,
     NotificationController.readAdminSingleNotification,
+  );
+
+// --- USER & AGENT ROUTES ---
+router
+  .route("/")
+  .get(
+    isUserOrAgent,
+    NotificationController.getNotifications,
+  )
+  .patch(
+    isUserOrAgent,
+    NotificationController.readNotifications,
+  );
+
+router
+  .route("/:id")
+  .get(
+    isUserOrAgent,
+    NotificationController.getSingleNotification,
+  )
+  .patch(
+    isUserOrAgent,
+    NotificationController.readSingleNotification,
   );
 
 export const NotificationRoutes = router;

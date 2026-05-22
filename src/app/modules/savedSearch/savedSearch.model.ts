@@ -20,7 +20,7 @@ const savedSearchSchema = new Schema<TSavedSearch, TSavedSearchModel>(
       bathrooms: { type: Number },
       tenure: { type: Schema.Types.Mixed },
       features: { type: Schema.Types.Mixed },
-      isFeatured: { type: Boolean },
+      // isFeatured: { type: Boolean },
       timeFilter: { type: String },
       sort: { type: String },
       lat: { type: Number },

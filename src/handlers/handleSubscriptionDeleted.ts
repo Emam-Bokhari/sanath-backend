@@ -4,6 +4,14 @@ import ApiError from "../errors/ApiErrors";
 import stripe from "../config/stripe";
 import { User } from "../app/modules/user/user.model";
 import { Subscription } from "../app/modules/subscription/subscription.model";
+import { Plan } from "../app/modules/plan/plan.model";
+import { sendNotifications } from "../helpers/notificationsHelper";
+import {
+  NOTIFICATION_REFERENCE_MODEL,
+  NOTIFICATION_TYPE,
+} from "../app/modules/notification/notification.constant";
+import { emailTemplate } from "../shared/emailTemplate";
+import { USER_ROLES } from "../enums/user";
 
 export const handleSubscriptionDeleted = async (data: Stripe.Subscription) => {
   // Retrieve the subscription from Stripe
@@ -26,6 +34,55 @@ export const handleSubscriptionDeleted = async (data: Stripe.Subscription) => {
     const existingUser = await User.findById(userSubscription?.userId);
 
     if (existingUser) {
+      // Find the pricing plan
+      const pricingPlan = await Plan.findById(userSubscription.planId);
+      const planName = pricingPlan ? pricingPlan.title : "Unknown Plan";
+
+      // Send Notification & Email to User
+      await sendNotifications({
+        receiver: existingUser._id.toString(),
+        title: "Subscription Cancelled",
+        text: `Your subscription to the ${planName} plan has been cancelled.`,
+        type: NOTIFICATION_TYPE.AGENT,
+        referenceId: userSubscription._id.toString(),
+        referenceModel: NOTIFICATION_REFERENCE_MODEL.SUBSCRIPTION,
+        event: "subscription",
+        ...emailTemplate.subscriptionEmail({
+          email: existingUser.email!,
+          name: existingUser.name,
+          planName: planName,
+          amount: userSubscription.amountPaid || 0,
+          status: "canceled",
+          date: new Date().toLocaleDateString(),
+          isCancellation: true,
+        }),
+      });
+
+      // Notify Admins
+      const admin = await User.findOne({
+        role: { $in: [USER_ROLES.ADMIN, USER_ROLES.SUPER_ADMIN] },
+      });
+
+      if (admin) {
+        await sendNotifications({
+          receiver: admin._id.toString(),
+          title: "Subscription Cancelled",
+          text: `${existingUser.name} has cancelled their ${planName} subscription.`,
+          type: NOTIFICATION_TYPE.ADMIN,
+          referenceId: userSubscription._id.toString(),
+          referenceModel: NOTIFICATION_REFERENCE_MODEL.SUBSCRIPTION,
+          event: "subscription",
+          ...emailTemplate.adminSubscriptionNotification({
+            email: admin.email!,
+            userName: existingUser.name,
+            userEmail: existingUser.email!,
+            planName: planName,
+            amount: userSubscription.amountPaid || 0,
+            type: "cancelled",
+          }),
+        });
+      }
+
       await User.findByIdAndUpdate(
         existingUser._id,
         {

@@ -21,14 +21,18 @@ const planLimitsSchema = new Schema(
 
 const planFeaturesSchema = new Schema(
   {
+    listings: {
+      type: Boolean,
+      default: false,
+    },
     leadAccess: {
       type: Boolean,
       default: false,
     },
-    featuredListing: {
-      type: Boolean,
-      default: false,
-    },
+    // featuredListing: {
+    //   type: Boolean,
+    //   default: false,
+    // },
     verifiedBadge: {
       type: Boolean,
       default: false,
@@ -51,10 +55,10 @@ const planTrialSchema = new Schema(
       type: Number,
     },
     restrictions: {
-      featuredListing: {
-        type: Boolean,
-        default: false,
-      },
+      // featuredListing: {
+      //   type: Boolean,
+      //   default: false,
+      // },
       leadAccess: {
         type: Boolean,
         default: false,

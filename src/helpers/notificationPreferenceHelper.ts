@@ -5,7 +5,7 @@ import { NotificationPreferenceModel } from "../app/modules/notificationPreferen
 export const canSendNotification = async (
   userId: string,
   channel: 'email' | 'push' | 'socket',
-  event?: keyof Omit<INotificationPreference, 'userId' | 'email' | 'push' | 'socket' | 'createdAt' | 'updatedAt'>
+  event?: keyof Omit<INotificationPreference, 'userId' | 'agentId' | 'email' | 'push' | 'socket' | 'createdAt' | 'updatedAt'>
 ): Promise<boolean> => {
   const userPref = await NotificationPreferenceModel.findOne({ userId });
 
@@ -17,7 +17,7 @@ export const canSendNotification = async (
     // Defaulting to true for now if no preference record exists, 
     // assuming users want notifications unless they opt-out.
     // However, if the project requirement is opt-in, this should be false.
-    return true; 
+    return true;
   }
 
   // Check channel preference

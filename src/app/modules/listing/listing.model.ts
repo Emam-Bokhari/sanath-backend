@@ -130,10 +130,10 @@ const listingSchema = new Schema<TListing, TListingModel>(
       type: String,
       required: true,
     },
-    isFeatured: {
-      type: Boolean,
-      default: false,
-    },
+    // isFeatured: {
+    //   type: Boolean,
+    //   default: false,
+    // },
     leadsCount: {
       type: Number,
       default: 0,

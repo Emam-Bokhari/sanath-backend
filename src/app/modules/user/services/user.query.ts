@@ -41,7 +41,7 @@ const getAllUsersFromDB = async (query: any) => {
 
   // Add plan tier filter if provided
   if (plan && Object.values(PLAN_TIER).includes(plan as any)) {
-    const planDoc = await Plan.findOne({ tier: plan });
+    const planDoc = await Plan.findOne({ tier: plan, isDeleted: false });
     if (planDoc) {
       filter.plan = planDoc._id;
     } else {

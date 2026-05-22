@@ -8,6 +8,8 @@ import {
   NOTIFICATION_REFERENCE_MODEL,
   NOTIFICATION_TYPE,
 } from "../app/modules/notification/notification.constant";
+import { emailTemplate } from "../shared/emailTemplate";
+import { USER_ROLES } from "../enums/user";
 
 export const handleSubscriptionCreated = async (data: Stripe.Subscription) => {
   // Retrieve the subscription from Stripe
@@ -83,7 +85,7 @@ export const handleSubscriptionCreated = async (data: Stripe.Subscription) => {
 
         await newSubscription.save();
 
-        // Send Notification
+        // Send Notification & Email to User
         await sendNotifications({
           receiver: existingUser._id.toString(),
           title: "Subscription Purchased",
@@ -91,8 +93,42 @@ export const handleSubscriptionCreated = async (data: Stripe.Subscription) => {
           type: NOTIFICATION_TYPE.AGENT,
           referenceId: newSubscription._id.toString(),
           referenceModel: NOTIFICATION_REFERENCE_MODEL.SUBSCRIPTION,
-          event: "subscriptionPurchase",
+          event: "subscription",
+          ...emailTemplate.subscriptionEmail({
+            email: existingUser.email!,
+            name: existingUser.name,
+            planName: pricingPlan.title,
+            amount: amountPaid,
+            status: status,
+            date: new Date().toLocaleDateString(),
+          }),
         });
+
+        // Notify Admins
+        const admin = await User.findOne({
+          role: { $in: [USER_ROLES.SUPER_ADMIN] },
+        });
+
+        if (admin) {
+          // Send Push/Socket & Email Notification to Admin
+          await sendNotifications({
+            receiver: admin._id.toString(),
+            title: "New Subscription Purchased",
+            text: `${existingUser.name} has purchased the ${pricingPlan.title} plan.`,
+            type: NOTIFICATION_TYPE.ADMIN,
+            referenceId: newSubscription._id.toString(),
+            referenceModel: NOTIFICATION_REFERENCE_MODEL.SUBSCRIPTION,
+            event: "subscription",
+            ...emailTemplate.adminSubscriptionNotification({
+              email: admin.email!,
+              userName: existingUser.name,
+              userEmail: existingUser.email!,
+              planName: pricingPlan.title,
+              amount: amountPaid,
+              type: "created",
+            }),
+          });
+        }
 
         // Update the user to reflect the active subscription
         await User.findByIdAndUpdate(

@@ -5,6 +5,8 @@ export const isUser = auth(USER_ROLES.USER);
 
 export const isAgent = auth(USER_ROLES.AGENT);
 
+export const isUserOrAgent = auth(USER_ROLES.USER, USER_ROLES.AGENT);
+
 export const isAuthenticated = auth(
   USER_ROLES.USER,
   USER_ROLES.AGENT,

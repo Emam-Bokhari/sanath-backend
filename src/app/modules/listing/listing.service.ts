@@ -31,6 +31,14 @@ const createListingServiceToDB = async (payload: TListing, agentId: string) => {
   const maxListings = user.maxListings || 0;
   const remainingListings = user.remainingListings || 0;
 
+  // Check if listing feature is enabled in the plan
+  if (!plan?.features?.listings) {
+    throw new ApiError(
+      StatusCodes.FORBIDDEN,
+      "Your current plan does not support creating listings.",
+    );
+  }
+
   if (maxListings !== -1) {
     if (remainingListings <= 0) {
       throw new ApiError(
@@ -47,13 +55,15 @@ const createListingServiceToDB = async (payload: TListing, agentId: string) => {
     initialStatus = LISTING_STATUS.PENDING_APPROVAL;
   }
 
-  // Check for featured listing permission
-  if (payload.isFeatured && !plan?.features?.featuredListing) {
+  // Check for featured listing permission (COMMENTED FOR FUTURE USE)
+  /*
+  if ((payload as any).isFeatured && !plan?.features?.featuredListing) {
     throw new ApiError(
       StatusCodes.FORBIDDEN,
       "Your current plan does not support featured listings",
     );
   }
+  */
 
   // always create listing first (safe default)
   const listing = await Listing.create({
@@ -219,14 +229,16 @@ const updateListingServiceToDB = async (
     payload.status = LISTING_STATUS.PENDING_APPROVAL;
   }
 
-  // Check for featured listing permission
-  if (payload.isFeatured) {
+  // Check for featured listing permission (COMMENTED FOR FUTURE USE)
+  /*
+  if ((payload as any).isFeatured) {
     const user = await User.findById(agentId).populate("plan");
     const plan = user?.plan as any;
     if (!plan?.features?.featuredListing) {
       return {} as any;
     }
   }
+  */
 
   Object.assign(existingListing, payload);
 
@@ -463,7 +475,7 @@ const searchListingsServiceFromDB = async (
     bathrooms,
     tenure,
     features,
-    isFeatured,
+    isFeatured, // COMMENTED PARAM
     timeFilter,
     sort,
     lat,
@@ -521,10 +533,12 @@ const searchListingsServiceFromDB = async (
     query.listingType = listingType;
   }
 
-  /* ================= FEATURED ================= */
+  /* ================= FEATURED (COMMENTED FOR FUTURE USE) ================= */
+  /*
   if (isFeatured !== undefined) {
     query.isFeatured = String(isFeatured) === "true";
   }
+  */
 
   /* ================= SEARCH ================= */
   if (searchTerm || location) {
