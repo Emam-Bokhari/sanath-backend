@@ -30,27 +30,27 @@ export const FILE_CONFIG = {
   profileImage: {
     dir: "profileImage",
     maxCount: 1,
-    mimeTypes: new Set(["image/png", "image/jpeg", "image/webp"]),
+    mimeTypes: new Set(["image/png", "image/jpeg", "image/jpg", "image/webp"]),
   },
   images: {
     dir: "images",
     maxCount: 10,
-    mimeTypes: new Set(["image/png", "image/jpeg", "image/webp"]),
+    mimeTypes: new Set(["image/png", "image/jpeg", "image/jpg", "image/webp"]),
   },
   photos: {
     dir: "photos",
     maxCount: 10,
-    mimeTypes: new Set(["image/png", "image/jpeg", "image/webp"]),
+    mimeTypes: new Set(["image/png", "image/jpeg", "image/jpg", "image/webp"]),
   },
   floorPlans: {
     dir: "floorPlans",
     maxCount: 5,
-    mimeTypes: new Set(["image/png", "image/jpeg", "image/webp"]),
+    mimeTypes: new Set(["image/png", "image/jpeg", "image/jpg", "image/webp"]),
   },
   thumbnail: {
     dir: "thumbnail",
     maxCount: 5,
-    mimeTypes: new Set(["image/png", "image/jpeg", "image/webp"]),
+    mimeTypes: new Set(["image/png", "image/jpeg", "image/jpg", "image/webp"]),
   },
   logo: {
     dir: "logo",
@@ -58,6 +58,7 @@ export const FILE_CONFIG = {
     mimeTypes: new Set([
       "image/png",
       "image/jpeg",
+      "image/jpg",
       "image/webp",
       "image/svg+xml",
     ]),
@@ -68,6 +69,7 @@ export const FILE_CONFIG = {
     mimeTypes: new Set([
       "image/png",
       "image/jpeg",
+      "image/jpg",
       "image/webp",
       "image/svg+xml",
     ]),
@@ -75,12 +77,12 @@ export const FILE_CONFIG = {
   banner: {
     dir: "banner",
     maxCount: 5,
-    mimeTypes: new Set(["image/png", "image/jpeg", "image/webp"]),
+    mimeTypes: new Set(["image/png", "image/jpeg", "image/jpg", "image/webp"]),
   },
   coverImage: {
     dir: "coverImage",
     maxCount: 1,
-    mimeTypes: new Set(["image/png", "image/jpeg", "image/webp"]),
+    mimeTypes: new Set(["image/png", "image/jpeg", "image/jpg", "image/webp"]),
   },
   threeSixtyTour: {
     dir: "threeSixtyTour",
@@ -90,7 +92,7 @@ export const FILE_CONFIG = {
   attachment: {
     dir: "attachment",
     maxCount: 1,
-    mimeTypes: new Set(["image/png", "image/jpeg", "image/webp"]),
+    mimeTypes: new Set(["image/png", "image/jpeg", "image/jpg", "image/webp"]),
   },
   audio: {
     dir: "audio",
@@ -116,6 +118,7 @@ export const FILE_CONFIG = {
       "application/msword",
       "image/png",
       "image/jpeg",
+      "image/jpg",
       "image/webp",
     ]),
   },

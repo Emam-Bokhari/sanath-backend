@@ -75,6 +75,10 @@ router
         fieldName: "brochure",
         mode: "single",
       },
+      {
+        fieldName: "threeSixtyTour",
+        mode: "single",
+      },
     ),
     ListingControllers.updateListing,
   )
