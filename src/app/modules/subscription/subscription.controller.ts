@@ -46,8 +46,20 @@ const getMySubscription = catchAsync(async (req: Request, res: Response) => {
   });
 });
 
+const paymentSuccess = catchAsync(async (req, res) => {
+  // Render success page or redirect to frontend success page
+  res.render("success");
+});
+
+const paymentFail = catchAsync(async (req, res) => {
+  // Render cancel page or redirect to frontend cancel page
+  res.render("fail");
+});
+
 export const SubscriptionController = {
   createCheckoutSession,
   cancelSubscription,
   getMySubscription,
+  paymentSuccess,
+  paymentFail,
 };

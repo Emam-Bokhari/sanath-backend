@@ -29,4 +29,7 @@ router.get(
   SubscriptionController.getMySubscription,
 );
 
+router.get("/success", SubscriptionController.paymentSuccess);
+router.get("/fail", SubscriptionController.paymentFail);
+
 export const SubscriptionRoutes = router;
