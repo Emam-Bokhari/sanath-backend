@@ -41,3 +41,15 @@ export const canPublishListing = (checklist?: TListingChecklist) => {
     checklist?.featureDescription
   );
 };
+
+export const getMissingChecklistItems = (checklist: TListingChecklist) => {
+  const missing = [];
+  if (!checklist.basicInfo) missing.push("Basic Info (title, price, location)");
+  if (!checklist.media) missing.push("Media (at least 6 photos and 1 video)");
+  if (!checklist.propertyInfo)
+    missing.push("Property Info (type, bedrooms, bathrooms)");
+  if (!checklist.featureDescription)
+    missing.push("Feature & Description (features and description text)");
+
+  return missing;
+};

@@ -14,29 +14,23 @@ const listingSchema = new Schema<TListing, TListingModel>(
   {
     title: {
       type: String,
-      required: true,
     },
     listingType: {
       type: String,
       enum: Object.values(LISTING_TYPE),
-      required: true,
     },
     askingPrice: {
       type: Number,
-      required: true,
     },
 
     country: {
       type: String,
-      required: true,
     },
     city: {
       type: String,
-      required: true,
     },
     postalCode: {
       type: String,
-      required: true,
     },
 
     location: {
@@ -57,12 +51,10 @@ const listingSchema = new Schema<TListing, TListingModel>(
 
     photos: {
       type: [String],
-      required: true,
       default: [],
     },
     videos: {
       type: [String],
-      required: true,
       default: [],
     },
     views: {
@@ -92,11 +84,9 @@ const listingSchema = new Schema<TListing, TListingModel>(
 
     propertyBedrooms: {
       type: Number,
-      required: true,
     },
     propertyBathrooms: {
       type: Number,
-      required: true,
     },
     propertySquareFoot: {
       type: Number,
@@ -124,11 +114,9 @@ const listingSchema = new Schema<TListing, TListingModel>(
     features: {
       type: [String],
       enum: Object.values(FEATURES),
-      required: true,
     },
     description: {
       type: String,
-      required: true,
     },
     // isFeatured: {
     //   type: Boolean,

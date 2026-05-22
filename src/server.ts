@@ -13,6 +13,8 @@ import {
   notificationQueue,
 } from "./queues";
 import "./queues";
+import 'dotenv/config';
+
 
 let server: any;
 

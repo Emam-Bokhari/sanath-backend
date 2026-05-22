@@ -4,7 +4,11 @@ import { User } from "../user/user.model";
 import { TListing, TSearchParams } from "./listing.interface";
 import { Listing } from "./listing.model";
 import { SavedSearch } from "../savedSearch/savedSearch.model";
-import { canPublishListing, generateChecklist } from "./listing.utils";
+import {
+  canPublishListing,
+  generateChecklist,
+  getMissingChecklistItems,
+} from "./listing.utils";
 import { LISTING_STATUS } from "./listing.constant";
 import { FilterQuery, Types } from "mongoose";
 import QueryBuilder from "../../builder/queryBuilder";
@@ -48,9 +52,8 @@ const createListingServiceToDB = async (payload: TListing, agentId: string) => {
     }
   }
 
-  // force status to DRAFT or PENDING_APPROVAL if PUBLISHED is requested by agent
+  // Generate checklist and set initial status
   let initialStatus = payload.status || LISTING_STATUS.DRAFT;
-
   if (initialStatus === LISTING_STATUS.PUBLISHED) {
     initialStatus = LISTING_STATUS.PENDING_APPROVAL;
   }
@@ -72,7 +75,7 @@ const createListingServiceToDB = async (payload: TListing, agentId: string) => {
     status: initialStatus,
   });
 
-  //  generate checklist
+  // Generate checklist
   const checklist = generateChecklist(listing);
   listing.listingCheckList = checklist;
 
@@ -81,12 +84,15 @@ const createListingServiceToDB = async (payload: TListing, agentId: string) => {
     const allowed = canPublishListing(checklist);
 
     if (!allowed) {
-      throw new Error(
-        "Cannot request publication. Please complete required sections first.",
+      const missingFields = getMissingChecklistItems(checklist);
+      throw new ApiError(
+        StatusCodes.BAD_REQUEST,
+        `Cannot request publication. Please complete the following sections first: ${missingFields.join(", ")}`,
       );
     }
   }
 
+  // Save listing to DB
   await listing.save();
 
   // Decrement remaining listings if not unlimited
@@ -250,8 +256,10 @@ const updateListingServiceToDB = async (
     const allowed = canPublishListing(checklist);
 
     if (!allowed) {
-      throw new Error(
-        "Cannot request publication. Complete all required sections first.",
+      const missingFields = getMissingChecklistItems(checklist);
+      throw new ApiError(
+        StatusCodes.BAD_REQUEST,
+        `Cannot request publication. Please complete the following sections first: ${missingFields.join(", ")}`,
       );
     }
   }
