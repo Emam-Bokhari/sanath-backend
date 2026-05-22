@@ -6,7 +6,6 @@ import { Types } from "mongoose";
 import { Enquery } from "./enquery.model";
 import { ISendEmail } from "../../../types/email";
 import config from "../../../config";
-import { emailHelper } from "../../../helpers/emailHelper";
 import QueryBuilder from "../../builder/queryBuilder";
 import { ENQUERY_STATUS } from "./enquery.constant";
 import { sendNotifications } from "../../../helpers/notificationsHelper";

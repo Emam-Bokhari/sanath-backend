@@ -14,9 +14,10 @@ export const canSendNotification = async (
   // In the current model, defaults are 'false'. 
   // If we want to be strict, we return false if no pref exists or if disabled.
   if (!userPref) {
-    // Defaulting to true for now if no preference record exists, 
-    // assuming users want notifications unless they opt-out.
-    // However, if the project requirement is opt-in, this should be false.
+    // If no preference record exists:
+    // 1. If a specific event is requested, we default to FALSE (matching schema defaults)
+    // 2. Otherwise, we default to TRUE for the channel itself to allow basic notifications
+    if (event) return false;
     return true;
   }
 
@@ -26,7 +27,7 @@ export const canSendNotification = async (
   if (channel === 'socket' && !userPref.socket) return false;
 
   // Check event preference if provided
-  if (event && !userPref[event]) {
+  if (event && !userPref[event as keyof INotificationPreference]) {
     return false;
   }
 

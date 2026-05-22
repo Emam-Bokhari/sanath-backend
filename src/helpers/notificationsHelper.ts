@@ -4,7 +4,7 @@ import { notificationHelper } from "../app/builder/pushNotification";
 import { NOTIFICATION_TYPE } from "../app/modules/notification/notification.constant";
 import { notificationPreferenceHelper } from "./notificationPreferenceHelper";
 import { User } from "../app/modules/user/user.model";
-import { emailHelper } from "./emailHelper";
+import { emailQueue } from "../queues";
 
 export const sendNotifications = async (
   data: Partial<INotification> & {
@@ -26,7 +26,7 @@ export const sendNotifications = async (
   if (canEmail) {
     const user = await User.findById(receiverId).select("email name");
     if (user && user.email) {
-      await emailHelper.sendEmail({
+      await emailQueue.add("notification-email", {
         to: user.email,
         subject: data.subject || data.title || "Notification",
         userId: receiverId,

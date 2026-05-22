@@ -21,7 +21,6 @@ export const emailWorker = new Worker(
 );
 
 // events
-
 emailWorker.on("completed", (job) => {
   console.log(`Email Sent: ${job.id}`);
 });
