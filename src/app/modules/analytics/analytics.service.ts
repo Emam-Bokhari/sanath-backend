@@ -36,8 +36,9 @@ const getAgentDashboardStats = async (agentId: string) => {
 
   const totalSaved = await FavoriteProperty.countDocuments({
     listingId: { $in: listingIds },
-    userId: agentObjectId,
   });
+
+  console.log(totalSaved, "totalSaved");
 
   return {
     totalListings,

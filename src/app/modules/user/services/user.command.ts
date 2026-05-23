@@ -16,6 +16,8 @@ import {
 import { IUser } from "../user.interface";
 import unlinkFile from "../../../../shared/unlinkFile";
 import bcrypt from "bcrypt";
+import { NotificationPreferenceModel } from "../../notificationPreference/notificationPreference.model";
+import { ADMIN_NOTIFICATION_DEFAULTS } from "../../notificationPreference/notificationPreference.service";
 
 const createUserToDB = async (payload: any) => {
   const isExistUser = await User.findOne({ email: payload.email });
@@ -210,6 +212,12 @@ const createAdminToDB = async (payload: any): Promise<IUser> => {
   };
 
   const createAdmin = await User.create(adminPayload);
+
+  // create notification preference
+  await NotificationPreferenceModel.create({
+    userId: createAdmin._id,
+    ...ADMIN_NOTIFICATION_DEFAULTS,
+  });
 
   // ---------------- EMAIL TEMPLATE ----------------
   const template = emailTemplate.adminCredentials({
