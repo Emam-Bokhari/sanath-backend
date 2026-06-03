@@ -19,6 +19,7 @@ const getNotifications = catchAsync(async (req: Request, res: Response) => {
     data: result.data,
     meta: result.meta,
   });
+  
 });
 
 const readNotifications = catchAsync(async (req: Request, res: Response) => {

@@ -231,7 +231,12 @@ const updateListingServiceToDB = async (
     throw new Error("Listing not found or unauthorized");
   }
 
-  if (payload.status === LISTING_STATUS.PUBLISHED) {
+  // Only if the listing is already PUBLISHED or being set to PUBLISHED,
+  // it should go to PENDING_APPROVAL for admin review.
+  if (
+    existingListing.status === LISTING_STATUS.PUBLISHED ||
+    payload.status === LISTING_STATUS.PUBLISHED
+  ) {
     payload.status = LISTING_STATUS.PENDING_APPROVAL;
   }
 
