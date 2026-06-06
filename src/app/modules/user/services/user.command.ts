@@ -39,7 +39,6 @@ const createUserToDB = async (payload: any) => {
   };
 
   const createAccountTemplate = emailTemplate.createAccount(values);
-  // emailHelper.sendEmail(createAccountTemplate);
   emailQueue.add("create-account-otp", createAccountTemplate);
 
   //save to DB

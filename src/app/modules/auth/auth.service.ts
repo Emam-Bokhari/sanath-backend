@@ -96,7 +96,6 @@ const forgetPasswordToDB = async (email: string) => {
   };
 
   const forgetPassword = emailTemplate.resetPassword(value);
-  // emailHelper.sendEmail(forgetPassword);
   emailQueue.add("forget-password-otp", forgetPassword);
 
   //save to DB
@@ -329,7 +328,6 @@ const resendVerificationEmailToDB = async (email: string) => {
   };
 
   const accountEmailTemplate = emailTemplate.createAccount(emailValues);
-  // emailHelper.sendEmail(accountEmailTemplate);
   emailQueue.add("resend-email-otp", accountEmailTemplate);
 
   // Update user with authentication details

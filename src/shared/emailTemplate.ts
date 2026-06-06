@@ -5,43 +5,82 @@ import {
   IResetPassword,
 } from "../types/emailTemplate";
 
-const PRIMARY_COLOR = "#a90707";
-const BG_COLOR = "#ffffff";
-const TEXT_COLOR = "#363636";
+const BRAND = {
+  NAME: "My Home",
+  PRIMARY_COLOR: "#0B3C6D",
+  BG_COLOR: "#FFFFFF",
+  TEXT_COLOR: "#191919",
+};
 
 const baseLayout = (content: string) => `
-  <body style="margin:0;padding:0;background-color:${BG_COLOR};font-family:Arial,Helvetica,sans-serif;">
-    <table width="100%" cellpadding="0" cellspacing="0" border="0" style="background-color:${BG_COLOR};padding:40px 0;">
+  <body style="margin:0;padding:0;background-color:${BRAND.BG_COLOR};font-family:Arial,Helvetica,sans-serif;">
+    <table width="100%" cellpadding="0" cellspacing="0" border="0" style="background-color:${BRAND.BG_COLOR};padding:40px 0;">
       <tr>
         <td align="center">
-          <table width="100%" cellpadding="0" cellspacing="0" border="0" 
-            style="max-width:600px;background:#ffffff;border-radius:12px;
-            box-shadow:0 8px 24px rgba(0,0,0,0.06);overflow:hidden;">
-            
+          <table
+            width="100%"
+            cellpadding="0"
+            cellspacing="0"
+            border="0"
+            style="
+              max-width:600px;
+              background:${BRAND.BG_COLOR};
+              border-radius:12px;
+              box-shadow:0 8px 24px rgba(0,0,0,0.06);
+              overflow:hidden;
+            "
+          >
             <!-- Header -->
             <tr>
-              <td align="center" style="padding:30px 20px;background:${PRIMARY_COLOR};color:#ffffff;">
-                <h1 style="margin:0;font-size:22px;font-weight:600;letter-spacing:1px;">
-                  GiftBox
+              <td
+                align="center"
+                style="
+                  padding:30px 20px;
+                  background:${BRAND.PRIMARY_COLOR};
+                  color:#ffffff;
+                "
+              >
+                <h1
+                  style="
+                    margin:0;
+                    font-size:22px;
+                    font-weight:600;
+                    letter-spacing:1px;
+                  "
+                >
+                  ${BRAND.NAME}
                 </h1>
               </td>
             </tr>
 
             <!-- Dynamic Content -->
             <tr>
-              <td style="padding:35px 30px;color:${TEXT_COLOR};font-size:15px;line-height:1.6;">
+              <td
+                style="
+                  padding:35px 30px;
+                  color:${BRAND.TEXT_COLOR};
+                  font-size:15px;
+                  line-height:1.6;
+                "
+              >
                 ${content}
               </td>
             </tr>
 
             <!-- Footer -->
             <tr>
-              <td align="center" 
-                style="padding:20px;font-size:12px;color:#888;background:#f7f7f7;">
-                © ${new Date().getFullYear()} GiftBox. All rights reserved.
+              <td
+                align="center"
+                style="
+                  padding:20px;
+                  font-size:12px;
+                  color:#888;
+                  background:#f7f7f7;
+                "
+              >
+                © ${new Date().getFullYear()} ${BRAND.NAME}. All rights reserved.
               </td>
             </tr>
-
           </table>
         </td>
       </tr>
@@ -51,26 +90,28 @@ const baseLayout = (content: string) => `
 
 const createAccount = (values: ICreateAccount) => {
   const content = `
-    <h2 style="margin-top:0;color:${TEXT_COLOR};">
+    <h2 style="margin-top:0;color:${BRAND.TEXT_COLOR};">
       Welcome, ${values.name}
     </h2>
 
     <p>
-      Thank you for creating an account with GiftBox.
+      Thank you for creating an account with ${BRAND.NAME}.
       Please verify your email address using the code below.
     </p>
 
     <div style="text-align:center;margin:35px 0;">
-      <div style="
-        display:inline-block;
-        padding:18px 30px;
-        background:${PRIMARY_COLOR};
-        color:#ffffff;
-        font-size:26px;
-        font-weight:700;
-        letter-spacing:4px;
-        border-radius:8px;
-      ">
+      <div
+        style="
+          display:inline-block;
+          padding:18px 30px;
+          background:${BRAND.PRIMARY_COLOR};
+          color:#ffffff;
+          font-size:26px;
+          font-weight:700;
+          letter-spacing:4px;
+          border-radius:8px;
+        "
+      >
         ${values.otp}
       </div>
     </div>
@@ -86,14 +127,14 @@ const createAccount = (values: ICreateAccount) => {
 
   return {
     to: values.email,
-    subject: "GiftBox – Verify Your Account",
+    subject: `${BRAND.NAME} – Verify Your Account`,
     html: baseLayout(content),
   };
 };
 
 const resetPassword = (values: IResetPassword) => {
   const content = `
-    <h2 style="margin-top:0;color:${TEXT_COLOR};">
+    <h2 style="margin-top:0;color:${BRAND.TEXT_COLOR};">
       Password Reset Request
     </h2>
 
@@ -103,16 +144,18 @@ const resetPassword = (values: IResetPassword) => {
     </p>
 
     <div style="text-align:center;margin:35px 0;">
-      <div style="
-        display:inline-block;
-        padding:18px 30px;
-        background:${PRIMARY_COLOR};
-        color:#ffffff;
-        font-size:26px;
-        font-weight:700;
-        letter-spacing:4px;
-        border-radius:8px;
-      ">
+      <div
+        style="
+          display:inline-block;
+          padding:18px 30px;
+          background:${BRAND.PRIMARY_COLOR};
+          color:#ffffff;
+          font-size:26px;
+          font-weight:700;
+          letter-spacing:4px;
+          border-radius:8px;
+        "
+      >
         ${values.otp}
       </div>
     </div>
@@ -128,7 +171,7 @@ const resetPassword = (values: IResetPassword) => {
 
   return {
     to: values.email,
-    subject: "GiftBox – Password Reset Code",
+    subject: `${BRAND.NAME} – Password Reset Code`,
     html: baseLayout(content),
   };
 };
@@ -143,51 +186,53 @@ const subscriptionEmail = (values: {
   isCancellation?: boolean;
 }) => {
   const content = `
-    <h2 style="margin-top:0;color:${TEXT_COLOR};">
-      Subscription ${values.isCancellation ? "Cancelled" : "Confirmed"}
-    </h2>
+  <h2 style="margin-top:0;color:${BRAND.TEXT_COLOR};">
+    Subscription ${values.isCancellation ? "Cancelled" : "Confirmed"}
+  </h2>
 
-    <p>
-      Hello ${values.name},
-    </p>
+  <p>
+    Hello ${values.name},
+  </p>
 
-    <p>
-      ${
-        values.isCancellation
-          ? `Your subscription to the <strong>${values.planName}</strong> plan has been cancelled.`
-          : `Thank you for subscribing to our <strong>${values.planName}</strong> plan.`
-      }
-    </p>
+  <p>
+    ${
+      values.isCancellation
+        ? `Your subscription to the <strong>${values.planName}</strong> plan has been cancelled.`
+        : `Thank you for subscribing to our <strong>${values.planName}</strong> plan.`
+    }
+  </p>
 
-    <div style="background:#f9f9f9;padding:20px;border-radius:8px;margin:20px 0;">
-      <table width="100%" cellpadding="0" cellspacing="0">
-        <tr>
-          <td style="padding:5px 0;font-weight:bold;">Plan:</td>
-          <td style="padding:5px 0;">${values.planName}</td>
-        </tr>
-        <tr>
-          <td style="padding:5px 0;font-weight:bold;">Amount:</td>
-          <td style="padding:5px 0;">$${values.amount}</td>
-        </tr>
-        <tr>
-          <td style="padding:5px 0;font-weight:bold;">Status:</td>
-          <td style="padding:5px 0;">${values.status.toUpperCase()}</td>
-        </tr>
-        <tr>
-          <td style="padding:5px 0;font-weight:bold;">Date:</td>
-          <td style="padding:5px 0;">${values.date}</td>
-        </tr>
-      </table>
-    </div>
+  <div style="background:#f7f9fc;padding:20px;border-radius:8px;margin:20px 0;">
+    <table width="100%" cellpadding="0" cellspacing="0">
+      <tr>
+        <td style="padding:5px 0;font-weight:bold;">Plan:</td>
+        <td style="padding:5px 0;">${values.planName}</td>
+      </tr>
+      <tr>
+        <td style="padding:5px 0;font-weight:bold;">Amount:</td>
+        <td style="padding:5px 0;">$${values.amount}</td>
+      </tr>
+      <tr>
+        <td style="padding:5px 0;font-weight:bold;">Status:</td>
+        <td style="padding:5px 0;">${values.status.toUpperCase()}</td>
+      </tr>
+      <tr>
+        <td style="padding:5px 0;font-weight:bold;">Date:</td>
+        <td style="padding:5px 0;">${values.date}</td>
+      </tr>
+    </table>
+  </div>
 
-    <p>
-      If you have any questions, please contact our support team.
-    </p>
-  `;
+  <p>
+    If you have any questions, please contact our support team.
+  </p>
+`;
 
   return {
     to: values.email,
-    subject: `GiftBox – Subscription ${values.isCancellation ? "Cancelled" : "Confirmed"}`,
+    subject: `${BRAND.NAME} – Subscription ${
+      values.isCancellation ? "Cancelled" : "Confirmed"
+    }`,
     html: baseLayout(content),
   };
 };
@@ -208,126 +253,130 @@ const adminSubscriptionNotification = (values: {
         : "Subscription Cancelled";
 
   const content = `
-    <h2 style="margin-top:0;color:${TEXT_COLOR};">
-      ${typeText}
-    </h2>
+  <h2 style="margin-top:0;color:${BRAND.TEXT_COLOR};">
+    ${typeText}
+  </h2>
 
-    <p>
-      A user has ${
-        values.type === "created"
-          ? "purchased a new"
-          : values.type === "updated"
-            ? "updated their"
-            : "cancelled their"
-      } subscription.
-    </p>
+  <p>
+    A user has ${
+      values.type === "created"
+        ? "purchased a new"
+        : values.type === "updated"
+          ? "updated their"
+          : "cancelled their"
+    } subscription.
+  </p>
 
-    <div style="background:#f9f9f9;padding:20px;border-radius:8px;margin:20px 0;">
-      <table width="100%" cellpadding="0" cellspacing="0">
-        <tr>
-          <td style="padding:5px 0;font-weight:bold;">User Name:</td>
-          <td style="padding:5px 0;">${values.userName}</td>
-        </tr>
-        <tr>
-          <td style="padding:5px 0;font-weight:bold;">User Email:</td>
-          <td style="padding:5px 0;">${values.userEmail}</td>
-        </tr>
-        <tr>
-          <td style="padding:5px 0;font-weight:bold;">Plan:</td>
-          <td style="padding:5px 0;">${values.planName}</td>
-        </tr>
-        <tr>
-          <td style="padding:5px 0;font-weight:bold;">Amount:</td>
-          <td style="padding:5px 0;">$${values.amount}</td>
-        </tr>
-      </table>
-    </div>
-  `;
+  <div style="background:#f7f9fc;padding:20px;border-radius:8px;margin:20px 0;">
+    <table width="100%" cellpadding="0" cellspacing="0">
+      <tr>
+        <td style="padding:5px 0;font-weight:bold;">User Name:</td>
+        <td style="padding:5px 0;">${values.userName}</td>
+      </tr>
+      <tr>
+        <td style="padding:5px 0;font-weight:bold;">User Email:</td>
+        <td style="padding:5px 0;">${values.userEmail}</td>
+      </tr>
+      <tr>
+        <td style="padding:5px 0;font-weight:bold;">Plan:</td>
+        <td style="padding:5px 0;">${values.planName}</td>
+      </tr>
+      <tr>
+        <td style="padding:5px 0;font-weight:bold;">Amount:</td>
+        <td style="padding:5px 0;">$${values.amount}</td>
+      </tr>
+    </table>
+  </div>
+`;
 
   return {
     to: values.email,
-    subject: `Admin Notification – ${typeText}`,
+    subject: `${BRAND.NAME} Admin Notification – ${typeText}`,
     html: baseLayout(content),
   };
 };
 
 const adminCredentials = (values: IAdminCredentials) => {
-  const emailHtml = `
-  <body style="margin:0;padding:0;background:#d1d2d2;font-family:Arial,sans-serif;">
-    <table width="100%" cellpadding="0" cellspacing="0" style="padding:40px 0;">
-      <tr>
-        <td align="center">
+  const content = `
+    <h2 style="margin-top:0;color:${BRAND.TEXT_COLOR};">
+      Admin Account Created
+    </h2>
 
-          <table width="600" cellpadding="0" cellspacing="0" style="background:#ffffff;border-radius:10px;overflow:hidden;box-shadow:0 8px 20px rgba(0,0,0,0.08);">
+    <p>
+      Hello <strong>${values.name || "Admin"}</strong>,
+    </p>
 
-            <!-- Header -->
-            <tr>
-              <td style="background:#0b3c6d;padding:25px;text-align:center;color:#ffffff;">
-                <h2 style="margin:0;">Admin Account Created</h2>
-                <p style="margin:5px 0 0 0;font-size:13px;">Welcome to My Home Admin Panel</p>
-              </td>
-            </tr>
+    <p>
+      Your admin account has been created successfully.
+    </p>
 
-            <!-- Body -->
-            <tr>
-              <td style="padding:30px;color:#333;font-size:15px;line-height:1.6;">
+    <div
+      style="
+        background:#f7f9fc;
+        padding:20px;
+        border-radius:8px;
+        margin:20px 0;
+      "
+    >
+      <table width="100%" cellpadding="0" cellspacing="0">
+        <tr>
+          <td style="padding:8px 0;font-weight:bold;width:120px;">
+            Email:
+          </td>
+          <td>${values.email}</td>
+        </tr>
 
-                <p>Hello <b>${values.name || "Admin"}</b>,</p>
+        <tr>
+          <td style="padding:8px 0;font-weight:bold;">
+            Password:
+          </td>
+          <td
+            style="
+              background:#ffffff;
+              padding:8px;
+              border-radius:5px;
+              border:1px solid #e5e7eb;
+            "
+          >
+            ${values.password}
+          </td>
+        </tr>
 
-                <p>Your admin account has been created successfully.</p>
+        <tr>
+          <td style="padding:8px 0;font-weight:bold;">
+            Role:
+          </td>
+          <td>ADMIN</td>
+        </tr>
+      </table>
+    </div>
 
-                <table style="width:100%;margin-top:20px;">
-                  <tr>
-                    <td style="padding:8px 0;font-weight:bold;width:120px;">Email:</td>
-                    <td>${values.email}</td>
-                  </tr>
+    <div style="text-align:center;margin:30px 0;">
+      <a
+        href="${config.dashboard_url}/dashboard"
+        style="
+          background:${BRAND.PRIMARY_COLOR};
+          color:#ffffff;
+          padding:12px 24px;
+          border-radius:6px;
+          text-decoration:none;
+          font-weight:600;
+          display:inline-block;
+        "
+      >
+        Login to Dashboard
+      </a>
+    </div>
 
-                  <tr>
-                    <td style="padding:8px 0;font-weight:bold;">Password:</td>
-                    <td style="background:#f0f0f0;padding:8px;border-radius:5px;">
-                      ${values.password}
-                    </td>
-                  </tr>
-
-                  <tr>
-                    <td style="padding:8px 0;font-weight:bold;">Role:</td>
-                    <td>ADMIN</td>
-                  </tr>
-                </table>
-
-                <div style="margin-top:25px;text-align:center;">
-                  <a href="${config.dashboard_url}/dashboard" 
-                    style="background:#0b3c6d;color:#ffffff;padding:12px 22px;border-radius:6px;text-decoration:none;font-weight:bold;">
-                    Login to Dashboard
-                  </a>
-                </div>
-
-                <p style="margin-top:25px;font-size:13px;color:#666;">
-                  ⚠️ Please change your password after first login for security.
-                </p>
-
-              </td>
-            </tr>
-
-            <!-- Footer -->
-            <tr>
-              <td style="background:#f2f2f2;text-align:center;padding:15px;font-size:12px;color:#888;">
-                © ${new Date().getFullYear()} My Home. All rights reserved.
-              </td>
-            </tr>
-
-          </table>
-
-        </td>
-      </tr>
-    </table>
-  </body>
-`;
+    <p style="font-size:13px;color:#666;">
+      Please change your password after your first login for security purposes.
+    </p>
+  `;
 
   return {
     to: values.email,
-    subject: "Your Admin Account Credentials - My Home",
-    html: emailHtml,
+    subject: `${BRAND.NAME} – Admin Account Credentials`,
+    html: baseLayout(content),
   };
 };
 

@@ -31,7 +31,7 @@ const sendEmail = async (values: ISendEmail) => {
     }
 
     const info = await transporter.sendMail({
-      from: `"GiftBox" ${config.email.from}`,
+      from: `"My Home" ${config.email.from}`,
       to: values.to,
       subject: values.subject,
       html: values.html,

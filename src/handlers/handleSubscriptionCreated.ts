@@ -130,6 +130,8 @@ export const handleSubscriptionCreated = async (data: Stripe.Subscription) => {
           });
         }
 
+        console.log("Subscription Created: ", newSubscription);
+
         // Update the user to reflect the active subscription
         await User.findByIdAndUpdate(
           existingUser._id,

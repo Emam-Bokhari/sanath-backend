@@ -9,8 +9,12 @@ import QueryBuilder from "../../builder/queryBuilder";
 import { SUPPORT_STATUS } from "./support.constant";
 import { emailQueue } from "../../../queues";
 
-const PRIMARY_COLOR = "#22143b";
-const TEXT_COLOR = "#ffffff";
+const BRAND = {
+  NAME: "My Home",
+  PRIMARY_COLOR: "#0B3C6D",
+  BG_COLOR: "#FFFFFF",
+  TEXT_COLOR: "#191919",
+};
 
 const support = async (id: string, payload: TSupport) => {
   const user = await User.isExistUserById(id);
@@ -25,26 +29,53 @@ const support = async (id: string, payload: TSupport) => {
 
   const supportEntry = await Support.create(payload);
 
-  const emailPayload: ISendEmail = {
-    to: config.support_receiver_email || "support@giftbox.com",
-    subject: `GiftBox Support Request: ${payload.subject}`,
-    html: `
-<body style="margin:0;padding:0;background:#ffffff;font-family:Arial,Helvetica,sans-serif;">
-  <table width="100%" cellpadding="0" cellspacing="0" style="padding:40px 0;background:#ffffff;">
+const emailPayload: ISendEmail = {
+  to: config.support_receiver_email || "support@yourdomain.com",
+  subject: `${BRAND.NAME} Support Request: ${payload.subject}`,
+  html: `
+<body style="margin:0;padding:0;background:${BRAND.BG_COLOR};font-family:Arial,Helvetica,sans-serif;">
+  <table width="100%" cellpadding="0" cellspacing="0" style="padding:40px 0;background:${BRAND.BG_COLOR};">
     <tr>
       <td align="center">
 
         <table width="100%" cellpadding="0" cellspacing="0"
-          style="max-width:600px;background:#ffffff;border-radius:12px;
-          box-shadow:0 8px 24px rgba(0,0,0,0.06);overflow:hidden;">
+          style="
+            max-width:600px;
+            background:${BRAND.BG_COLOR};
+            border-radius:12px;
+            box-shadow:0 8px 24px rgba(0,0,0,0.06);
+            overflow:hidden;
+          "
+        >
 
           <!-- Header -->
           <tr>
-            <td align="center" style="padding:30px 20px;background:${PRIMARY_COLOR};color:${TEXT_COLOR};">
-              <h1 style="margin:0;font-size:22px;font-weight:600;letter-spacing:1px;">
-                GiftBox
+            <td
+              align="center"
+              style="
+                padding:30px 20px;
+                background:${BRAND.PRIMARY_COLOR};
+                color:#ffffff;
+              "
+            >
+              <h1
+                style="
+                  margin:0;
+                  font-size:22px;
+                  font-weight:600;
+                  letter-spacing:1px;
+                "
+              >
+                ${BRAND.NAME}
               </h1>
-              <p style="margin:5px 0 0 0;font-size:13px;opacity:0.9;">
+
+              <p
+                style="
+                  margin:5px 0 0 0;
+                  font-size:13px;
+                  opacity:0.9;
+                "
+              >
                 Support Request Notification
               </p>
             </td>
@@ -52,57 +83,98 @@ const support = async (id: string, payload: TSupport) => {
 
           <!-- Body -->
           <tr>
-            <td style="padding:35px 30px;color:#363636;font-size:15px;line-height:1.6;">
+            <td
+              style="
+                padding:35px 30px;
+                color:${BRAND.TEXT_COLOR};
+                font-size:15px;
+                line-height:1.6;
+              "
+            >
 
               <p style="margin-bottom:10px;">
-                A new support request has been submitted from GiftBox platform.
+                A new support request has been submitted from the ${BRAND.NAME} platform.
               </p>
 
-              <table width="100%" cellpadding="0" cellspacing="0" style="margin-top:20px;">
+              <div
+                style="
+                  background:#f7f9fc;
+                  padding:20px;
+                  border-radius:8px;
+                  margin-top:20px;
+                "
+              >
+                <table width="100%" cellpadding="0" cellspacing="0">
 
-                <tr>
-                  <td style="padding:8px 0;font-weight:bold;width:150px;">Name:</td>
-                  <td style="padding:8px 0;">${payload.name || "Unknown"}</td>
-                </tr>
+                  <tr>
+                    <td style="padding:8px 0;font-weight:bold;width:150px;">
+                      Name:
+                    </td>
+                    <td style="padding:8px 0;">
+                      ${payload.name || "Unknown"}
+                    </td>
+                  </tr>
 
-                <tr>
-                  <td style="padding:8px 0;font-weight:bold;">Email:</td>
-                  <td style="padding:8px 0;">${payload.email}</td>
-                </tr>
+                  <tr>
+                    <td style="padding:8px 0;font-weight:bold;">
+                      Email:
+                    </td>
+                    <td style="padding:8px 0;">
+                      ${payload.email}
+                    </td>
+                  </tr>
 
-                <tr>
-                  <td style="padding:8px 0;font-weight:bold;">Subject:</td>
-                  <td style="padding:8px 0;">${payload.subject}</td>
-                </tr>
+                  <tr>
+                    <td style="padding:8px 0;font-weight:bold;">
+                      Subject:
+                    </td>
+                    <td style="padding:8px 0;">
+                      ${payload.subject}
+                    </td>
+                  </tr>
 
-                ${
-                  payload.attachment
-                    ? `
-                <tr>
-                  <td style="padding:8px 0;font-weight:bold;">Attachment:</td>
-                  <td style="padding:8px 0;">
-                    <a href="http://10.10.7.93:5000${payload.attachment}" target="_blank" style="color:${PRIMARY_COLOR};text-decoration:underline;">
-                      View Attachment
-                    </a>
-                  </td>
-                </tr>
-                `
-                    : ""
-                }
+                  ${
+                    payload.attachment
+                      ? `
+                  <tr>
+                    <td style="padding:8px 0;font-weight:bold;">
+                      Attachment:
+                    </td>
+                    <td style="padding:8px 0;">
+                      <a
+                        href="${config.base_url}${payload.attachment}"
+                        target="_blank"
+                        style="
+                          color:${BRAND.PRIMARY_COLOR};
+                          text-decoration:underline;
+                        "
+                      >
+                        View Attachment
+                      </a>
+                    </td>
+                  </tr>
+                  `
+                      : ""
+                  }
 
-              </table>
+                </table>
+              </div>
 
               <div style="margin-top:25px;">
-                <p style="margin-bottom:6px;font-weight:bold;">Message:</p>
+                <p style="margin-bottom:6px;font-weight:bold;">
+                  Message:
+                </p>
 
-                <div style="
-                  background:#f8f8f8;
-                  padding:18px;
-                  border-left:4px solid ${PRIMARY_COLOR};
-                  border-radius:4px;
-                  font-size:14px;
-                  line-height:1.6;
-                ">
+                <div
+                  style="
+                    background:#f7f9fc;
+                    padding:18px;
+                    border-left:4px solid ${BRAND.PRIMARY_COLOR};
+                    border-radius:4px;
+                    font-size:14px;
+                    line-height:1.6;
+                  "
+                >
                   ${payload.message}
                 </div>
               </div>
@@ -111,8 +183,8 @@ const support = async (id: string, payload: TSupport) => {
                 <a
                   href="mailto:${payload.email}"
                   style="
-                    background:${PRIMARY_COLOR};
-                    color:${TEXT_COLOR};
+                    background:${BRAND.PRIMARY_COLOR};
+                    color:#ffffff;
                     padding:14px 24px;
                     border-radius:6px;
                     text-decoration:none;
@@ -130,9 +202,16 @@ const support = async (id: string, payload: TSupport) => {
 
           <!-- Footer -->
           <tr>
-            <td align="center"
-              style="padding:20px;font-size:12px;color:#888;background:#f7f7f7;">
-              © ${new Date().getFullYear()} GiftBox. All rights reserved.
+            <td
+              align="center"
+              style="
+                padding:20px;
+                font-size:12px;
+                color:#888;
+                background:#f7f7f7;
+              "
+            >
+              © ${new Date().getFullYear()} ${BRAND.NAME}. All rights reserved.
             </td>
           </tr>
 
@@ -143,7 +222,7 @@ const support = async (id: string, payload: TSupport) => {
   </table>
 </body>
 `,
-  };
+};
 
   emailQueue.add("support-request", emailPayload);
 
