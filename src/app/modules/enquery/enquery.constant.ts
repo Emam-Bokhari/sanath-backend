@@ -1,4 +1,4 @@
-export enum   ENQUERY_STATUS {
+export enum ENQUERY_STATUS {
   ENQUIRED = "ENQUIRED",
   CONTACTED = "CONTACTED",
 }

@@ -35,7 +35,6 @@ const getUserPreferenceFromDB = async (
   return result;
 };
 
-
 const updateUserPreferenceToDB = async (
   userId: string,
   preferences: Partial<INotificationPreference>,

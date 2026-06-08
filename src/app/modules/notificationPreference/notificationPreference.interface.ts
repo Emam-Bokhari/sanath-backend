@@ -17,8 +17,8 @@ export interface INotificationPreference {
   userSignup: boolean;
 
   // enquiry flow
-  enquiryCreated: boolean;     
-  enquiryReplied: boolean;   
+  enquiryCreated: boolean;
+  enquiryReplied: boolean;
 
   createdAt?: Date;
   updatedAt?: Date;

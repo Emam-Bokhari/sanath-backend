@@ -10,7 +10,9 @@ const validateAndNormalizeListingIds = async (
   listingIds: string[],
   excludePopularLocationId?: string,
 ): Promise<Types.ObjectId[]> => {
-  const uniqueIds = [...new Set(listingIds.map((id) => id.toString()).filter(Boolean))];
+  const uniqueIds = [
+    ...new Set(listingIds.map((id) => id.toString()).filter(Boolean)),
+  ];
   const validatedIds: Types.ObjectId[] = [];
 
   for (const listingId of uniqueIds) {
@@ -172,9 +174,9 @@ const deletePopularLocationFromDB = async (popularLocationId: string) => {
 const getAvailableListingsForPopularLocation = async (
   popularLocationId?: string,
 ) => {
-  const popularLocations = await PopularLocation.find({ isDeleted: false }).select(
-    "listings _id",
-  );
+  const popularLocations = await PopularLocation.find({
+    isDeleted: false,
+  }).select("listings _id");
 
   const assignedListingIds = popularLocations
     .filter((loc) => loc._id.toString() !== popularLocationId)

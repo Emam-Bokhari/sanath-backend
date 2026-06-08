@@ -49,7 +49,9 @@ router
   .route("/search")
   .get(optionalAuth(), ListingControllers.searchListingsService);
 
-router.route("/my").get(isAgent, checkSubscription(), ListingControllers.getMyListingsService);
+router
+  .route("/my")
+  .get(isAgent, checkSubscription(), ListingControllers.getMyListingsService);
 
 router
   .route("/my/:listingId")
@@ -86,7 +88,11 @@ router
 
 router
   .route("/my/status-sold/:listingId")
-  .patch(isAgent, checkSubscription(), ListingControllers.updateListingStatusToSold);
+  .patch(
+    isAgent,
+    checkSubscription(),
+    ListingControllers.updateListingStatusToSold,
+  );
 
 router.route("/admin/all").get(isAdmin, ListingControllers.getAllListings);
 

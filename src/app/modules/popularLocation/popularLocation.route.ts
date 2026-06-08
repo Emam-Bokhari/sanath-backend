@@ -7,22 +7,29 @@ import { parseFileData } from "../../middlewares/parseFileData";
 const router = express.Router();
 
 router
-    .route("/")
-    .post(isAdmin,
-        fileUploadHandler(),
-        parseFileData({ fieldName: "image", mode: "single" }),
-        PopularLocationControllers.createPopularLocation)
-    .get(PopularLocationControllers.getAllPopularLocations);
+  .route("/")
+  .post(
+    isAdmin,
+    fileUploadHandler(),
+    parseFileData({ fieldName: "image", mode: "single" }),
+    PopularLocationControllers.createPopularLocation,
+  )
+  .get(PopularLocationControllers.getAllPopularLocations);
 
-router.get("/available-listings", PopularLocationControllers.getAvailableListings);
+router.get(
+  "/available-listings",
+  PopularLocationControllers.getAvailableListings,
+);
 
 router
-    .route("/:popularLocationId")
-    .get(PopularLocationControllers.getSinglePopularLocation)
-    .patch(isAdmin,
-        fileUploadHandler(),
-        parseFileData({ fieldName: "image", mode: "single" }),
-        PopularLocationControllers.updatePopularLocation)
-    .delete(isAdmin, PopularLocationControllers.deletePopularLocation);
+  .route("/:popularLocationId")
+  .get(PopularLocationControllers.getSinglePopularLocation)
+  .patch(
+    isAdmin,
+    fileUploadHandler(),
+    parseFileData({ fieldName: "image", mode: "single" }),
+    PopularLocationControllers.updatePopularLocation,
+  )
+  .delete(isAdmin, PopularLocationControllers.deletePopularLocation);
 
 export const PopularLocationRoutes = router;

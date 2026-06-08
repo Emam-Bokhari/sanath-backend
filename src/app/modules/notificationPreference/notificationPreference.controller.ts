@@ -6,7 +6,8 @@ import { NotificationPreferenceService } from "./notificationPreference.service"
 
 const getUserPreference = catchAsync(async (req: Request, res: Response) => {
   const userId = req.user.id;
-  const result = await NotificationPreferenceService.getUserPreferenceFromDB(userId);
+  const result =
+    await NotificationPreferenceService.getUserPreferenceFromDB(userId);
 
   sendResponse(res, {
     statusCode: StatusCodes.OK,
@@ -20,7 +21,7 @@ const updateUserPreference = catchAsync(async (req: Request, res: Response) => {
   const userId = req.user.id;
   const result = await NotificationPreferenceService.updateUserPreferenceToDB(
     userId,
-    req.body
+    req.body,
   );
 
   sendResponse(res, {

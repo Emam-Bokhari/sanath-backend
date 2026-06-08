@@ -29,10 +29,10 @@ const support = async (id: string, payload: TSupport) => {
 
   const supportEntry = await Support.create(payload);
 
-const emailPayload: ISendEmail = {
-  to: config.support_receiver_email || "support@yourdomain.com",
-  subject: `${BRAND.NAME} Support Request: ${payload.subject}`,
-  html: `
+  const emailPayload: ISendEmail = {
+    to: config.support_receiver_email || "support@yourdomain.com",
+    subject: `${BRAND.NAME} Support Request: ${payload.subject}`,
+    html: `
 <body style="margin:0;padding:0;background:${BRAND.BG_COLOR};font-family:Arial,Helvetica,sans-serif;">
   <table width="100%" cellpadding="0" cellspacing="0" style="padding:40px 0;background:${BRAND.BG_COLOR};">
     <tr>
@@ -222,7 +222,7 @@ const emailPayload: ISendEmail = {
   </table>
 </body>
 `,
-};
+  };
 
   emailQueue.add("support-request", emailPayload);
 

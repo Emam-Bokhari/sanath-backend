@@ -65,7 +65,9 @@ const updatePlanToDB = async (planId: string, payload: Partial<IPlan>) => {
       if (payload.status)
         stripeUpdatePayload.active = payload.status === PLAN_STATUS.ACTIVE;
       if (payload.sortOrder !== undefined)
-        stripeUpdatePayload.metadata = { sortOrder: payload.sortOrder.toString() };
+        stripeUpdatePayload.metadata = {
+          sortOrder: payload.sortOrder.toString(),
+        };
 
       await stripe.products.update(isExist.productId, stripeUpdatePayload);
     }

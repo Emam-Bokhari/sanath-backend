@@ -88,9 +88,25 @@ export const sendNotifications = async (
     if (canSocket) {
       // Create notification record in DB only if socket preference is true
       // Destructure to avoid passing extra fields like 'html', 'subject', 'event' to Mongoose
-      const { title, text, receiver, sender, referenceId, referenceModel, type } = data;
+      const {
+        title,
+        text,
+        receiver,
+        sender,
+        referenceId,
+        referenceModel,
+        type,
+      } = data;
       const result = await (
-        await Notification.create({ title, text, receiver, sender, referenceId, referenceModel, type })
+        await Notification.create({
+          title,
+          text,
+          receiver,
+          sender,
+          referenceId,
+          referenceModel,
+          type,
+        })
       ).populate("receiver sender referenceId");
 
       //@ts-ignore

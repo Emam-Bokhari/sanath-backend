@@ -391,7 +391,8 @@ const getNearbyListingsServiceFromDB = async (
     if (listing.agentId) {
       const agent = listing.agentId;
       const agentPlan = agent.plan;
-      agent.isAgentVerified = agent.isAgentVerified ?? !!agentPlan?.features?.verifiedBadge;
+      agent.isAgentVerified =
+        agent.isAgentVerified ?? !!agentPlan?.features?.verifiedBadge;
       agent.hasProfilePage = !!agentPlan?.features?.agentProfilePage;
     }
 
@@ -440,7 +441,8 @@ const getSingleListingByIdFromDB = async (
     const agentPlan = agent.plan;
 
     // Use stored isAgentVerified from profile, fallback to plan feature if profile field is not set
-    agent.isAgentVerified = agent.isAgentVerified ?? !!agentPlan?.features?.verifiedBadge;
+    agent.isAgentVerified =
+      agent.isAgentVerified ?? !!agentPlan?.features?.verifiedBadge;
     agent.hasProfilePage = !!agentPlan?.features?.agentProfilePage;
   }
 
@@ -841,7 +843,8 @@ const searchListingsServiceFromDB = async (
     if (listing.agentId) {
       const agent = listing.agentId;
       const agentPlan = agent.plan;
-      agent.isAgentVerified = agent.isAgentVerified ?? !!agentPlan?.features?.verifiedBadge;
+      agent.isAgentVerified =
+        agent.isAgentVerified ?? !!agentPlan?.features?.verifiedBadge;
       agent.hasProfilePage = !!agentPlan?.features?.agentProfilePage;
     }
 

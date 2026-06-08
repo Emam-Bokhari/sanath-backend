@@ -25,7 +25,9 @@ const sendEmail = async (values: ISendEmail) => {
       );
 
       if (!canEmail) {
-        logger.info(`Email skipped for user ${values.userId} due to preference`);
+        logger.info(
+          `Email skipped for user ${values.userId} due to preference`,
+        );
         return;
       }
     }

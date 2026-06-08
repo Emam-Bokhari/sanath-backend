@@ -3,3 +3,4 @@ node_modules
 /winston
 README.md
 dist
+.env

@@ -7,47 +7,23 @@ const router = express.Router();
 // --- ADMIN & SUPER_ADMIN ROUTES ---
 router
   .route("/admin")
-  .get(
-    isAdmin,
-    NotificationController.getAdminNotifications,
-  )
-  .patch(
-    isAdmin,
-    NotificationController.readAdminNotifications,
-  );
+  .get(isAdmin, NotificationController.getAdminNotifications)
+  .patch(isAdmin, NotificationController.readAdminNotifications);
 
 router
   .route("/admin/:id")
-  .get(
-    isAdmin,
-    NotificationController.getAdminSingleNotification,
-  )
-  .patch(
-    isAdmin,
-    NotificationController.readAdminSingleNotification,
-  );
+  .get(isAdmin, NotificationController.getAdminSingleNotification)
+  .patch(isAdmin, NotificationController.readAdminSingleNotification);
 
 // --- USER & AGENT ROUTES ---
 router
   .route("/")
-  .get(
-    isUserOrAgent,
-    NotificationController.getNotifications,
-  )
-  .patch(
-    isUserOrAgent,
-    NotificationController.readNotifications,
-  );
+  .get(isUserOrAgent, NotificationController.getNotifications)
+  .patch(isUserOrAgent, NotificationController.readNotifications);
 
 router
   .route("/:id")
-  .get(
-    isUserOrAgent,
-    NotificationController.getSingleNotification,
-  )
-  .patch(
-    isUserOrAgent,
-    NotificationController.readSingleNotification,
-  );
+  .get(isUserOrAgent, NotificationController.getSingleNotification)
+  .patch(isUserOrAgent, NotificationController.readSingleNotification);
 
 export const NotificationRoutes = router;

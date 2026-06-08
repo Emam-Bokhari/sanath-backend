@@ -165,7 +165,9 @@ const getAdminFromDB = async (query: any) => {
     role: { $in: [USER_ROLES.ADMIN, USER_ROLES.SUPER_ADMIN] },
     // status: STATUS.ACTIVE,
     verified: true,
-  }).select("name email role profileImage createdAt updatedAt status lastLoginAt");
+  }).select(
+    "name email role profileImage createdAt updatedAt status lastLoginAt",
+  );
 
   const queryBuilder = new QueryBuilder<IUser>(baseQuery, query)
     .search(["name", "email"])

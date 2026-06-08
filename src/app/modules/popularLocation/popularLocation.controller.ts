@@ -77,9 +77,10 @@ const getAllPopularLocations = catchAsync(async (req, res) => {
 
 const getSinglePopularLocation = catchAsync(async (req, res) => {
   const { popularLocationId } = req.params;
-  const result = await PopularLocationServices.getSinglePopularLocationFromDB(
-    popularLocationId,
-  );
+  const result =
+    await PopularLocationServices.getSinglePopularLocationFromDB(
+      popularLocationId,
+    );
 
   sendResponse(res, {
     success: true,
@@ -91,9 +92,10 @@ const getSinglePopularLocation = catchAsync(async (req, res) => {
 
 const deletePopularLocation = catchAsync(async (req, res) => {
   const { popularLocationId } = req.params;
-  const result = await PopularLocationServices.deletePopularLocationFromDB(
-    popularLocationId,
-  );
+  const result =
+    await PopularLocationServices.deletePopularLocationFromDB(
+      popularLocationId,
+    );
 
   sendResponse(res, {
     success: true,

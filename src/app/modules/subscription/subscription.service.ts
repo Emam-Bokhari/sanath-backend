@@ -11,7 +11,7 @@ const createCheckoutSession = async (userId: string, planId: string) => {
     throw new ApiError(StatusCodes.NOT_FOUND, "User not found");
   }
 
-  console.log(user,"USER")
+  console.log(user, "USER");
 
   const plan = await Plan.findOne({ _id: planId });
   if (!plan) {
@@ -56,7 +56,6 @@ const createCheckoutSession = async (userId: string, planId: string) => {
 
   return session.url;
 };
-
 
 const cancelSubscription = async (userId: string) => {
   const user = await User.findById(userId);

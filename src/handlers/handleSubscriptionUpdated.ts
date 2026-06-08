@@ -95,23 +95,23 @@ export const handleSubscriptionUpdated = async (data: Stripe.Subscription) => {
             }
 
             // Push Notification & Email to User
-             await sendNotifications({
-               receiver: existingUser._id.toString(),
-               title: "Subscription Updated",
-               text: updateText,
-               type: NOTIFICATION_TYPE.AGENT,
-               referenceId: currentActiveSubscription._id.toString(),
-               referenceModel: NOTIFICATION_REFERENCE_MODEL.SUBSCRIPTION,
-               event: "subscription",
-               ...emailTemplate.subscriptionEmail({
-                 email: existingUser.email!,
-                 name: existingUser.name,
-                 planName: pricingPlan.title,
-                 amount: amountPaid,
-                 status: status,
-                 date: new Date().toLocaleDateString(),
-               }),
-             });
+            await sendNotifications({
+              receiver: existingUser._id.toString(),
+              title: "Subscription Updated",
+              text: updateText,
+              type: NOTIFICATION_TYPE.AGENT,
+              referenceId: currentActiveSubscription._id.toString(),
+              referenceModel: NOTIFICATION_REFERENCE_MODEL.SUBSCRIPTION,
+              event: "subscription",
+              ...emailTemplate.subscriptionEmail({
+                email: existingUser.email!,
+                name: existingUser.name,
+                planName: pricingPlan.title,
+                amount: amountPaid,
+                status: status,
+                date: new Date().toLocaleDateString(),
+              }),
+            });
 
             // Notify Admins
             const admin = await User.findOne({
@@ -178,48 +178,48 @@ export const handleSubscriptionUpdated = async (data: Stripe.Subscription) => {
           await newSubscription.save();
 
           // Send notifications for new creation in update handler
-           await sendNotifications({
-             receiver: existingUser._id.toString(),
-             title: "Subscription Active",
-             text: `Your subscription to ${pricingPlan.title} is now active.`,
-             type: NOTIFICATION_TYPE.AGENT,
-             referenceId: newSubscription._id.toString(),
-             referenceModel: NOTIFICATION_REFERENCE_MODEL.SUBSCRIPTION,
-             event: "subscription",
-             ...emailTemplate.subscriptionEmail({
-               email: existingUser.email!,
-               name: existingUser.name,
-               planName: pricingPlan.title,
-               amount: amountPaid,
-               status: status,
-               date: new Date().toLocaleDateString(),
-             }),
-           });
+          await sendNotifications({
+            receiver: existingUser._id.toString(),
+            title: "Subscription Active",
+            text: `Your subscription to ${pricingPlan.title} is now active.`,
+            type: NOTIFICATION_TYPE.AGENT,
+            referenceId: newSubscription._id.toString(),
+            referenceModel: NOTIFICATION_REFERENCE_MODEL.SUBSCRIPTION,
+            event: "subscription",
+            ...emailTemplate.subscriptionEmail({
+              email: existingUser.email!,
+              name: existingUser.name,
+              planName: pricingPlan.title,
+              amount: amountPaid,
+              status: status,
+              date: new Date().toLocaleDateString(),
+            }),
+          });
 
-           // Notify Admins
-           const admin = await User.findOne({
-             role: { $in: [USER_ROLES.ADMIN, USER_ROLES.SUPER_ADMIN] },
-           });
+          // Notify Admins
+          const admin = await User.findOne({
+            role: { $in: [USER_ROLES.ADMIN, USER_ROLES.SUPER_ADMIN] },
+          });
 
-           if (admin) {
-             await sendNotifications({
-               receiver: admin._id.toString(),
-               title: "New Subscription (Updated)",
-               text: `${existingUser.name} has a new active subscription: ${pricingPlan.title}.`,
-               type: NOTIFICATION_TYPE.ADMIN,
-               referenceId: newSubscription._id.toString(),
-               referenceModel: NOTIFICATION_REFERENCE_MODEL.SUBSCRIPTION,
-               event: "subscription",
-               ...emailTemplate.adminSubscriptionNotification({
-                 email: admin.email!,
-                 userName: existingUser.name,
-                 userEmail: existingUser.email!,
-                 planName: pricingPlan.title,
-                 amount: amountPaid,
-                 type: "created",
-               }),
-             });
-           }
+          if (admin) {
+            await sendNotifications({
+              receiver: admin._id.toString(),
+              title: "New Subscription (Updated)",
+              text: `${existingUser.name} has a new active subscription: ${pricingPlan.title}.`,
+              type: NOTIFICATION_TYPE.ADMIN,
+              referenceId: newSubscription._id.toString(),
+              referenceModel: NOTIFICATION_REFERENCE_MODEL.SUBSCRIPTION,
+              event: "subscription",
+              ...emailTemplate.adminSubscriptionNotification({
+                email: admin.email!,
+                userName: existingUser.name,
+                userEmail: existingUser.email!,
+                planName: pricingPlan.title,
+                amount: amountPaid,
+                type: "created",
+              }),
+            });
+          }
 
           await User.findByIdAndUpdate(existingUser._id, {
             isSubscribed: true,

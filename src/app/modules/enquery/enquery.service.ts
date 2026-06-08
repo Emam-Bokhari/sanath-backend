@@ -111,10 +111,11 @@ const createEnquery = async (userId: string, payload: any) => {
               <p><b>User:</b> ${user.name}</p>
               <p><b>Email:</b> ${user.email}</p>
 
-              ${agentName
-        ? `<p><b>Agent:</b> ${agentName} (${agentEmail})</p>`
-        : ""
-      }
+              ${
+                agentName
+                  ? `<p><b>Agent:</b> ${agentName} (${agentEmail})</p>`
+                  : ""
+              }
 
               <p><b>Phone:</b> ${payload.phone}</p>
               <p><b>Country:</b> ${payload.country}</p>
@@ -392,8 +393,9 @@ const updateEnqueryStatus = async (
       receiver:
         (enquery.userId as any)._id?.toString() || enquery.userId.toString(),
       title: "Enquiry Update",
-      text: `The agent has contacted you regarding your enquiry for "${(enquery.listingId as any).title || "the property"
-        }".`,
+      text: `The agent has contacted you regarding your enquiry for "${
+        (enquery.listingId as any).title || "the property"
+      }".`,
       type: NOTIFICATION_TYPE.USER,
       referenceId: enquery._id.toString(),
       referenceModel: NOTIFICATION_REFERENCE_MODEL.ENQUERY,

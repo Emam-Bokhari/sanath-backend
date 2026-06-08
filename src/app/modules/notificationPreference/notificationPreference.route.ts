@@ -6,13 +6,10 @@ const router = express.Router();
 
 router
   .route("/")
-  .get(
-    isAuthenticated,
-    NotificationPreferenceController.getUserPreference
-  )
+  .get(isAuthenticated, NotificationPreferenceController.getUserPreference)
   .patch(
     isAuthenticated,
-    NotificationPreferenceController.updateUserPreference
+    NotificationPreferenceController.updateUserPreference,
   );
 
 export const NotificationPreferenceRoutes = router;

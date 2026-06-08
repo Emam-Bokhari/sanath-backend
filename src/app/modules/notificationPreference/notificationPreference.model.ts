@@ -31,10 +31,10 @@ const NotificationPreferenceSchema = new Schema<INotificationPreference>(
   {
     timestamps: true,
     versionKey: false,
-  }
+  },
 );
 
 export const NotificationPreferenceModel = model<INotificationPreference>(
   "NotificationPreference",
-  NotificationPreferenceSchema
+  NotificationPreferenceSchema,
 );
