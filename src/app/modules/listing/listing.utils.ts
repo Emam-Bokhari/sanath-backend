@@ -1,6 +1,32 @@
 import { TListing, TListingChecklist } from "./listing.interface";
+import fs from "fs";
+import path from "path";
+import * as csv from "fast-csv";
 
 const hasValue = (v: any) => v !== undefined && v !== null && v !== "";
+
+export const parseCSVFile = <T>(filePath: string): Promise<T[]> => {
+  return new Promise((resolve, reject) => {
+    const results: T[] = [];
+    fs.createReadStream(filePath)
+      .pipe(csv.parse({ headers: true, trim: true }))
+      .on("data", (data) => results.push(data))
+      .on("error", (error) => reject(error))
+      .on("end", () => resolve(results));
+  });
+};
+
+export const resolveLocalMediaPath = (filename: string, folder: string) => {
+  if (!filename) return "";
+  // Ensure we don't double slash or miss one
+  return `/uploads/${folder}/${filename}`;
+};
+
+export const checkFileExists = (filename: string, folder: string) => {
+  if (!filename) return false;
+  const filePath = path.join(process.cwd(), "uploads", folder, filename);
+  return fs.existsSync(filePath);
+};
 
 export const generateChecklist = (listing: TListing) => {
   const basicInfo =

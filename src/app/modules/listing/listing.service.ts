@@ -6,10 +6,13 @@ import { Listing } from "./listing.model";
 import { SavedSearch } from "../savedSearch/savedSearch.model";
 import {
   canPublishListing,
+  checkFileExists,
   generateChecklist,
   getMissingChecklistItems,
+  parseCSVFile,
+  resolveLocalMediaPath,
 } from "./listing.utils";
-import { LISTING_STATUS } from "./listing.constant";
+import { FEATURES, LISTING_STATUS } from "./listing.constant";
 import { FilterQuery, Types } from "mongoose";
 import QueryBuilder from "../../builder/queryBuilder";
 import { Enquery } from "../enquery/enquery.model";
@@ -19,6 +22,197 @@ import {
   NOTIFICATION_REFERENCE_MODEL,
   NOTIFICATION_TYPE,
 } from "../notification/notification.constant";
+import { csvListingSchema, TCSVListingRow } from "./listing.validation";
+import AdmZip from "adm-zip";
+import path from "path";
+import fs from "fs";
+
+const bulkImportListingsServiceFromZIP = async (
+  zipPath: string,
+  adminId: string,
+) => {
+  const extractPath = path.join(
+    process.cwd(),
+    "uploads",
+    "temp-extract",
+    `${Date.now()}`,
+  );
+
+  // Ensure extract path exists
+  if (!fs.existsSync(extractPath)) {
+    fs.mkdirSync(extractPath, { recursive: true });
+  }
+
+  try {
+    const zip = new AdmZip(zipPath);
+    zip.extractAllTo(extractPath, true);
+
+    // Find CSV file in extracted folder
+    const files = fs.readdirSync(extractPath);
+    const csvFileName = files.find((f) => f.endsWith(".csv"));
+
+    if (!csvFileName) {
+      throw new ApiError(StatusCodes.BAD_REQUEST, "No CSV file found in ZIP");
+    }
+
+    const csvFilePath = path.join(extractPath, csvFileName);
+    const rawRows = await parseCSVFile<any>(csvFilePath);
+    const totalRows = rawRows.length;
+
+    const successListings: TListing[] = [];
+    const failedRows: { row: number; error: string }[] = [];
+
+    for (let i = 0; i < rawRows.length; i++) {
+      const rowNumber = i + 1;
+      const rowData = rawRows[i];
+
+      try {
+        const validatedData = csvListingSchema.parse(rowData);
+
+        const processMedia = (
+          field: string | undefined,
+          folder: string,
+          requiredCount = 0,
+        ) => {
+          if (!field) return [];
+          const filenames = field.split("|").map((f) => f.trim());
+          const resolvedPaths: string[] = [];
+
+          for (const filename of filenames) {
+         
+            const sourcePathInSubfolder = path.join(
+              extractPath,
+              folder,
+              filename,
+            );
+          
+            const sourcePathInRoot = path.join(extractPath, filename);
+
+            const sourcePath = fs.existsSync(sourcePathInSubfolder)
+              ? sourcePathInSubfolder
+              : sourcePathInRoot;
+
+            const targetDir = path.join(process.cwd(), "uploads", folder);
+            const targetPath = path.join(targetDir, filename);
+
+            if (fs.existsSync(sourcePath)) {
+              if (!fs.existsSync(targetDir)) {
+                fs.mkdirSync(targetDir, { recursive: true });
+              }
+              fs.copyFileSync(sourcePath, targetPath);
+              resolvedPaths.push(resolveLocalMediaPath(filename, folder));
+            } else {
+              throw new Error(
+                `File ${filename} not found in ZIP for row ${rowNumber}`,
+              );
+            }
+          }
+
+          if (resolvedPaths.length < requiredCount) {
+            throw new Error(
+              `Field ${folder} requires at least ${requiredCount} valid files`,
+            );
+          }
+
+          return resolvedPaths;
+        };
+
+        const photos = processMedia(validatedData.photos, "photos");
+        const videos = processMedia(validatedData.videos, "videos");
+        const floorPlans = processMedia(validatedData.floorPlans, "floorPlans");
+        const brochure = validatedData.brochure
+          ? processMedia(validatedData.brochure, "brochure")[0]
+          : undefined;
+        const threeSixtyTour = validatedData.threeSixtyTour
+          ? processMedia(validatedData.threeSixtyTour, "threeSixtyTour")[0]
+          : undefined;
+
+        const listingData: TListing = {
+          title: validatedData.title,
+          listingType: validatedData.listingType,
+          askingPrice: validatedData.askingPrice,
+          country: validatedData.country,
+          city: validatedData.city,
+          postalCode: validatedData.postalCode,
+          agentId: new Types.ObjectId(adminId),
+          photos,
+          videos,
+          floorPlans,
+          brochure,
+          threeSixtyTour,
+          propertyType: validatedData.propertyType,
+          propertyBedrooms: validatedData.propertyBedrooms,
+          propertyBathrooms: validatedData.propertyBathrooms,
+          propertySquareFoot: validatedData.propertySquareFoot,
+          tenure: validatedData.tenure,
+          councilTaxBand: validatedData.councilTaxBand,
+          description: validatedData.description,
+          features:
+            (validatedData.features
+              ?.split("|")
+              .map((f) => f.trim().toUpperCase()) as FEATURES[]) || [],
+          status: LISTING_STATUS.PUBLISHED,
+          location:
+            validatedData.lat && validatedData.lng
+              ? {
+                  type: "Point",
+                  coordinates: [
+                    Number(validatedData.lng),
+                    Number(validatedData.lat),
+                  ],
+                  address: validatedData.address || "",
+                }
+              : undefined,
+        };
+
+        listingData.listingCheckList = generateChecklist(listingData);
+        successListings.push(listingData);
+      } catch (error: any) {
+        failedRows.push({
+          row: rowNumber,
+          error: error.message || "Validation failed",
+        });
+      }
+    }
+
+    const CHUNK_SIZE = 100;
+    let successCount = 0;
+
+    for (let i = 0; i < successListings.length; i += CHUNK_SIZE) {
+      const chunk = successListings.slice(i, i + CHUNK_SIZE);
+      try {
+        await Listing.insertMany(chunk, { ordered: false });
+        successCount += chunk.length;
+      } catch (error: any) {
+        if (error.writeErrors) {
+          successCount += chunk.length - error.writeErrors.length;
+          error.writeErrors.forEach((we: any) => {
+            failedRows.push({
+              row: i + we.index + 1,
+              error: we.errmsg || "Database insertion failed",
+            });
+          });
+        } else {
+          failedRows.push({
+            row: i + 1,
+            error: "Batch insertion failed",
+          });
+        }
+      }
+    }
+
+    return {
+      totalRows,
+      successCount,
+      failedRows,
+    };
+  } finally {
+    // Clean up extraction directory
+    if (fs.existsSync(extractPath)) {
+      fs.rmSync(extractPath, { recursive: true, force: true });
+    }
+  }
+};
 
 const createListingServiceToDB = async (payload: TListing, agentId: string) => {
   // Check subscription and limits
@@ -992,6 +1186,7 @@ const getListingStatsServiceFromDB = async () => {
 
 export const ListingServices = {
   createListingServiceToDB,
+  bulkImportListingsServiceFromZIP,
   getMyListingsServiceFromDB,
   getSingleListingByIdFromDB,
   updateListingServiceToDB,

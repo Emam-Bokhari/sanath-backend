@@ -122,6 +122,16 @@ export const FILE_CONFIG = {
       "image/webp",
     ]),
   },
+  csv: {
+    dir: "csv",
+    maxCount: 1,
+    mimeTypes: new Set(["text/csv", "application/vnd.ms-excel"]),
+  },
+  zip: {
+    dir: "temp-zip",
+    maxCount: 1,
+    mimeTypes: new Set(["application/zip", "application/x-zip-compressed"]),
+  },
 } satisfies Record<string, FileConfig>;
 
 export type IFolderName = keyof typeof FILE_CONFIG;
@@ -203,6 +213,10 @@ export const fileUploadHandler = (allowedFields?: IFolderName[]) => {
     }));
 
   return upload.fields(fields);
+};
+
+export const fileUploadSingleHandler = (fieldName: IFolderName) => {
+  return upload.single(fieldName);
 };
 
 export default fileUploadHandler;

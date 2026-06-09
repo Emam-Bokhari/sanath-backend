@@ -1,6 +1,9 @@
+import { StatusCodes } from "http-status-codes";
 import catchAsync from "../../../shared/catchAsync";
 import sendResponse from "../../../shared/sendResponse";
 import { ListingServices } from "./listing.service";
+import fs from "fs";
+import ApiError from "../../../errors/ApiErrors";
 
 const createListing = catchAsync(async (req, res) => {
   const data = req.body;
@@ -205,8 +208,43 @@ const getListingStats = catchAsync(async (req, res) => {
   });
 });
 
+const bulkImportListings = catchAsync(async (req, res) => {
+  if (!req.file) {
+    throw new ApiError(StatusCodes.BAD_REQUEST, "Please upload a ZIP file");
+  }
+
+  const { id: adminId } = req.user as { id: string };
+  const filePath = req.file.path;
+
+  try {
+    const result = await ListingServices.bulkImportListingsServiceFromZIP(
+      filePath,
+      adminId,
+    );
+
+    // Clean up temporary file
+    if (fs.existsSync(filePath)) {
+      fs.unlinkSync(filePath);
+    }
+
+    sendResponse(res, {
+      success: true,
+      statusCode: StatusCodes.OK,
+      message: "Bulk import completed",
+      data: result,
+    });
+  } catch (error) {
+    // Clean up temporary file on error
+    if (fs.existsSync(filePath)) {
+      fs.unlinkSync(filePath);
+    }
+    throw error;
+  }
+});
+
 export const ListingControllers = {
   createListing,
+  bulkImportListings,
   getMyListingsService,
   getMyListingById,
   updateListing,

@@ -5,7 +5,9 @@ import {
 } from "./../../../helpers/authHelper";
 import express from "express";
 import { ListingControllers } from "./listing.controller";
-import fileUploadHandler from "../../middlewares/fileUploaderHandler";
+import fileUploadHandler, {
+  fileUploadSingleHandler,
+} from "../../middlewares/fileUploaderHandler";
 import { parseFileData } from "../../middlewares/parseFileData";
 import optionalAuth from "../../middlewares/optionalAuth";
 import checkSubscription from "../../middlewares/checkSubscription";
@@ -95,6 +97,10 @@ router
   );
 
 router.route("/admin/all").get(isAdmin, ListingControllers.getAllListings);
+
+router
+  .route("/admin/bulk-import")
+  .post(isAdmin, fileUploadSingleHandler("zip"), ListingControllers.bulkImportListings);
 
 router.route("/admin/stats").get(isAdmin, ListingControllers.getListingStats);
 
