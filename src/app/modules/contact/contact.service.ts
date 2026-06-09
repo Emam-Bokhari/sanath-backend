@@ -5,7 +5,7 @@ import { ISendEmail } from "../../../types/email";
 import config from "../../../config";
 
 const BRAND = {
-  NAME: "My Home",
+  NAME: config.brand_name,
   PRIMARY_COLOR: "#0B3C6D",
   BG_COLOR: "#FFFFFF",
   TEXT_COLOR: "#191919",

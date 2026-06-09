@@ -33,7 +33,7 @@ const sendEmail = async (values: ISendEmail) => {
     }
 
     const info = await transporter.sendMail({
-      from: `"My Home" ${config.email.from}`,
+      from: `"${config.email.from_name || config.brand_name}" <${config.email.from}>`,
       to: values.to,
       subject: values.subject,
       html: values.html,

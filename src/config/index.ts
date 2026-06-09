@@ -20,6 +20,7 @@ export default {
   redis_db: process.env.REDIS_DB,
   start_cron: process.env.START_CRON,
   client_url: process.env.CLIENT_URL,
+  brand_name: process.env.BRAND_NAME || "My Home",
   base_url: process.env.BASE_URL,
   dashboard_url: process.env.DASHBOARD_URL,
   // google login
@@ -38,6 +39,7 @@ export default {
   },
   email: {
     from: process.env.EMAIL_FROM,
+    from_name: process.env.EMAIL_FROM_NAME,
     user: process.env.EMAIL_USER,
     port: process.env.EMAIL_PORT,
     host: process.env.EMAIL_HOST,
