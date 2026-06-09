@@ -4,15 +4,9 @@ import sendResponse from "../../../shared/sendResponse";
 import { contactServices } from "./contact.service";
 
 const submitContactRequest = catchAsync(async (req, res) => {
-  const supportData = req.body;
+  const contactData = req.body;
 
-  if (!req.user) {
-    throw new ApiError(401, "User not authenticated");
-  }
-
-  const { id } = req.user as any;
-
-  const result = await contactServices.contact(id, supportData);
+  const result = await contactServices.contact(contactData);
 
   sendResponse(res, {
     statusCode: 200,

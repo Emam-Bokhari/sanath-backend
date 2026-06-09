@@ -1,7 +1,4 @@
-import { Types } from "mongoose";
-import ApiError from "../../../errors/ApiErrors";
 import { emailQueue } from "../../../queues";
-import { User } from "../user/user.model";
 import { TContact } from "./contact.interface";
 import { Contact } from "./contact.model";
 import { ISendEmail } from "../../../types/email";
@@ -14,18 +11,11 @@ const BRAND = {
   TEXT_COLOR: "#191919",
 };
 
-const contact = async (id: string, payload: TContact) => {
-  const user = await User.isExistUserById(id);
-
-  if (!user) {
-    throw new ApiError(404, "No user is found in the database");
-  }
-
-  payload.userId = new Types.ObjectId(id);
-  payload.name = user.name || "Unknown";
-  payload.email = user.email;
-
-  const contactEntry = await Contact.create(payload);
+const contact = async (payload: TContact) => {
+  const contactEntry = await Contact.create({
+    ...payload,
+    userId: payload?.userId || undefined,
+  });
 
   const emailPayload: ISendEmail = {
     to: config.support_receiver_email || "support@yourdomain.com",
@@ -49,11 +39,7 @@ const contact = async (id: string, payload: TContact) => {
           <!-- Header -->
           <tr>
             <td align="center"
-              style="
-                padding:30px 20px;
-                background:${BRAND.PRIMARY_COLOR};
-                color:#ffffff;
-              "
+              style="padding:30px 20px;background:${BRAND.PRIMARY_COLOR};color:#fff;"
             >
               <h1 style="margin:0;font-size:22px;font-weight:600;">
                 ${BRAND.NAME}
@@ -69,9 +55,10 @@ const contact = async (id: string, payload: TContact) => {
             <td style="padding:35px 30px;color:${BRAND.TEXT_COLOR};font-size:15px;line-height:1.6;">
 
               <p style="margin-bottom:15px;">
-                You have received a new contact message from ${BRAND.NAME} platform.
+                New contact message received from website.
               </p>
 
+              <!-- Info -->
               <div style="background:#f7f9fc;padding:20px;border-radius:8px;">
                 <table width="100%">
 
@@ -93,6 +80,7 @@ const contact = async (id: string, payload: TContact) => {
                 </table>
               </div>
 
+              <!-- Message -->
               <div style="margin-top:25px;">
                 <p style="font-weight:bold;margin-bottom:8px;">Message:</p>
 
@@ -106,6 +94,7 @@ const contact = async (id: string, payload: TContact) => {
                 </div>
               </div>
 
+              <!-- Reply -->
               <div style="text-align:center;margin-top:35px;">
                 <a href="mailto:${payload.email}"
                   style="

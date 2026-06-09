@@ -2,7 +2,7 @@ import { Types } from "mongoose";
 import { ISoftDeleteModel } from "../../../types/softDelete";
 
 export type TContact = {
-  userId: Types.ObjectId;
+  userId?: Types.ObjectId;
   name: string;
   email?: string;
   subject: string;

@@ -7,6 +7,7 @@ const contactSchema = new Schema<TContact, TContactModel>(
     userId: {
       type: Schema.Types.ObjectId,
       ref: "User",
+      required: false,
     },
     name: {
       type: String,
