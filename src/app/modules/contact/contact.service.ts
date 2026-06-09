@@ -145,3 +145,7 @@ const contact = async (id: string, payload: TContact) => {
 
   return contactEntry;
 };
+
+export const contactServices = {
+  contact,
+};
