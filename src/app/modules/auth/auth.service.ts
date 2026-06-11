@@ -133,7 +133,6 @@ const verifyEmailToDB = async (payload: IVerifyEmail) => {
   ) {
     throw new ApiError(
       StatusCodes.BAD_REQUEST,
-
       "Otp already expired, Please try again",
     );
   }

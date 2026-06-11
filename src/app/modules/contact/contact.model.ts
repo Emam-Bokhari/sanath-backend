@@ -24,7 +24,7 @@ const contactSchema = new Schema<TContact, TContactModel>(
     message: {
       type: String,
       required: true,
-    }
+    },
   },
   {
     timestamps: true,

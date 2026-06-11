@@ -100,7 +100,11 @@ router.route("/admin/all").get(isAdmin, ListingControllers.getAllListings);
 
 router
   .route("/admin/bulk-import")
-  .post(isAdmin, fileUploadSingleHandler("zip"), ListingControllers.bulkImportListings);
+  .post(
+    isAdmin,
+    fileUploadSingleHandler("zip"),
+    ListingControllers.bulkImportListings,
+  );
 
 router.route("/admin/stats").get(isAdmin, ListingControllers.getListingStats);
 

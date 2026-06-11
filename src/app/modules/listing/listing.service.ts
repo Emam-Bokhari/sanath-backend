@@ -79,13 +79,12 @@ const bulkImportListingsServiceFromZIP = async (
           const resolvedPaths: string[] = [];
 
           for (const filename of filenames) {
-         
             const sourcePathInSubfolder = path.join(
               extractPath,
               folder,
               filename,
             );
-          
+
             const sourcePathInRoot = path.join(extractPath, filename);
 
             const sourcePath = fs.existsSync(sourcePathInSubfolder)
@@ -135,6 +134,7 @@ const bulkImportListingsServiceFromZIP = async (
           city: validatedData.city,
           postalCode: validatedData.postalCode,
           agentId: new Types.ObjectId(adminId),
+          isFeatured: validatedData.isFeatured,
           photos,
           videos,
           floorPlans,
@@ -253,14 +253,14 @@ const createListingServiceToDB = async (payload: TListing, agentId: string) => {
   }
 
   // Check for featured listing permission (COMMENTED FOR FUTURE USE)
-  /*
+  
   if ((payload as any).isFeatured && !plan?.features?.featuredListing) {
     throw new ApiError(
       StatusCodes.FORBIDDEN,
       "Your current plan does not support featured listings",
     );
   }
-  */
+  
 
   // always create listing first (safe default)
   const listing = await Listing.create({

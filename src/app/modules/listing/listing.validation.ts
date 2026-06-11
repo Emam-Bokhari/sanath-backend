@@ -29,6 +29,7 @@ export const csvListingSchema = z.object({
   lat: z.coerce.number().optional(),
   lng: z.coerce.number().optional(),
   address: z.string().optional(),
+  isFeatured: z.coerce.boolean().optional().default(false),
 });
 
 export type TCSVListingRow = z.infer<typeof csvListingSchema>;

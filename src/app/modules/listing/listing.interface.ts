@@ -55,7 +55,7 @@ export type TListing = {
   features: FEATURES[];
   description: string;
   status: LISTING_STATUS;
-  // isFeatured: boolean;
+  isFeatured: boolean;
   // leads info
   leadsCount?: number;
   leads?: TEnquery[];
@@ -84,7 +84,7 @@ export type TSearchParams = {
   bathrooms?: number | string;
   tenure?: string | string[];
   features?: string | string[];
-  // isFeatured?: boolean | string;
+  isFeatured?: boolean;
   timeFilter?: TTimeFilter;
   sort?: TSort;
   lat?: number | string;
