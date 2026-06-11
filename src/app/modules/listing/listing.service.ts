@@ -6,7 +6,6 @@ import { Listing } from "./listing.model";
 import { SavedSearch } from "../savedSearch/savedSearch.model";
 import {
   canPublishListing,
-  checkFileExists,
   generateChecklist,
   getMissingChecklistItems,
   parseCSVFile,
@@ -22,7 +21,7 @@ import {
   NOTIFICATION_REFERENCE_MODEL,
   NOTIFICATION_TYPE,
 } from "../notification/notification.constant";
-import { csvListingSchema, TCSVListingRow } from "./listing.validation";
+import { csvListingSchema } from "./listing.validation";
 import AdmZip from "adm-zip";
 import path from "path";
 import fs from "fs";
