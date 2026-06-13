@@ -5,7 +5,7 @@ if (!admin.apps.length) {
   admin.initializeApp({
     credential: admin.credential.cert({
       projectId: config.firebase.projectId,
-      privateKey: config.firebase.privateKey,
+      privateKey: process.env.FIREBASE_PRIVATE_KEY?.replace(/\\n/g, '\n'),
       clientEmail: config.firebase.clientEmail,
     }),
   });
