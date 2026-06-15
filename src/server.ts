@@ -14,6 +14,7 @@ import {
 } from "./queues";
 import "./queues";
 import "dotenv/config";
+import { startKyeroCron } from "./app/modules/listing/keyroImporter";
 
 let server: any;
 
@@ -79,6 +80,11 @@ async function main() {
     socketHelper.socket(io);
     //@ts-ignore
     global.io = io;
+
+    // Start Kyero cron job if feed URL is provided
+    if (config.kyero_feed_url && config.start_cron === "true") {
+      startKyeroCron(config.kyero_feed_url);
+    }
   } catch (error) {
     errorLogger.error(colors.red("🤢 Failed to connect Database"));
     process.exit(1);

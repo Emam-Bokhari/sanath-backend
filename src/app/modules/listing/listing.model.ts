@@ -113,8 +113,9 @@ const listingSchema = new Schema<TListing, TListingModel>(
 
     features: {
       type: [String],
-      enum: Object.values(FEATURES),
+      default: [],
     },
+
     description: {
       type: String,
     },
@@ -158,6 +159,23 @@ const listingSchema = new Schema<TListing, TListingModel>(
     isDeleted: {
       type: Boolean,
       default: false,
+    },
+    // Kyero specific fields
+    kyeroId: {
+      type: String,
+    },
+    kyeroRef: {
+      type: String,
+    },
+    source: {
+      type: String,
+      enum: ["manual", "kyero", "csv"],
+    },
+    sourceUrl: {
+      type: String,
+    },
+    lastSyncedAt: {
+      type: Date,
     },
   },
   {

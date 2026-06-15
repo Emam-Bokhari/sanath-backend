@@ -52,7 +52,7 @@ export type TListing = {
     score: number;
   };
   // feature & description
-  features: FEATURES[];
+  features: FEATURES[] | string[];
   description: string;
   status: LISTING_STATUS;
   isFeatured: boolean;
@@ -62,6 +62,13 @@ export type TListing = {
   // listing checklist
   listingCheckList?: TListingChecklist;
   isDeleted?: boolean;
+
+  // Kyero specific fields
+  kyeroId?: string;
+  kyeroRef?: string;
+  source?: "manual" | "kyero" | "csv";
+  sourceUrl?: string;
+  lastSyncedAt?: Date;
 };
 
 export type TSort =

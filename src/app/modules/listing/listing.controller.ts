@@ -4,6 +4,7 @@ import sendResponse from "../../../shared/sendResponse";
 import { ListingServices } from "./listing.service";
 import fs from "fs";
 import ApiError from "../../../errors/ApiErrors";
+import { runKyeroImportNow } from "./keyroImporter";
 
 const createListing = catchAsync(async (req, res) => {
   const data = req.body;
@@ -242,6 +243,30 @@ const bulkImportListings = catchAsync(async (req, res) => {
   }
 });
 
+const importKyeroFeedController = catchAsync(
+  async (req, res) => {
+  
+      const { feedUrl } = req.body;
+
+      if (!feedUrl || typeof feedUrl !== "string") {
+        throw new ApiError(
+          StatusCodes.BAD_REQUEST,
+          "Valid Kyero Feed URL is required",
+        );
+      }
+
+      const result = await runKyeroImportNow(feedUrl);
+
+      sendResponse(res, {
+        statusCode: StatusCodes.OK,
+        success: true,
+        message: "Kyero feed imported successfully",
+        data: result,
+      });
+   
+  },
+);
+
 export const ListingControllers = {
   createListing,
   bulkImportListings,
@@ -257,4 +282,5 @@ export const ListingControllers = {
   getSingleListingForAdmin,
   updateListingStatusForAdmin,
   getListingStats,
+  importKyeroFeedController,
 };
