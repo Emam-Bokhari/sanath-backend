@@ -51,6 +51,8 @@ export type TListing = {
     label: string;
     score: number;
   };
+  shareId: string;
+  slug: string;
   // feature & description
   features: FEATURES[] | string[];
   description: string;

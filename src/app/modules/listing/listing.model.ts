@@ -111,6 +111,17 @@ const listingSchema = new Schema<TListing, TListingModel>(
       },
     },
 
+    shareId: {
+      type: String,
+      unique: true,
+      index: true,
+    },
+
+    slug: {
+      type: String,
+      index: true,
+    },
+
     features: {
       type: [String],
       default: [],

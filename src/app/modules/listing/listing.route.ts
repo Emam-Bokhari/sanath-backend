@@ -119,6 +119,10 @@ router
   .patch(isAdmin, ListingControllers.updateListingStatusForAdmin);
 
 router
+  .route("/share/:shareId/:slug")
+  .get(optionalAuth(), ListingControllers.getListingByShareIdAndSlug);
+
+router
   .route("/:listingId")
   .get(optionalAuth(), ListingControllers.getListingById);
 

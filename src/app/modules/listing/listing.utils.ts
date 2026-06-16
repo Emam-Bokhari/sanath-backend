@@ -2,6 +2,26 @@ import { TListing, TListingChecklist } from "./listing.interface";
 import fs from "fs";
 import path from "path";
 import * as csv from "fast-csv";
+import crypto from "crypto";
+
+const FRONTEND_URL = process.env.CLIENT_URL!;
+
+export const generateShareId = () => {
+  return crypto.randomBytes(8).toString("hex");
+};
+
+export const generateSlug = (title: string) => {
+  return title
+    .toLowerCase()
+    .replace(/[^a-z0-9\s-]/g, "")
+    .replace(/\s+/g, "-")
+    .replace(/-+/g, "-")
+    .trim();
+};
+
+export const generateShareLink = (shareId: string, slug: string) => {
+  return `${FRONTEND_URL}/l/${shareId}/${slug}`;
+};
 
 const hasValue = (v: any) => v !== undefined && v !== null && v !== "";
 

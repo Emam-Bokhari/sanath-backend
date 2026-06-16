@@ -10,6 +10,9 @@ import {
   getMissingChecklistItems,
   parseCSVFile,
   resolveLocalMediaPath,
+  generateShareId,
+  generateSlug,
+  generateShareLink,
 } from "./listing.utils";
 import { FEATURES, LISTING_STATUS } from "./listing.constant";
 import { FilterQuery, Types } from "mongoose";
@@ -134,6 +137,8 @@ const bulkImportListingsServiceFromZIP = async (
           postalCode: validatedData.postalCode,
           agentId: new Types.ObjectId(adminId),
           isFeatured: validatedData.isFeatured,
+          shareId: validatedData.shareId || generateShareId(),
+          slug: validatedData.slug || generateSlug(validatedData.title),
           photos,
           videos,
           floorPlans,
@@ -266,6 +271,8 @@ const createListingServiceToDB = async (payload: TListing, agentId: string) => {
     ...payload,
     agentId,
     status: initialStatus,
+    shareId: generateShareId(),
+    slug: generateSlug(payload.title),
   });
 
   // Generate checklist
@@ -355,6 +362,7 @@ const getMyListingsServiceFromDB = async (
         leadsCount,
         leads: hasLeadAccess ? leads : [],
         isFavorite: favoriteListingIds.includes(listing._id.toString()),
+        shareLink: generateShareLink(listing.shareId, listing.slug),
       };
     }),
   );
@@ -407,6 +415,7 @@ const getAgentListingByIdFromDB = async (
     leadsCount,
     leads: hasLeadAccess ? leads : [],
     isFavorite: !!isFavorite,
+    shareLink: generateShareLink(listing.shareId, listing.slug),
   };
 };
 
@@ -444,6 +453,10 @@ const updateListingServiceToDB = async (
   }
   */
 
+  // If title is updated, update the slug
+  if (payload.title) {
+    payload.slug = generateSlug(payload.title);
+  }
   Object.assign(existingListing, payload);
 
   const checklist = generateChecklist(existingListing);
@@ -594,6 +607,8 @@ const getNearbyListingsServiceFromDB = async (
     } else {
       listing.isFavorite = false;
     }
+    
+    listing.shareLink = generateShareLink(listing.shareId, listing.slug);
   });
 
   const meta = await listingQuery.countTotal();
@@ -665,6 +680,7 @@ const getSingleListingByIdFromDB = async (
   return {
     ...listing,
     isFavorite,
+    shareLink: generateShareLink(listing.shareId, listing.slug),
   };
 };
 
@@ -985,7 +1001,11 @@ const searchListingsServiceFromDB = async (
       }
     }
 
-    return await Listing.aggregate(pipeline);
+    const results = await Listing.aggregate(pipeline);
+    return results.map((listing: any) => ({
+      ...listing,
+      shareLink: generateShareLink(listing.shareId, listing.slug),
+    }));
   }
 
   /* ================= NORMAL SORT ================= */
@@ -1046,6 +1066,8 @@ const searchListingsServiceFromDB = async (
     } else {
       listing.isFavorite = false;
     }
+    
+    listing.shareLink = generateShareLink(listing.shareId, listing.slug);
   });
 
   return listings;
@@ -1160,6 +1182,68 @@ const updateListingStatusForAdminServiceToDB = async (
   return listing;
 };
 
+const getListingByShareIdAndSlugFromDB = async (
+  shareId: string,
+  slug: string,
+  userId?: string,
+) => {
+  const listing = await Listing.findOne({
+    shareId,
+    slug,
+    isDeleted: { $ne: true },
+  })
+    .populate({
+      path: "agentId",
+      populate: {
+        path: "plan",
+      },
+    })
+    .lean();
+
+  if (!listing) {
+    throw new Error("Listing not found");
+  }
+
+  // Add feature flags to agent data
+  if (listing.agentId) {
+    const agent = listing.agentId as any;
+    const agentPlan = agent.plan;
+    agent.isAgentVerified =
+      agent.isAgentVerified ?? !!agentPlan?.features?.verifiedBadge;
+    agent.hasProfilePage = !!agentPlan?.features?.agentProfilePage;
+  }
+
+  let isFavorite = false;
+  if (userId) {
+    const { FavoriteProperty } = await import("../favoriteProperty/favoriteProperty.model");
+    const favorite = await FavoriteProperty.exists({
+      userId,
+      listingId: listing._id,
+    });
+    isFavorite = !!favorite;
+
+    const agentId = (listing.agentId as any)?._id || listing.agentId;
+    const isOwner = agentId.toString() === userId;
+    const hasViewed = (listing.viewedBy as any)?.some(
+      (id: any) => id.toString() === userId,
+    );
+
+    if (!isOwner && !hasViewed) {
+      await Listing.findByIdAndUpdate(listing._id, {
+        $inc: { views: 1 },
+        $push: { viewedBy: new Types.ObjectId(userId) },
+      });
+      (listing as any).views = (listing.views || 0) + 1;
+    }
+  }
+
+  return {
+    ...listing,
+    isFavorite,
+    shareLink: generateShareLink(listing.shareId, listing.slug),
+  };
+};
+
 const getListingStatsServiceFromDB = async () => {
   const total = await Listing.countDocuments({ isDeleted: { $ne: true } });
   const published = await Listing.countDocuments({
@@ -1198,4 +1282,5 @@ export const ListingServices = {
   getSingleListingForAdminFromDB,
   updateListingStatusForAdminServiceToDB,
   getListingStatsServiceFromDB,
+  getListingByShareIdAndSlugFromDB,
 };
