@@ -117,11 +117,6 @@ const listingSchema = new Schema<TListing, TListingModel>(
       index: true,
     },
 
-    slug: {
-      type: String,
-      index: true,
-    },
-
     features: {
       type: [String],
       default: [],

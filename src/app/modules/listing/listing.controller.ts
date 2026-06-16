@@ -198,12 +198,11 @@ const updateListingStatusForAdmin = catchAsync(async (req, res) => {
   });
 });
 
-const getListingByShareIdAndSlug = catchAsync(async (req, res) => {
+const getListingByShareId = catchAsync(async (req, res) => {
   const user = req?.user as { id: string } | undefined;
-  const { shareId, slug } = req.params;
-  const listing = await ListingServices.getListingByShareIdAndSlugFromDB(
+  const { shareId } = req.params;
+  const listing = await ListingServices.getListingByShareIdFromDB(
     shareId,
-    slug,
     user?.id,
   );
 
@@ -300,5 +299,5 @@ export const ListingControllers = {
   updateListingStatusForAdmin,
   getListingStats,
   importKyeroFeedController,
-  getListingByShareIdAndSlug,
+  getListingByShareId,
 };

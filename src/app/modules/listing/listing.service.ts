@@ -10,8 +10,6 @@ import {
   getMissingChecklistItems,
   parseCSVFile,
   resolveLocalMediaPath,
-  generateShareId,
-  generateSlug,
   generateShareLink,
 } from "./listing.utils";
 import { FEATURES, LISTING_STATUS } from "./listing.constant";
@@ -137,8 +135,7 @@ const bulkImportListingsServiceFromZIP = async (
           postalCode: validatedData.postalCode,
           agentId: new Types.ObjectId(adminId),
           isFeatured: validatedData.isFeatured,
-          shareId: validatedData.shareId || generateShareId(),
-          slug: validatedData.slug || generateSlug(validatedData.title),
+          shareId: "", // Placeholder, will be set after insertion
           photos,
           videos,
           floorPlans,
@@ -185,7 +182,12 @@ const bulkImportListingsServiceFromZIP = async (
     for (let i = 0; i < successListings.length; i += CHUNK_SIZE) {
       const chunk = successListings.slice(i, i + CHUNK_SIZE);
       try {
-        await Listing.insertMany(chunk, { ordered: false });
+        const insertedListings = await Listing.insertMany(chunk, { ordered: false });
+        // Set shareId as listing's _id for each inserted listing
+        for (const listing of insertedListings) {
+          listing.shareId = listing._id.toString();
+          await listing.save();
+        }
         successCount += chunk.length;
       } catch (error: any) {
         if (error.writeErrors) {
@@ -271,9 +273,10 @@ const createListingServiceToDB = async (payload: TListing, agentId: string) => {
     ...payload,
     agentId,
     status: initialStatus,
-    shareId: generateShareId(),
-    slug: generateSlug(payload.title),
   });
+
+  // Set shareId as the listing's _id
+  listing.shareId = listing._id.toString();
 
   // Generate checklist
   const checklist = generateChecklist(listing);
@@ -362,7 +365,7 @@ const getMyListingsServiceFromDB = async (
         leadsCount,
         leads: hasLeadAccess ? leads : [],
         isFavorite: favoriteListingIds.includes(listing._id.toString()),
-        shareLink: generateShareLink(listing.shareId, listing.slug),
+        shareLink: generateShareLink(listing.shareId),
       };
     }),
   );
@@ -415,7 +418,7 @@ const getAgentListingByIdFromDB = async (
     leadsCount,
     leads: hasLeadAccess ? leads : [],
     isFavorite: !!isFavorite,
-    shareLink: generateShareLink(listing.shareId, listing.slug),
+    shareLink: generateShareLink(listing.shareId),
   };
 };
 
@@ -453,10 +456,7 @@ const updateListingServiceToDB = async (
   }
   */
 
-  // If title is updated, update the slug
-  if (payload.title) {
-    payload.slug = generateSlug(payload.title);
-  }
+
   Object.assign(existingListing, payload);
 
   const checklist = generateChecklist(existingListing);
@@ -608,7 +608,7 @@ const getNearbyListingsServiceFromDB = async (
       listing.isFavorite = false;
     }
     
-    listing.shareLink = generateShareLink(listing.shareId, listing.slug);
+    listing.shareLink = generateShareLink(listing.shareId);
   });
 
   const meta = await listingQuery.countTotal();
@@ -680,7 +680,7 @@ const getSingleListingByIdFromDB = async (
   return {
     ...listing,
     isFavorite,
-    shareLink: generateShareLink(listing.shareId, listing.slug),
+    shareLink: generateShareLink(listing.shareId),
   };
 };
 
@@ -1004,7 +1004,7 @@ const searchListingsServiceFromDB = async (
     const results = await Listing.aggregate(pipeline);
     return results.map((listing: any) => ({
       ...listing,
-      shareLink: generateShareLink(listing.shareId, listing.slug),
+      shareLink: generateShareLink(listing.shareId),
     }));
   }
 
@@ -1067,7 +1067,7 @@ const searchListingsServiceFromDB = async (
       listing.isFavorite = false;
     }
     
-    listing.shareLink = generateShareLink(listing.shareId, listing.slug);
+    listing.shareLink = generateShareLink(listing.shareId);
   });
 
   return listings;
@@ -1182,14 +1182,12 @@ const updateListingStatusForAdminServiceToDB = async (
   return listing;
 };
 
-const getListingByShareIdAndSlugFromDB = async (
+const getListingByShareIdFromDB = async (
   shareId: string,
-  slug: string,
   userId?: string,
 ) => {
   const listing = await Listing.findOne({
     shareId,
-    slug,
     isDeleted: { $ne: true },
   })
     .populate({
@@ -1240,7 +1238,7 @@ const getListingByShareIdAndSlugFromDB = async (
   return {
     ...listing,
     isFavorite,
-    shareLink: generateShareLink(listing.shareId, listing.slug),
+    shareLink: generateShareLink(listing.shareId),
   };
 };
 
@@ -1282,5 +1280,5 @@ export const ListingServices = {
   getSingleListingForAdminFromDB,
   updateListingStatusForAdminServiceToDB,
   getListingStatsServiceFromDB,
-  getListingByShareIdAndSlugFromDB,
+  getListingByShareIdFromDB,
 };

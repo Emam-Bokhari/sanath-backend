@@ -30,7 +30,6 @@ export const csvListingSchema = z.object({
   lng: z.coerce.number().optional(),
   address: z.string().optional(),
   shareId: z.string().optional(),
-  slug: z.string().optional(),
   isFeatured: z.coerce.boolean().optional().default(false),
 });
 
