@@ -3,7 +3,7 @@ import admin from "firebase-admin";
 if (!admin.apps.length) {
   const privateKey = (process.env.FIREBASE_PRIVATE_KEY || "")
     .replace(/\\n/g, "\n")
-    .replace(/^"|"$/g, ""); 
+    .replace(/^"|"$/g, "");
 
   admin.initializeApp({
     credential: admin.credential.cert({

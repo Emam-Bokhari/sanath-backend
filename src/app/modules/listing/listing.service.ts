@@ -182,7 +182,9 @@ const bulkImportListingsServiceFromZIP = async (
     for (let i = 0; i < successListings.length; i += CHUNK_SIZE) {
       const chunk = successListings.slice(i, i + CHUNK_SIZE);
       try {
-        const insertedListings = await Listing.insertMany(chunk, { ordered: false });
+        const insertedListings = await Listing.insertMany(chunk, {
+          ordered: false,
+        });
         // Set shareId as listing's _id for each inserted listing
         for (const listing of insertedListings) {
           listing.shareId = listing._id.toString();
@@ -259,14 +261,13 @@ const createListingServiceToDB = async (payload: TListing, agentId: string) => {
   }
 
   // Check for featured listing permission (COMMENTED FOR FUTURE USE)
-  
+
   if ((payload as any).isFeatured && !plan?.features?.featuredListing) {
     throw new ApiError(
       StatusCodes.FORBIDDEN,
       "Your current plan does not support featured listings",
     );
   }
-  
 
   // always create listing first (safe default)
   const listing = await Listing.create({
@@ -456,7 +457,6 @@ const updateListingServiceToDB = async (
   }
   */
 
-
   Object.assign(existingListing, payload);
 
   const checklist = generateChecklist(existingListing);
@@ -607,7 +607,7 @@ const getNearbyListingsServiceFromDB = async (
     } else {
       listing.isFavorite = false;
     }
-    
+
     listing.shareLink = generateShareLink(listing.shareId);
   });
 
@@ -1066,7 +1066,7 @@ const searchListingsServiceFromDB = async (
     } else {
       listing.isFavorite = false;
     }
-    
+
     listing.shareLink = generateShareLink(listing.shareId);
   });
 
@@ -1182,10 +1182,7 @@ const updateListingStatusForAdminServiceToDB = async (
   return listing;
 };
 
-const getListingByShareIdFromDB = async (
-  shareId: string,
-  userId?: string,
-) => {
+const getListingByShareIdFromDB = async (shareId: string, userId?: string) => {
   const listing = await Listing.findOne({
     shareId,
     isDeleted: { $ne: true },
@@ -1213,7 +1210,8 @@ const getListingByShareIdFromDB = async (
 
   let isFavorite = false;
   if (userId) {
-    const { FavoriteProperty } = await import("../favoriteProperty/favoriteProperty.model");
+    const { FavoriteProperty } =
+      await import("../favoriteProperty/favoriteProperty.model");
     const favorite = await FavoriteProperty.exists({
       userId,
       listingId: listing._id,

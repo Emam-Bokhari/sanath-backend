@@ -259,29 +259,25 @@ const bulkImportListings = catchAsync(async (req, res) => {
   }
 });
 
-const importKyeroFeedController = catchAsync(
-  async (req, res) => {
-  
-      const { feedUrl } = req.body;
+const importKyeroFeedController = catchAsync(async (req, res) => {
+  const { feedUrl } = req.body;
 
-      if (!feedUrl || typeof feedUrl !== "string") {
-        throw new ApiError(
-          StatusCodes.BAD_REQUEST,
-          "Valid Kyero Feed URL is required",
-        );
-      }
+  if (!feedUrl || typeof feedUrl !== "string") {
+    throw new ApiError(
+      StatusCodes.BAD_REQUEST,
+      "Valid Kyero Feed URL is required",
+    );
+  }
 
-      const result = await runKyeroImportNow(feedUrl);
+  const result = await runKyeroImportNow(feedUrl);
 
-      sendResponse(res, {
-        statusCode: StatusCodes.OK,
-        success: true,
-        message: "Kyero feed imported successfully",
-        data: result,
-      });
-   
-  },
-);
+  sendResponse(res, {
+    statusCode: StatusCodes.OK,
+    success: true,
+    message: "Kyero feed imported successfully",
+    data: result,
+  });
+});
 
 export const ListingControllers = {
   createListing,

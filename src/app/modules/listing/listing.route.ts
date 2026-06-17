@@ -108,7 +108,9 @@ router
 
 router.route("/admin/stats").get(isAdmin, ListingControllers.getListingStats);
 
-router.route("/admin/import-kyero-feed").post(isAdmin, ListingControllers.importKyeroFeedController);
+router
+  .route("/admin/import-kyero-feed")
+  .post(isAdmin, ListingControllers.importKyeroFeedController);
 
 router
   .route("/admin/:listingId")

@@ -20,7 +20,7 @@ export default {
   redis_db: process.env.REDIS_DB,
   start_cron: process.env.START_CRON,
   kyero_feed_url: process.env.KYERO_FEED_URL,
-  kyero_cron_interval: process.env.KYERO_CRON_INTERVAL || '0 * * * *',
+  kyero_cron_interval: process.env.KYERO_CRON_INTERVAL || "0 * * * *",
   client_url: process.env.CLIENT_URL,
   brand_name: process.env.BRAND_NAME || "My Home",
   base_url: process.env.BASE_URL,

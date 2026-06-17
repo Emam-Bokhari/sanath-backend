@@ -5,7 +5,6 @@ import * as csv from "fast-csv";
 
 const FRONTEND_URL = process.env.CLIENT_URL!;
 
-
 export const generateShareLink = (shareId: string) => {
   return `${FRONTEND_URL}/share/${shareId}`;
 };
