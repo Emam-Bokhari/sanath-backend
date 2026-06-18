@@ -40,6 +40,10 @@ Your XML feed should follow this structure:
       <propertyType>APARTMENT</propertyType>
       <tenure>FREEHOLD</tenure>
       <councilTaxBand>B</councilTaxBand>
+      <epcEnergyRating>
+        <label>B</label>
+        <score>85</score>
+      </epcEnergyRating>
     </details>
 
     <!-- Media -->
@@ -51,6 +55,12 @@ Your XML feed should follow this structure:
       <videos>
         <video>https://example.com/video1.mp4</video>
       </videos>
+      <floorPlans>
+        <floorPlan>https://example.com/floor-plan-1.jpg</floorPlan>
+        <floorPlan>https://example.com/floor-plan-2.jpg</floorPlan>
+      </floorPlans>
+      <brochure>https://example.com/brochure.pdf</brochure>
+      <threeSixtyTour>https://example.com/360-tour</threeSixtyTour>
     </media>
 
     <!-- Features -->
@@ -97,12 +107,16 @@ Your XML feed should follow this structure:
 | `propertyType` | String | Property type (e.g., APARTMENT, VILLA, STUDIO) |
 | `tenure` | String | Tenure type (e.g., FREEHOLD, LEASEHOLD) |
 | `councilTaxBand` | String | Council tax band |
+| `epcEnergyRating` | Object | EPC energy rating with `label` (String) and `score` (Number) |
 
 #### Media
 | Field | Type | Description |
 |-------|------|-------------|
 | `photos` | Array | List of photo URLs |
 | `videos` | Array | List of video URLs |
+| `floorPlans` | Array | List of floor plan image URLs |
+| `brochure` | String | URL to property brochure |
+| `threeSixtyTour` | String | URL to 360° virtual tour |
 
 #### Other
 | Field | Type | Description |

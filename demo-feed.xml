@@ -19,6 +19,10 @@
       <propertyType>APARTMENT</propertyType>
       <tenure>FREEHOLD</tenure>
       <councilTaxBand>B</councilTaxBand>
+      <epcEnergyRating>
+        <label>B</label>
+        <score>85</score>
+      </epcEnergyRating>
     </details>
     <media>
       <photos>
@@ -32,6 +36,12 @@
       <videos>
         <video>https://example.com/demo-video.mp4</video>
       </videos>
+      <floorPlans>
+        <floorPlan>https://example.com/floor-plan-1.jpg</floorPlan>
+        <floorPlan>https://example.com/floor-plan-2.jpg</floorPlan>
+      </floorPlans>
+      <brochure>https://example.com/brochure.pdf</brochure>
+      <threeSixtyTour>https://example.com/360-tour</threeSixtyTour>
     </media>
     <features>
       <feature>Gym</feature>

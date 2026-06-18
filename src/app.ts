@@ -52,6 +52,11 @@ app.get("/demo-feed.xml", (req: Request, res: Response) => {
   res.sendFile(xmlPath);
 });
 
+// Feed Documentation Endpoint
+app.get("/feed-documentation", (req: Request, res: Response) => {
+  res.render("feed-documentation");
+});
+
 // handle not found route
 app.use((req: Request, res: Response) => {
   res.status(StatusCodes.NOT_FOUND).json({

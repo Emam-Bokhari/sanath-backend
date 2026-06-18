@@ -1,0 +1,631 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>XML Feed Documentation</title>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;600&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --emerald: #00b389;
+      --emerald-dark: #007a5e;
+      --emerald-glow: rgba(0, 179, 137, 0.18);
+      --gold: #c9a84c;
+      --bg: #f4f6f5;
+      --surface: rgba(255,255,255,0.92);
+      --border: rgba(0,0,0,0.07);
+      --text-primary: #1a1f1d;
+      --text-muted: rgba(30,40,35,0.65);
+      --code-bg: #f0f4f2;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--bg);
+      font-family: 'DM Sans', sans-serif;
+      line-height: 1.6;
+      color: var(--text-primary);
+      position: relative;
+      min-height: 100vh;
+    }
+
+    /* ── Ambient background ── */
+    .bg-orb {
+      position: fixed;
+      border-radius: 50%;
+      filter: blur(90px);
+      pointer-events: none;
+      z-index: 0;
+    }
+    .orb-1 {
+      width: 520px; height: 520px;
+      background: radial-gradient(circle, rgba(0,179,137,0.13), transparent 70%);
+      top: -120px; left: -100px;
+      animation: drift 14s ease-in-out infinite alternate;
+    }
+    .orb-2 {
+      width: 400px; height: 400px;
+      background: radial-gradient(circle, rgba(201,168,76,0.08), transparent 70%);
+      bottom: -80px; right: -80px;
+      animation: drift 18s ease-in-out infinite alternate-reverse;
+    }
+    .orb-3 {
+      width: 250px; height: 250px;
+      background: radial-gradient(circle, rgba(0,179,137,0.07), transparent 70%);
+      top: 50%; left: 60%;
+      animation: drift 10s ease-in-out infinite alternate;
+    }
+    @keyframes drift {
+      from { transform: translate(0,0) scale(1); }
+      to   { transform: translate(30px,20px) scale(1.08); }
+    }
+
+    /* ── Grid lines ── */
+    .grid {
+      position: fixed; inset: 0;
+      background-image:
+        linear-gradient(rgba(255,255,255,0.025) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,0.025) 1px, transparent 1px);
+      background-size: 60px 60px;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    /* ── Container ── */
+    .container {
+      position: relative;
+      z-index: 10;
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 3rem 1.5rem 4rem;
+    }
+
+    /* ── Header ── */
+    header {
+      text-align: center;
+      margin-bottom: 3rem;
+      padding: 2.5rem 0;
+      background: var(--surface);
+      border-radius: 24px;
+      border: 1px solid var(--border);
+      backdrop-filter: blur(32px);
+      -webkit-backdrop-filter: blur(32px);
+      box-shadow: 0 20px 60px rgba(0,0,0,0.05);
+    }
+
+    header h1 {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 2.8rem;
+      font-weight: 600;
+      color: var(--text-primary);
+      margin-bottom: 0.75rem;
+      letter-spacing: -0.02em;
+    }
+
+    header p {
+      color: var(--text-muted);
+      font-size: 1rem;
+      max-width: 500px;
+      margin: 0 auto;
+    }
+
+    /* ── Quick Links ── */
+    .quick-links {
+      display: flex;
+      gap: 0.75rem;
+      justify-content: center;
+      flex-wrap: wrap;
+      margin-top: 1.5rem;
+    }
+
+    .quick-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.6rem 1.2rem;
+      background: rgba(0,179,137,0.1);
+      border: 1px solid rgba(0,179,137,0.2);
+      border-radius: 999px;
+      color: var(--emerald-dark);
+      text-decoration: none;
+      font-size: 0.85rem;
+      font-weight: 500;
+      transition: all 0.3s ease;
+    }
+
+    .quick-link:hover {
+      background: rgba(0,179,137,0.15);
+      transform: translateY(-2px);
+    }
+
+    /* ── Content Sections ── */
+    .content-section {
+      background: var(--surface);
+      border-radius: 20px;
+      border: 1px solid var(--border);
+      padding: 2rem;
+      margin-bottom: 1.5rem;
+      backdrop-filter: blur(32px);
+      -webkit-backdrop-filter: blur(32px);
+      box-shadow: 0 8px 30px rgba(0,0,0,0.04);
+    }
+
+    .content-section h2 {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.8rem;
+      margin-bottom: 1rem;
+      color: var(--text-primary);
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+
+    .content-section h2::before {
+      content: '';
+      width: 4px;
+      height: 28px;
+      background: linear-gradient(180deg, var(--emerald), var(--gold));
+      border-radius: 999px;
+    }
+
+    .content-section h3 {
+      font-size: 1.2rem;
+      margin: 1.5rem 0 0.75rem;
+      color: var(--text-primary);
+    }
+
+    .content-section p {
+      color: var(--text-muted);
+      margin-bottom: 1rem;
+    }
+
+    /* ── Code Blocks ── */
+    pre {
+      background: var(--code-bg);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 1.25rem;
+      overflow-x: auto;
+      margin: 1rem 0;
+      font-size: 0.85rem;
+    }
+
+    code {
+      font-family: 'Consolas', 'Monaco', monospace;
+      color: var(--emerald-dark);
+    }
+
+    pre code {
+      color: var(--text-primary);
+    }
+
+    /* ── Tables ── */
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 1rem 0;
+      font-size: 0.9rem;
+    }
+
+    th, td {
+      padding: 0.75rem 1rem;
+      text-align: left;
+      border-bottom: 1px solid var(--border);
+    }
+
+    th {
+      background: rgba(0,179,137,0.05);
+      font-weight: 500;
+      color: var(--emerald-dark);
+    }
+
+    tr:last-child td {
+      border-bottom: none;
+    }
+
+    /* ── Lists ── */
+    ul, ol {
+      margin: 1rem 0;
+      padding-left: 1.5rem;
+      color: var(--text-muted);
+    }
+
+    li {
+      margin-bottom: 0.5rem;
+    }
+
+    li strong {
+      color: var(--text-primary);
+    }
+
+    /* ── Notes Box ── */
+    .notes-box {
+      background: rgba(201,168,76,0.1);
+      border: 1px solid rgba(201,168,76,0.25);
+      border-radius: 12px;
+      padding: 1.25rem;
+      margin: 1rem 0;
+    }
+
+    .notes-box strong {
+      color: var(--text-primary);
+    }
+
+    /* ── Demo URL Badge ── */
+    .demo-url {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      background: rgba(0,179,137,0.1);
+      border: 1px solid rgba(0,179,137,0.2);
+      border-radius: 8px;
+      padding: 0.5rem 0.75rem;
+      font-family: 'Consolas', 'Monaco', monospace;
+      font-size: 0.85rem;
+      color: var(--emerald-dark);
+      word-break: break-all;
+    }
+
+    /* ── Responsive ── */
+    @media (max-width: 768px) {
+      header h1 { font-size: 2rem; }
+      .content-section { padding: 1.5rem; }
+      table { font-size: 0.8rem; }
+      th, td { padding: 0.5rem; }
+    }
+  </style>
+</head>
+<body>
+  <div class="bg-orb orb-1"></div>
+  <div class="bg-orb orb-2"></div>
+  <div class="bg-orb orb-3"></div>
+  <div class="grid"></div>
+
+  <div class="container">
+    <header>
+      <h1>XML Feed Documentation</h1>
+      <p>This document describes how to format your XML feed for importing properties into our platform.</p>
+      <div class="quick-links">
+        <a href="#demo-feed" class="quick-link">Demo Feed</a>
+        <a href="#feed-format" class="quick-link">Feed Format</a>
+        <a href="#field-descriptions" class="quick-link">Fields</a>
+        <a href="#how-to-use" class="quick-link">How to Use</a>
+      </div>
+    </header>
+
+    <div class="content-section" id="demo-feed">
+      <h2>Demo Feed</h2>
+      <p>You can test using our demo feed available at:</p>
+      <div class="demo-url">http://your-server-url/demo-feed.xml</div>
+      <p style="margin-top: 0.75rem;"><small>(Replace <code>your-server-url</code> with your actual server address, e.g., <code>http://localhost:3000</code>)</small></p>
+    </div>
+
+    <div class="content-section" id="feed-format">
+      <h2>Feed Format</h2>
+      <p>Your XML feed should follow this structure:</p>
+      <pre><code>&lt;properties&gt;
+  &lt;property&gt;
+    &lt;!-- Required Fields --&gt;
+    &lt;externalId&gt;unique-property-id&lt;/externalId&gt;
+    &lt;title&gt;Property Title&lt;/title&gt;
+    &lt;price&gt;250000&lt;/price&gt;
+    &lt;listingType&gt;SALE&lt;/listingType&gt;
+
+    &lt;!-- Location --&gt;
+    &lt;location&gt;
+      &lt;country&gt;Bangladesh&lt;/country&gt;
+      &lt;city&gt;Dhaka&lt;/city&gt;
+      &lt;postalCode&gt;1212&lt;/postalCode&gt;
+      &lt;address&gt;Full Address Here&lt;/address&gt;
+      &lt;lat&gt;23.8103&lt;/lat&gt;
+      &lt;lng&gt;90.4125&lt;/lng&gt;
+    &lt;/location&gt;
+
+    &lt;!-- Property Details --&gt;
+    &lt;details&gt;
+      &lt;bedrooms&gt;3&lt;/bedrooms&gt;
+      &lt;bathrooms&gt;2&lt;/bathrooms&gt;
+      &lt;squareFoot&gt;1500&lt;/squareFoot&gt;
+      &lt;propertyType&gt;APARTMENT&lt;/propertyType&gt;
+      &lt;tenure&gt;FREEHOLD&lt;/tenure&gt;
+      &lt;councilTaxBand&gt;B&lt;/councilTaxBand&gt;
+      &lt;epcEnergyRating&gt;
+        &lt;label&gt;B&lt;/label&gt;
+        &lt;score&gt;85&lt;/score&gt;
+      &lt;/epcEnergyRating&gt;
+    &lt;/details&gt;
+
+    &lt;!-- Media --&gt;
+    &lt;media&gt;
+      &lt;photos&gt;
+        &lt;photo&gt;https://example.com/photo1.jpg&lt;/photo&gt;
+        &lt;photo&gt;https://example.com/photo2.jpg&lt;/photo&gt;
+      &lt;/photos&gt;
+      &lt;videos&gt;
+        &lt;video&gt;https://example.com/video1.mp4&lt;/video&gt;
+      &lt;/videos&gt;
+      &lt;floorPlans&gt;
+        &lt;floorPlan&gt;https://example.com/floor-plan-1.jpg&lt;/floorPlan&gt;
+        &lt;floorPlan&gt;https://example.com/floor-plan-2.jpg&lt;/floorPlan&gt;
+      &lt;/floorPlans&gt;
+      &lt;brochure&gt;https://example.com/brochure.pdf&lt;/brochure&gt;
+      &lt;threeSixtyTour&gt;https://example.com/360-tour&lt;/threeSixtyTour&gt;
+    &lt;/media&gt;
+
+    &lt;!-- Features --&gt;
+    &lt;features&gt;
+      &lt;feature&gt;Swimming Pool&lt;/feature&gt;
+      &lt;feature&gt;Garden&lt;/feature&gt;
+    &lt;/features&gt;
+
+    &lt;!-- Description --&gt;
+    &lt;description&gt;Detailed property description here...&lt;/description&gt;
+  &lt;/property&gt;
+&lt;/properties&gt;</code></pre>
+    </div>
+
+    <div class="content-section" id="field-descriptions">
+      <h2>Field Descriptions</h2>
+      
+      <h3>Required Fields</h3>
+      <table>
+        <thead>
+          <tr>
+            <th>Field</th>
+            <th>Type</th>
+            <th>Description</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><code>externalId</code></td>
+            <td>String</td>
+            <td>Unique ID for the property (must be unique per feed)</td>
+          </tr>
+          <tr>
+            <td><code>title</code></td>
+            <td>String</td>
+            <td>Property title</td>
+          </tr>
+          <tr>
+            <td><code>price</code></td>
+            <td>Number</td>
+            <td>Asking price</td>
+          </tr>
+          <tr>
+            <td><code>listingType</code></td>
+            <td>String</td>
+            <td>
+              <strong>Accepted values:</strong><br/>
+              <code>SALE</code>, <code>RENT</code>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+
+      <h3>Optional Fields</h3>
+      
+      <h4>Location</h4>
+      <table>
+        <thead>
+          <tr>
+            <th>Field</th>
+            <th>Type</th>
+            <th>Description</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><code>country</code></td>
+            <td>String</td>
+            <td>Country name</td>
+          </tr>
+          <tr>
+            <td><code>city</code></td>
+            <td>String</td>
+            <td>City name</td>
+          </tr>
+          <tr>
+            <td><code>postalCode</code></td>
+            <td>String</td>
+            <td>Postal/ZIP code</td>
+          </tr>
+          <tr>
+            <td><code>address</code></td>
+            <td>String</td>
+            <td>Full property address</td>
+          </tr>
+          <tr>
+            <td><code>lat</code></td>
+            <td>Number</td>
+            <td>Latitude</td>
+          </tr>
+          <tr>
+            <td><code>lng</code></td>
+            <td>Number</td>
+            <td>Longitude</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <h4>Property Details</h4>
+      <table>
+        <thead>
+          <tr>
+            <th>Field</th>
+            <th>Type</th>
+            <th>Description</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><code>bedrooms</code></td>
+            <td>Number</td>
+            <td>Number of bedrooms</td>
+          </tr>
+          <tr>
+            <td><code>bathrooms</code></td>
+            <td>Number</td>
+            <td>Number of bathrooms</td>
+          </tr>
+          <tr>
+            <td><code>squareFoot</code></td>
+            <td>Number</td>
+            <td>Property area in square feet</td>
+          </tr>
+          <tr>
+            <td><code>propertyType</code></td>
+            <td>String</td>
+            <td>
+              <strong>Accepted values:</strong><br/>
+              <code>DETACHED</code>, <code>SEMI</code>, <code>SEMI_DETACHED</code>, <code>TERRACED</code>, <code>BUNGLOW</code>, <code>APARTMENT</code>, <code>COUNTRY_HOUSE</code>, <code>FLAT</code>, <code>PARK_HOME</code>, <code>VILLA</code>
+            </td>
+          </tr>
+          <tr>
+            <td><code>tenure</code></td>
+            <td>String</td>
+            <td>
+              <strong>Accepted values:</strong><br/>
+              <code>FREEHOLD</code>, <code>LEASEHOLD</code>, <code>SHARE_OF_FREEHOLD</code>
+            </td>
+          </tr>
+          <tr>
+            <td><code>councilTaxBand</code></td>
+            <td>String</td>
+            <td>
+              <strong>Accepted values:</strong><br/>
+              <code>A</code>, <code>B</code>, <code>C</code>, <code>D</code>, <code>E</code>, <code>F</code>, <code>G</code>, <code>H</code>
+            </td>
+          </tr>
+          <tr>
+            <td><code>epcEnergyRating</code></td>
+            <td>Object</td>
+            <td>
+              EPC energy rating with:
+              <ul>
+                <li><code>label</code>: <strong>Accepted values:</strong> <code>A</code>, <code>B</code>, <code>C</code>, <code>D</code>, <code>E</code>, <code>F</code>, <code>G</code>, <code>H</code></li>
+                <li><code>score</code>: Number</li>
+              </ul>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+
+      <h4>Media</h4>
+      <table>
+        <thead>
+          <tr>
+            <th>Field</th>
+            <th>Type</th>
+            <th>Description</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><code>photos</code></td>
+            <td>Array</td>
+            <td>List of photo URLs</td>
+          </tr>
+          <tr>
+            <td><code>videos</code></td>
+            <td>Array</td>
+            <td>List of video URLs</td>
+          </tr>
+          <tr>
+            <td><code>floorPlans</code></td>
+            <td>Array</td>
+            <td>List of floor plan image URLs</td>
+          </tr>
+          <tr>
+            <td><code>brochure</code></td>
+            <td>String</td>
+            <td>URL to property brochure</td>
+          </tr>
+          <tr>
+            <td><code>threeSixtyTour</code></td>
+            <td>String</td>
+            <td>URL to 360° virtual tour</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <h4>Other</h4>
+      <table>
+        <thead>
+          <tr>
+            <th>Field</th>
+            <th>Type</th>
+            <th>Description</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><code>features</code></td>
+            <td>Array</td>
+            <td>
+              <strong>Accepted values:</strong><br/>
+              <code>GARDEN</code>, <code>PARKING</code>, <code>NEW_BUILD</code>, <code>CHAIN_FEE</code>, <code>SWIMMING_POOL</code>, <code>GYM</code>, <code>CONCIERGE</code>, <code>BALCONY</code>, <code>TERRACE</code>, <code>LIFT</code>, <code>FITTED_KITCHEN</code>, <code>UNDER_FLOOR_HEATING</code>, <code>SOLAR_PANELS</code>, <code>OFF_STREET_PARKING</code>, <code>DRIVEWAY</code>, <code>ALARM_SYSTEM</code>
+            </td>
+          </tr>
+          <tr>
+            <td><code>description</code></td>
+            <td>String</td>
+            <td>Detailed property description</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="content-section" id="how-to-use">
+      <h2>How to Use</h2>
+      <ol>
+        <li><strong>Create your XML feed</strong> following the format above</li>
+        <li><strong>Host your XML feed</strong> on a publicly accessible URL</li>
+        <li>
+          <strong>Add the feed</strong> via our agent dashboard or API:
+          <pre><code>POST /api/v1/agent-feeds
+{
+  "feedUrl": "https://your-site.com/your-feed.xml",
+  "name": "My Property Feed"
+}</code></pre>
+        </li>
+        <li><strong>Sync your feed</strong> (automatically hourly or manually via API)</li>
+      </ol>
+    </div>
+
+    <div class="content-section">
+      <h2>Testing</h2>
+      <p>Use our demo feed to test:</p>
+      <div class="demo-url">http://your-server-url/demo-feed.xml</div>
+    </div>
+
+    <div class="content-section">
+      <h2>Admin Approval Requirements</h2>
+      <p>For a property to be eligible for admin approval and publishing, it must include all of the following:</p>
+      <div class="notes-box">
+        <h3 style="margin-bottom: 0.5rem;">Required for Approval:</h3>
+        <ul>
+          <li><strong>Basic Info:</strong> <code>title</code>, <code>askingPrice</code>, <code>country</code>, <code>city</code>, <code>postalCode</code></li>
+          <li><strong>Media:</strong> At least 6 photos and 1 video</li>
+          <li><strong>Property Info:</strong> <code>propertyType</code>, <code>propertyBedrooms</code>, <code>propertyBathrooms</code></li>
+          <li><strong>Feature & Description:</strong> At least 1 feature and a <code>description</code></li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="content-section">
+      <h2>Important Notes</h2>
+      <div class="notes-box">
+        <ul>
+          <li>All properties must have a unique <code>externalId</code></li>
+          <li>Deleted properties in your feed will be soft-deleted in our system</li>
+          <li>Updates to existing properties will be reflected in our system</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</body>
+</html>

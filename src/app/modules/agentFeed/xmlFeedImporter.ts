@@ -67,6 +67,15 @@ export const importSingleFeed = async (feed: TAgentFeed & { _id: Types.ObjectId 
           councilTaxBand: prop.details?.councilTaxBand,
           photos: prop.media?.photos?.photo || [],
           videos: prop.media?.videos?.video || [],
+          floorPlans: prop.media?.floorPlans?.floorPlan || [],
+          brochure: prop.media?.brochure,
+          threeSixtyTour: prop.media?.threeSixtyTour,
+          epcEnergyRating: prop.details?.epcEnergyRating
+            ? {
+                label: prop.details.epcEnergyRating.label,
+                score: Number(prop.details.epcEnergyRating.score) || 0,
+              }
+            : undefined,
           features: prop.features?.feature || [],
           description: prop.description,
           agentId: feed.agentId,
