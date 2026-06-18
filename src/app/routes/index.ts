@@ -21,6 +21,7 @@ import { TransactionRoutes } from "../modules/transaction/transaction.route";
 import { PopularLocationRoutes } from "../modules/popularLocation/popularLocation.route";
 import { NotificationPreferenceRoutes } from "../modules/notificationPreference/notificationPreference.route";
 import { ContactRoutes } from "../modules/contact/contact.route";
+import { AgentFeedRoutes } from "../modules/agentFeed/agentFeed.route";
 
 const router = express.Router();
 
@@ -72,6 +73,10 @@ const apiRoutes = [
   {
     path: "/listings",
     route: ListingRoutes,
+  },
+  {
+    path: "/agent-feeds",
+    route: AgentFeedRoutes,
   },
   {
     path: "/favorite-properties",

@@ -1,0 +1,43 @@
+<properties>
+  <property>
+    <externalId>property-001</externalId>
+    <title>Modern Apartment in Dhaka</title>
+    <price>4500000</price>
+    <listingType>SALE</listingType>
+    <location>
+      <country>Bangladesh</country>
+      <city>Dhaka</city>
+      <postalCode>1212</postalCode>
+      <address>House 15, Road 2, Dhanmondi</address>
+      <lat>23.7465</lat>
+      <lng>90.3765</lng>
+    </location>
+    <details>
+      <bedrooms>3</bedrooms>
+      <bathrooms>2</bathrooms>
+      <squareFoot>1600</squareFoot>
+      <propertyType>APARTMENT</propertyType>
+      <tenure>FREEHOLD</tenure>
+      <councilTaxBand>B</councilTaxBand>
+    </details>
+    <media>
+      <photos>
+        <photo>https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?w=600</photo>
+        <photo>https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?w=600</photo>
+        <photo>https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?w=600</photo>
+        <photo>https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?w=600</photo>
+        <photo>https://placehold.co/600x400</photo>
+        <photo>https://placehold.co/600</photo>
+      </photos>
+      <videos>
+        <video>https://example.com/demo-video.mp4</video>
+      </videos>
+    </media>
+    <features>
+      <feature>Gym</feature>
+      <feature>Swimming Pool</feature>
+      <feature>24/7 Security</feature>
+    </features>
+    <description>Beautiful modern apartment in the heart of Dhanmondi with all modern amenities.</description>
+  </property>
+</properties>

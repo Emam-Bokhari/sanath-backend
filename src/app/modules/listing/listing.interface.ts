@@ -64,10 +64,10 @@ export type TListing = {
   listingCheckList?: TListingChecklist;
   isDeleted?: boolean;
 
-  // Kyero specific fields
-  kyeroId?: string;
-  kyeroRef?: string;
-  source?: "manual" | "kyero" | "csv";
+  // Feed specific fields
+  feedId?: Types.ObjectId;
+  externalId?: string;
+  source?: "manual" | "csv" | "feed";
   sourceUrl?: string;
   lastSyncedAt?: Date;
 };

@@ -14,7 +14,8 @@ import {
 } from "./queues";
 import "./queues";
 import "dotenv/config";
-import { startKyeroCron } from "./app/modules/listing/keyroImporter";
+import cron from "node-cron";
+import { importAllFeeds } from "./app/modules/agentFeed/xmlFeedImporter";
 
 let server: any;
 
@@ -81,9 +82,17 @@ async function main() {
     //@ts-ignore
     global.io = io;
 
-    // Start Kyero cron job if feed URL is provided
-    if (config.kyero_feed_url && config.start_cron === "true") {
-      startKyeroCron(config.kyero_feed_url);
+    // Start hourly feed import cron job
+    if (config.start_cron === "true") {
+      logger.info(colors.cyan("🕒 Starting hourly feed sync cron job"));
+      cron.schedule("0 * * * *", async () => {
+        logger.info(colors.cyan("🔄 Running scheduled feed sync"));
+        try {
+          await importAllFeeds();
+        } catch (error) {
+          errorLogger.error("❌ Scheduled feed sync failed", error);
+        }
+      });
     }
   } catch (error) {
     errorLogger.error(colors.red("🤢 Failed to connect Database"));

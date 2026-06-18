@@ -166,16 +166,17 @@ const listingSchema = new Schema<TListing, TListingModel>(
       type: Boolean,
       default: false,
     },
-    // Kyero specific fields
-    kyeroId: {
-      type: String,
+    // Feed specific fields
+    feedId: {
+      type: Schema.Types.ObjectId,
+      ref: "AgentFeed",
     },
-    kyeroRef: {
+    externalId: {
       type: String,
     },
     source: {
       type: String,
-      enum: ["manual", "kyero", "csv"],
+      enum: ["manual", "csv", "feed"],
     },
     sourceUrl: {
       type: String,

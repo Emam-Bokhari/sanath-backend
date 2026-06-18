@@ -45,6 +45,13 @@ app.get("/", (req: Request, res: Response) => {
   res.send("Server is running...");
 });
 
+// Demo XML Feed Endpoint
+app.get("/demo-feed.xml", (req: Request, res: Response) => {
+  const xmlPath = path.join(process.cwd(), "demo-feed.xml");
+  res.setHeader("Content-Type", "application/xml");
+  res.sendFile(xmlPath);
+});
+
 // handle not found route
 app.use((req: Request, res: Response) => {
   res.status(StatusCodes.NOT_FOUND).json({
