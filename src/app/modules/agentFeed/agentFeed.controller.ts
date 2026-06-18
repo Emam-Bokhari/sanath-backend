@@ -3,7 +3,7 @@ import catchAsync from "../../../shared/catchAsync";
 import sendResponse from "../../../shared/sendResponse";
 import { AgentFeedServices } from "./agentFeed.service";
 
-const createAgentFeed = catchAsync(async (req, res) => {
+const createOrUpdateAgentFeed = catchAsync(async (req, res) => {
   const data = req.body;
   const { id: agentId } = req.user as { id: string };
   const feed = await AgentFeedServices.createAgentFeedServiceToDB(data, agentId);
@@ -11,28 +11,14 @@ const createAgentFeed = catchAsync(async (req, res) => {
   sendResponse(res, {
     success: true,
     statusCode: 200,
-    message: "Feed created successfully",
+    message: "Feed saved successfully",
     data: feed,
   });
 });
 
-const getMyAgentFeeds = catchAsync(async (req, res) => {
+const getAgentFeed = catchAsync(async (req, res) => {
   const { id: agentId } = req.user as { id: string };
-  const query = req.query;
-  const feeds = await AgentFeedServices.getMyAgentFeedsServiceFromDB(agentId, query);
-
-  sendResponse(res, {
-    success: true,
-    statusCode: 200,
-    message: "Feeds retrieved successfully",
-    data: feeds,
-  });
-});
-
-const getAgentFeedById = catchAsync(async (req, res) => {
-  const { id: agentId } = req.user as { id: string };
-  const { feedId } = req.params;
-  const feed = await AgentFeedServices.getAgentFeedByIdServiceFromDB(feedId, agentId);
+  const feed = await AgentFeedServices.getAgentFeedServiceFromDB(agentId);
 
   sendResponse(res, {
     success: true,
@@ -42,36 +28,9 @@ const getAgentFeedById = catchAsync(async (req, res) => {
   });
 });
 
-const updateAgentFeed = catchAsync(async (req, res) => {
-  const { id: agentId } = req.user as { id: string };
-  const { feedId } = req.params;
-  const data = req.body;
-  const feed = await AgentFeedServices.updateAgentFeedServiceToDB(feedId, data, agentId);
-
-  sendResponse(res, {
-    success: true,
-    statusCode: 200,
-    message: "Feed updated successfully",
-    data: feed,
-  });
-});
-
-const deleteAgentFeed = catchAsync(async (req, res) => {
-  const { id: agentId } = req.user as { id: string };
-  const { feedId } = req.params;
-  await AgentFeedServices.deleteAgentFeedServiceFromDB(feedId, agentId);
-
-  sendResponse(res, {
-    success: true,
-    statusCode: 200,
-    message: "Feed deleted successfully",
-  });
-});
-
 const triggerFeedSync = catchAsync(async (req, res) => {
   const { id: agentId } = req.user as { id: string };
-  const { feedId } = req.params;
-  const result = await AgentFeedServices.triggerFeedSyncService(feedId, agentId);
+  const result = await AgentFeedServices.triggerFeedSyncService(agentId);
 
   sendResponse(res, {
     success: true,
@@ -82,10 +41,7 @@ const triggerFeedSync = catchAsync(async (req, res) => {
 });
 
 export const AgentFeedControllers = {
-  createAgentFeed,
-  getMyAgentFeeds,
-  getAgentFeedById,
-  updateAgentFeed,
-  deleteAgentFeed,
+  createOrUpdateAgentFeed,
+  getAgentFeed,
   triggerFeedSync,
 };

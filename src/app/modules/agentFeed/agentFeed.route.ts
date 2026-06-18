@@ -13,23 +13,12 @@ router
     isAgent,
     checkSubscription(),
     validateRequest(AgentFeedValidation.createAgentFeedValidationSchema),
-    AgentFeedControllers.createAgentFeed
+    AgentFeedControllers.createOrUpdateAgentFeed
   )
-  .get(isAgent, checkSubscription(), AgentFeedControllers.getMyAgentFeeds);
+  .get(isAgent, checkSubscription(), AgentFeedControllers.getAgentFeed);
 
 router
-  .route("/:feedId")
-  .get(isAgent, checkSubscription(), AgentFeedControllers.getAgentFeedById)
-  .patch(
-    isAgent,
-    checkSubscription(),
-    validateRequest(AgentFeedValidation.updateAgentFeedValidationSchema),
-    AgentFeedControllers.updateAgentFeed
-  )
-  .delete(isAgent, checkSubscription(), AgentFeedControllers.deleteAgentFeed);
-
-router
-  .route("/:feedId/sync")
+  .route("/sync")
   .post(isAgent, checkSubscription(), AgentFeedControllers.triggerFeedSync);
 
 export const AgentFeedRoutes = router;
