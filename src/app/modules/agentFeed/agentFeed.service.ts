@@ -2,8 +2,7 @@ import { StatusCodes } from "http-status-codes";
 import ApiError from "../../../errors/ApiErrors";
 import { AgentFeed } from "./agentFeed.model";
 import { Types } from "mongoose";
-import { TAgentFeed } from "./agentFeed.interface";
-import { importSingleFeed } from "./xmlFeedImporter";
+import { feedSyncQueue } from "../../../queues";
 
 const createAgentFeedServiceToDB = async (
   payload: { feedUrl: string; name?: string },
@@ -25,11 +24,14 @@ const createAgentFeedServiceToDB = async (
     isActive: true,
   });
 
-  // Optionally, import the feed immediately
+  // Add initial feed sync to queue
   try {
-    await importSingleFeed(feed as unknown as TAgentFeed & { _id: Types.ObjectId });
+    await feedSyncQueue.add("singleFeedSync", {
+      feedId: feed._id.toString(),
+      feed: feed,
+    });
   } catch (error) {
-    console.error("Error importing feed immediately:", error);
+    console.error("Error adding feed sync to queue:", error);
   }
 
   return feed;
@@ -110,8 +112,18 @@ const deleteAgentFeedServiceFromDB = async (
 
 const triggerFeedSyncService = async (feedId: string, agentId: string) => {
   const feed = await getAgentFeedByIdServiceFromDB(feedId, agentId);
-  const result = await importSingleFeed(feed as unknown as TAgentFeed & { _id: Types.ObjectId });
-  return result;
+  
+  // Add single feed sync job to queue
+  const job = await feedSyncQueue.add("singleFeedSync", {
+    feedId: feedId,
+    feed: feed,
+  });
+  
+  return {
+    jobId: job.id,
+    status: "queued",
+    message: "Feed sync added to queue",
+  };
 };
 
 export const AgentFeedServices = {

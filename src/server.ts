@@ -9,13 +9,13 @@ import seedSuperAdmin from "./DB";
 import {
   emailWorker,
   notificationWorker,
+  feedSyncWorker,
   emailQueue,
   notificationQueue,
+  feedSyncQueue,
 } from "./queues";
 import "./queues";
 import "dotenv/config";
-import cron from "node-cron";
-import { importAllFeeds } from "./app/modules/agentFeed/xmlFeedImporter";
 
 let server: any;
 
@@ -25,10 +25,10 @@ const shutdown = async () => {
 
   try {
     // close workers
-    await Promise.all([emailWorker.close(), notificationWorker.close()]);
+    await Promise.all([emailWorker.close(), notificationWorker.close(), feedSyncWorker.close()]);
 
     // close queues
-    await Promise.all([emailQueue.close(), notificationQueue.close()]);
+    await Promise.all([emailQueue.close(), notificationQueue.close(), feedSyncQueue.close()]);
 
     // close HTTP server
     if (server) {
@@ -82,17 +82,26 @@ async function main() {
     //@ts-ignore
     global.io = io;
 
-    // Start hourly feed import cron job
+    // Start hourly feed sync with BullMQ
     if (config.start_cron === "true") {
-      logger.info(colors.cyan("🕒 Starting hourly feed sync cron job"));
-      cron.schedule("0 * * * *", async () => {
-        logger.info(colors.cyan("🔄 Running scheduled feed sync"));
-        try {
-          await importAllFeeds();
-        } catch (error) {
-          errorLogger.error("❌ Scheduled feed sync failed", error);
-        }
-      });
+      logger.info(colors.cyan("🕒 Starting hourly feed sync with BullMQ"));
+      
+      // Remove existing job schedulers to avoid duplicates
+      const existingSchedulers = await feedSyncQueue.getJobSchedulers();
+      for (const scheduler of existingSchedulers) {
+        await feedSyncQueue.removeJobScheduler(scheduler.key);
+      }
+      
+      // Add hourly job scheduler (runs at minute 0 of every hour)
+      await feedSyncQueue.add(
+        "feedSync",
+        {},
+        {
+          repeat: {
+            pattern: "0 * * * *",
+          },
+        },
+      );
     }
   } catch (error) {
     errorLogger.error(colors.red("🤢 Failed to connect Database"));
