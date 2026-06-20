@@ -6,7 +6,10 @@ import { AgentFeedServices } from "./agentFeed.service";
 const createOrUpdateAgentFeed = catchAsync(async (req, res) => {
   const data = req.body;
   const { id: agentId } = req.user as { id: string };
-  const feed = await AgentFeedServices.createAgentFeedServiceToDB(data, agentId);
+  const feed = await AgentFeedServices.createAgentFeedServiceToDB(
+    data,
+    agentId,
+  );
 
   sendResponse(res, {
     success: true,

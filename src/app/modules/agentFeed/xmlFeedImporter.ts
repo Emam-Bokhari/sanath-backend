@@ -17,7 +17,9 @@ const getArrayValue = (value: any): any[] => {
   return Array.isArray(value) ? value : [value];
 };
 
-export const importSingleFeed = async (feed: TAgentFeed & { _id: Types.ObjectId }) => {
+export const importSingleFeed = async (
+  feed: TAgentFeed & { _id: Types.ObjectId },
+) => {
   try {
     console.log(`🔄 Importing feed: ${feed.feedUrl}`);
 
@@ -34,9 +36,9 @@ export const importSingleFeed = async (feed: TAgentFeed & { _id: Types.ObjectId 
     });
 
     const parsed = parser.parse(xml);
-        console.log('📄 Parsed XML:', JSON.stringify(parsed, null, 2)); // Debug: See the full parsed structure
-        const properties = parsed?.properties?.[0]?.property || [];
-        const propertyArray = Array.isArray(properties) ? properties : [properties];
+    console.log("📄 Parsed XML:", JSON.stringify(parsed, null, 2)); // Debug: See the full parsed structure
+    const properties = parsed?.properties?.[0]?.property || [];
+    const propertyArray = Array.isArray(properties) ? properties : [properties];
 
     const now = new Date();
     const externalIdsFromFeed: string[] = [];
@@ -47,7 +49,7 @@ export const importSingleFeed = async (feed: TAgentFeed & { _id: Types.ObjectId 
     for (const prop of propertyArray) {
       try {
         const externalId = getSingleValue(prop.externalId);
-        
+
         if (!externalId) {
           failed++;
           continue;
@@ -59,14 +61,16 @@ export const importSingleFeed = async (feed: TAgentFeed & { _id: Types.ObjectId 
         const details = getSingleValue(prop.details);
         const media = getSingleValue(prop.media);
         const features = getSingleValue(prop.features);
-        const epcEnergyRating = details ? getSingleValue(details.epcEnergyRating) : undefined;
+        const epcEnergyRating = details
+          ? getSingleValue(details.epcEnergyRating)
+          : undefined;
 
         // Helper to deeply extract nested values, handling arrays at every level
         const extractNestedArray = (obj: any, path: string[]): any[] => {
           if (!obj || path.length === 0) return [];
-          
+
           let current = obj;
-          
+
           // Traverse all keys except the last one
           for (let i = 0; i < path.length - 1; i++) {
             const key = path[i];
@@ -74,18 +78,18 @@ export const importSingleFeed = async (feed: TAgentFeed & { _id: Types.ObjectId 
             // Unwrap arrays at every step
             current = getSingleValue(current[key]);
           }
-          
+
           const lastKey = path[path.length - 1];
           if (!current) return [];
-          
+
           // Get the final array, unwrapping if necessary
           const finalValue = current[lastKey];
           const arrayValue = getArrayValue(finalValue);
-          
+
           // Unwrap each individual item in the array
-          return arrayValue.map(item => getSingleValue(item)).filter(Boolean);
+          return arrayValue.map((item) => getSingleValue(item)).filter(Boolean);
         };
-        
+
         // Helper to extract nested single value properly
         const extractNestedSingle = (obj: any, path: string[]): any => {
           let current = obj;
@@ -97,9 +101,12 @@ export const importSingleFeed = async (feed: TAgentFeed & { _id: Types.ObjectId 
         };
 
         // Create base listing data without status (we'll set status conditionally)
-        const photos = extractNestedArray(media, ['photos', 'photo']);
-        console.log(`🖼️ Extracted ${photos.length} photos for ${externalId}:`, photos);
-        
+        const photos = extractNestedArray(media, ["photos", "photo"]);
+        console.log(
+          `🖼️ Extracted ${photos.length} photos for ${externalId}:`,
+          photos,
+        );
+
         const baseListingData = {
           title: getSingleValue(prop.title),
           askingPrice: Number(getSingleValue(prop.price)) || 0,
@@ -120,22 +127,23 @@ export const importSingleFeed = async (feed: TAgentFeed & { _id: Types.ObjectId 
               : undefined,
           propertyBedrooms: Number(getSingleValue(details?.bedrooms)) || 0,
           propertyBathrooms: Number(getSingleValue(details?.bathrooms)) || 0,
-          propertySquareFoot: Number(getSingleValue(details?.squareFoot)) || undefined,
+          propertySquareFoot:
+            Number(getSingleValue(details?.squareFoot)) || undefined,
           propertyType: getSingleValue(details?.propertyType),
           tenure: getSingleValue(details?.tenure),
           councilTaxBand: getSingleValue(details?.councilTaxBand),
           photos: photos,
-          videos: extractNestedArray(media, ['videos', 'video']),
-          floorPlans: extractNestedArray(media, ['floorPlans', 'floorPlan']),
-          brochure: extractNestedSingle(media, ['brochure']),
-          threeSixtyTour: extractNestedSingle(media, ['threeSixtyTour']),
+          videos: extractNestedArray(media, ["videos", "video"]),
+          floorPlans: extractNestedArray(media, ["floorPlans", "floorPlan"]),
+          brochure: extractNestedSingle(media, ["brochure"]),
+          threeSixtyTour: extractNestedSingle(media, ["threeSixtyTour"]),
           epcEnergyRating: epcEnergyRating
             ? {
                 label: getSingleValue(epcEnergyRating.label),
                 score: Number(getSingleValue(epcEnergyRating.score)) || 0,
               }
             : undefined,
-          features: extractNestedArray(features, ['feature']),
+          features: extractNestedArray(features, ["feature"]),
           description: getSingleValue(prop.description),
           agentId: feed.agentId,
           externalId: externalId,
@@ -179,6 +187,8 @@ export const importSingleFeed = async (feed: TAgentFeed & { _id: Types.ObjectId 
       isDeleted: { $ne: true },
     });
 
+    console.log(listingsToDelete, "listings to delete");
+
     for (const listing of listingsToDelete) {
       listing.isDeleted = true;
       await listing.save();
@@ -215,11 +225,11 @@ export const importAllFeeds = async () => {
     isDeleted: { $ne: true },
   } as any);
 
-  console.log(`Found ${activeFeeds.length} active feeds to import`);
-
   for (const feed of activeFeeds) {
     try {
-      await importSingleFeed(feed as unknown as TAgentFeed & { _id: Types.ObjectId });
+      await importSingleFeed(
+        feed as unknown as TAgentFeed & { _id: Types.ObjectId },
+      );
     } catch (error) {
       console.error(`Error importing feed ${feed._id}:`, error);
     }

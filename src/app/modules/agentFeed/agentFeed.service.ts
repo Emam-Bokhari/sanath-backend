@@ -12,7 +12,7 @@ const createAgentFeedServiceToDB = async (
   const feed = await AgentFeed.findOneAndUpdate(
     { agentId: new Types.ObjectId(agentId) },
     { ...payload, isActive: true },
-    { new: true, upsert: true }
+    { new: true, upsert: true },
   );
 
   // Add initial feed sync to queue
@@ -37,17 +37,17 @@ const getAgentFeedServiceFromDB = async (agentId: string) => {
 
 const triggerFeedSyncService = async (agentId: string) => {
   const feed = await getAgentFeedServiceFromDB(agentId);
-  
+
   if (!feed) {
     throw new ApiError(StatusCodes.NOT_FOUND, "No feed found for this agent");
   }
-  
+
   // Add single feed sync job to queue
   const job = await feedSyncQueue.add("singleFeedSync", {
     feedId: feed._id.toString(),
     feed: feed,
   });
-  
+
   return {
     jobId: job.id,
     status: "queued",

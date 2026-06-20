@@ -49,7 +49,7 @@ const deleteRule = async (type: RULE_TYPE) => {
     throw new ApiError(StatusCodes.NOT_FOUND, `${type} not found`);
   }
 
-  return result;
+  return { message: `${type} deleted successfully`, result };
 };
 
 export const RuleServices = {

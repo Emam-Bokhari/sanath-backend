@@ -13,7 +13,7 @@ router
     isAgent,
     checkSubscription(),
     validateRequest(AgentFeedValidation.createAgentFeedValidationSchema),
-    AgentFeedControllers.createOrUpdateAgentFeed
+    AgentFeedControllers.createOrUpdateAgentFeed,
   )
   .get(isAgent, checkSubscription(), AgentFeedControllers.getAgentFeed);
 

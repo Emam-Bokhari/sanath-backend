@@ -35,4 +35,7 @@ const agentFeedSchema = new Schema<TAgentFeed, TAgentFeedModel>(
 
 agentFeedSchema.plugin(softDeletePlugin);
 
-export const AgentFeed = model<TAgentFeed, TAgentFeedModel>("AgentFeed", agentFeedSchema);
+export const AgentFeed = model<TAgentFeed, TAgentFeedModel>(
+  "AgentFeed",
+  agentFeedSchema,
+);

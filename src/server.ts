@@ -25,10 +25,18 @@ const shutdown = async () => {
 
   try {
     // close workers
-    await Promise.all([emailWorker.close(), notificationWorker.close(), feedSyncWorker.close()]);
+    await Promise.all([
+      emailWorker.close(),
+      notificationWorker.close(),
+      feedSyncWorker.close(),
+    ]);
 
     // close queues
-    await Promise.all([emailQueue.close(), notificationQueue.close(), feedSyncQueue.close()]);
+    await Promise.all([
+      emailQueue.close(),
+      notificationQueue.close(),
+      feedSyncQueue.close(),
+    ]);
 
     // close HTTP server
     if (server) {
@@ -85,13 +93,13 @@ async function main() {
     // Start hourly feed sync with BullMQ
     if (config.start_cron === "true") {
       logger.info(colors.cyan("🕒 Starting hourly feed sync with BullMQ"));
-      
+
       // Remove existing job schedulers to avoid duplicates
       const existingSchedulers = await feedSyncQueue.getJobSchedulers();
       for (const scheduler of existingSchedulers) {
         await feedSyncQueue.removeJobScheduler(scheduler.key);
       }
-      
+
       // Add hourly job scheduler (runs at minute 0 of every hour)
       await feedSyncQueue.add(
         "feedSync",

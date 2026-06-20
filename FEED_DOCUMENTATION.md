@@ -3,10 +3,13 @@
 This document describes how to format your XML feed for importing properties into our platform.
 
 ## Demo Feed
+
 You can test using our demo feed available at:
+
 ```
 http://your-server-url/demo-feed.xml
 ```
+
 (Replace `your-server-url` with your actual server address, e.g., `http://localhost:3000`)
 
 ## Feed Format
@@ -79,49 +82,53 @@ Your XML feed should follow this structure:
 
 ### Required Fields
 
-| Field | Type | Description |
-|-------|------|-------------|
-| `externalId` | String | Unique ID for the property (must be unique per feed) |
-| `title` | String | Property title |
-| `price` | Number | Asking price |
-| `listingType` | String | Either `SALE` or `RENT` |
+| Field         | Type   | Description                                          |
+| ------------- | ------ | ---------------------------------------------------- |
+| `externalId`  | String | Unique ID for the property (must be unique per feed) |
+| `title`       | String | Property title                                       |
+| `price`       | Number | Asking price                                         |
+| `listingType` | String | Either `SALE` or `RENT`                              |
 
 ### Optional Fields
 
 #### Location
-| Field | Type | Description |
-|-------|------|-------------|
-| `country` | String | Country name |
-| `city` | String | City name |
-| `postalCode` | String | Postal/ZIP code |
-| `address` | String | Full property address |
-| `lat` | Number | Latitude |
-| `lng` | Number | Longitude |
+
+| Field        | Type   | Description           |
+| ------------ | ------ | --------------------- |
+| `country`    | String | Country name          |
+| `city`       | String | City name             |
+| `postalCode` | String | Postal/ZIP code       |
+| `address`    | String | Full property address |
+| `lat`        | Number | Latitude              |
+| `lng`        | Number | Longitude             |
 
 #### Property Details
-| Field | Type | Description |
-|-------|------|-------------|
-| `bedrooms` | Number | Number of bedrooms |
-| `bathrooms` | Number | Number of bathrooms |
-| `squareFoot` | Number | Property area in square feet |
-| `propertyType` | String | Property type (e.g., APARTMENT, VILLA, STUDIO) |
-| `tenure` | String | Tenure type (e.g., FREEHOLD, LEASEHOLD) |
-| `councilTaxBand` | String | Council tax band |
+
+| Field             | Type   | Description                                                  |
+| ----------------- | ------ | ------------------------------------------------------------ |
+| `bedrooms`        | Number | Number of bedrooms                                           |
+| `bathrooms`       | Number | Number of bathrooms                                          |
+| `squareFoot`      | Number | Property area in square feet                                 |
+| `propertyType`    | String | Property type (e.g., APARTMENT, VILLA, STUDIO)               |
+| `tenure`          | String | Tenure type (e.g., FREEHOLD, LEASEHOLD)                      |
+| `councilTaxBand`  | String | Council tax band                                             |
 | `epcEnergyRating` | Object | EPC energy rating with `label` (String) and `score` (Number) |
 
 #### Media
-| Field | Type | Description |
-|-------|------|-------------|
-| `photos` | Array | List of photo URLs |
-| `videos` | Array | List of video URLs |
-| `floorPlans` | Array | List of floor plan image URLs |
-| `brochure` | String | URL to property brochure |
-| `threeSixtyTour` | String | URL to 360° virtual tour |
+
+| Field            | Type   | Description                   |
+| ---------------- | ------ | ----------------------------- |
+| `photos`         | Array  | List of photo URLs            |
+| `videos`         | Array  | List of video URLs            |
+| `floorPlans`     | Array  | List of floor plan image URLs |
+| `brochure`       | String | URL to property brochure      |
+| `threeSixtyTour` | String | URL to 360° virtual tour      |
 
 #### Other
-| Field | Type | Description |
-|-------|------|-------------|
-| `features` | Array | List of property features |
+
+| Field         | Type   | Description                   |
+| ------------- | ------ | ----------------------------- |
+| `features`    | Array  | List of property features     |
 | `description` | String | Detailed property description |
 
 ## How to Use
@@ -139,9 +146,11 @@ Your XML feed should follow this structure:
 4. **Sync your feed** (automatically hourly or manually via API)
 
 ## Testing
+
 Use our demo feed to test: `http://your-server-url/demo-feed.xml`
 
 ## Important Notes
+
 - All properties must have a unique `externalId`
 - Deleted properties in your feed will be soft-deleted in our system
 - Updates to existing properties will be reflected in our system
