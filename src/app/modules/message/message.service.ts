@@ -16,6 +16,10 @@ const detectMessageType = (
   return "DOC";
 };
 
+/*
+  1. 
+*/
+
 // enhanced version with better error handling and logging
 const sendMessageToDB = async (payload: IMessage): Promise<IMessage> => {
   // check if chat exists

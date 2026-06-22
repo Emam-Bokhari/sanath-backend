@@ -55,6 +55,11 @@ const getAdminStatsFromDB = async () => {
     totalInactiveAdmins,
   ] = await Promise.all([
     User.countDocuments({ role: USER_ROLES.ADMIN, verified: true }),
+
+    /*
+    
+    */
+
     User.countDocuments({ role: USER_ROLES.SUPER_ADMIN, verified: true }),
     User.countDocuments({
       role: USER_ROLES.ADMIN,

@@ -10,9 +10,6 @@ const createCheckoutSession = async (userId: string, planId: string) => {
   if (!user) {
     throw new ApiError(StatusCodes.NOT_FOUND, "User not found");
   }
-
-  console.log(user, "USER");
-
   const plan = await Plan.findOne({ _id: planId });
   if (!plan) {
     throw new ApiError(StatusCodes.NOT_FOUND, "Plan not found");

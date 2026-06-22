@@ -21,7 +21,7 @@ import { FcmTokenService } from "../fcmToken/fcmService";
 import { emailQueue } from "../../../queues";
 
 const loginUserFromDB = async (payload: ILoginData) => {
-  const { email, password, fcmToken, deviceId, deviceType } = payload;
+  const { email, password, role, fcmToken, deviceId, deviceType } = payload;
 
   const isExistUser = await User.findOne({ email }).select("+password");
   if (!isExistUser) {
@@ -54,6 +54,11 @@ const loginUserFromDB = async (payload: ILoginData) => {
     throw new ApiError(StatusCodes.BAD_REQUEST, "Password is incorrect!");
   }
 
+  // check user role
+  if (role && isExistUser.role !== role) {
+    throw new ApiError(StatusCodes.BAD_REQUEST, "Role doesn't match!");
+  }
+
   // Save device token if provided
   if (fcmToken && deviceId && deviceType) {
     await FcmTokenService.saveDeviceToken(isExistUser._id, {
@@ -84,6 +89,7 @@ const loginUserFromDB = async (payload: ILoginData) => {
 // ========================== forget password ===========================
 const forgetPasswordToDB = async (email: string) => {
   const isExistUser = await User.isExistUserByEmail(email);
+
   if (!isExistUser) {
     throw new ApiError(StatusCodes.BAD_REQUEST, "User doesn't exist!");
   }

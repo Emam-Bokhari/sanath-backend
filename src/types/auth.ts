@@ -7,6 +7,7 @@ export type ILoginData = {
   email?: string;
   phone?: string;
   password?: string;
+  role?: string;
   fcmToken?: string;
   deviceId?: string;
   deviceType?: "ios" | "android" | "web";

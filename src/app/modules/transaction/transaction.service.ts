@@ -77,6 +77,10 @@ const getMyTransactionsFromDB = async (
     .paginate()
     .fields();
 
+  /*
+  
+  */
+
   const result = await transactionQuery.modelQuery;
   const meta = await transactionQuery.countTotal();
 
