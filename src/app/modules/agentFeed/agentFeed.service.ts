@@ -16,19 +16,27 @@ const createAgentFeedServiceToDB = async (
   agentId: string,
 ) => {
   // Check if there's an existing feed
-  const existingFeed = await AgentFeed.findOne({ agentId: new Types.ObjectId(agentId) });
-  
+  const existingFeed = await AgentFeed.findOne({
+    agentId: new Types.ObjectId(agentId),
+  });
+
   // Determine final values
   const finalFeedType = payload.feedType ?? existingFeed?.feedType;
   const finalXmlFeedUrl = payload.xmlFeedUrl ?? existingFeed?.xmlFeedUrl;
   const finalBlmFeedUrl = payload.blmFeedUrl ?? existingFeed?.blmFeedUrl;
-  
+
   // Validate only if we have a feedType to work with
   if (finalFeedType) {
-    if ((finalFeedType === FEED_TYPE.XML || finalFeedType === FEED_TYPE.BOTH) && !finalXmlFeedUrl) {
+    if (
+      (finalFeedType === FEED_TYPE.XML || finalFeedType === FEED_TYPE.BOTH) &&
+      !finalXmlFeedUrl
+    ) {
       throw new ApiError(StatusCodes.BAD_REQUEST, "xmlFeedUrl is required");
     }
-    if ((finalFeedType === FEED_TYPE.BLM || finalFeedType === FEED_TYPE.BOTH) && !finalBlmFeedUrl) {
+    if (
+      (finalFeedType === FEED_TYPE.BLM || finalFeedType === FEED_TYPE.BOTH) &&
+      !finalBlmFeedUrl
+    ) {
       throw new ApiError(StatusCodes.BAD_REQUEST, "blmFeedUrl is required");
     }
   }

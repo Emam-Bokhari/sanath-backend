@@ -3,7 +3,6 @@ import { AgentFeedControllers } from "./agentFeed.controller";
 import { isAgent } from "../../../helpers/authHelper";
 import checkSubscription from "../../middlewares/checkSubscription";
 
-
 const router = express.Router();
 
 router
@@ -15,10 +14,10 @@ router
   )
   .get(isAgent, checkSubscription(), AgentFeedControllers.getAgentFeed);
 
-router
-  .route("/sync")
-  .post(isAgent, 
-    // checkSubscription(),
-     AgentFeedControllers.triggerFeedSync);
+router.route("/sync").post(
+  isAgent,
+  // checkSubscription(),
+  AgentFeedControllers.triggerFeedSync,
+);
 
 export const AgentFeedRoutes = router;

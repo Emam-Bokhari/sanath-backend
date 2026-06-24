@@ -221,7 +221,10 @@ export const importXMLFeed = async (
             };
 
             for (const key of CONTENT_FIELDS) {
-              updateDoc[key] = (baseListingData as any)[key] !== undefined ? (baseListingData as any)[key] : null;
+              updateDoc[key] =
+                (baseListingData as any)[key] !== undefined
+                  ? (baseListingData as any)[key]
+                  : null;
             }
 
             await Listing.updateOne(
@@ -238,7 +241,9 @@ export const importXMLFeed = async (
       }
     } catch (error: any) {
       if (error.code === 11000) {
-        console.log(`Duplicate key error (11000) caught for XML externalId ${getSingleValue(prop.externalId)}. Skipping.`);
+        console.log(
+          `Duplicate key error (11000) caught for XML externalId ${getSingleValue(prop.externalId)}. Skipping.`,
+        );
         unchanged++;
       } else {
         failed++;

@@ -38,16 +38,23 @@ export function makeSnapshot(data: any) {
     } else if (key === "location") {
       normalized[key] = {
         type: val.type || "Point",
-        coordinates: Array.isArray(val.coordinates) ? val.coordinates.map(Number) : null,
+        coordinates: Array.isArray(val.coordinates)
+          ? val.coordinates.map(Number)
+          : null,
         address: val.address || null,
       };
     } else if (key === "epcEnergyRating") {
       normalized[key] = {
         label: val.label || null,
-        score: val.score !== undefined && val.score !== null ? Number(val.score) : null,
+        score:
+          val.score !== undefined && val.score !== null
+            ? Number(val.score)
+            : null,
       };
     } else if (Array.isArray(val)) {
-      normalized[key] = val.map((item: any) => (item === undefined || item === null ? null : item));
+      normalized[key] = val.map((item: any) =>
+        item === undefined || item === null ? null : item,
+      );
     } else {
       normalized[key] = val;
     }
@@ -107,7 +114,9 @@ export const importBLMFeed = async (
       const lng = row["LNG"];
       const bedrooms = Number(row["BEDROOMS"]) || 0;
       const bathrooms = Number(row["BATHROOMS"]) || 0;
-      const squareFoot = row["SQUAREFOOT"] ? Number(row["SQUAREFOOT"]) : undefined;
+      const squareFoot = row["SQUAREFOOT"]
+        ? Number(row["SQUAREFOOT"])
+        : undefined;
       const propertyType = row["PROPERTYTYPE"] || "";
       const tenure = row["TENURE"] || "";
       const councilTaxBand = row["COUNCILTAXBAND"] || "";
@@ -122,16 +131,22 @@ export const importBLMFeed = async (
       const features = splitMultiValueField(row["FEATURES"]);
       const description = row["DESCRIPTION"] || "";
 
-      const location = (lat && lng) ? {
-        type: "Point" as const,
-        coordinates: [Number(lng), Number(lat)] as [number, number],
-        address: address,
-      } : undefined;
+      const location =
+        lat && lng
+          ? {
+              type: "Point" as const,
+              coordinates: [Number(lng), Number(lat)] as [number, number],
+              address: address,
+            }
+          : undefined;
 
-      const epcEnergyRating = (epcLabel || epcScore) ? {
-        label: epcLabel,
-        score: Number(epcScore) || 0,
-      } : undefined;
+      const epcEnergyRating =
+        epcLabel || epcScore
+          ? {
+              label: epcLabel,
+              score: Number(epcScore) || 0,
+            }
+          : undefined;
 
       const baseListingData = {
         title,
@@ -205,7 +220,10 @@ export const importBLMFeed = async (
             };
 
             for (const key of CONTENT_FIELDS) {
-              updateDoc[key] = (baseListingData as any)[key] !== undefined ? (baseListingData as any)[key] : null;
+              updateDoc[key] =
+                (baseListingData as any)[key] !== undefined
+                  ? (baseListingData as any)[key]
+                  : null;
             }
 
             await Listing.updateOne(
@@ -222,11 +240,16 @@ export const importBLMFeed = async (
       }
     } catch (error: any) {
       if (error.code === 11000) {
-        console.log(`Duplicate key error (11000) caught for BLM externalId ${externalId}. Skipping.`);
+        console.log(
+          `Duplicate key error (11000) caught for BLM externalId ${externalId}. Skipping.`,
+        );
         unchanged++;
       } else {
         failed++;
-        console.error(`❌ Failed to process BLM property ${externalId}:`, error);
+        console.error(
+          `❌ Failed to process BLM property ${externalId}:`,
+          error,
+        );
       }
     }
   }

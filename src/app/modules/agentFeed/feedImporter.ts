@@ -8,7 +8,9 @@ export const importSingleFeed = async (
   feed: TAgentFeed & { _id: Types.ObjectId },
 ) => {
   const feedId = feed._id.toString();
-  console.log(`🔄 Unified dispatcher running for feed: ${feedId} (Type: ${feed.feedType})`);
+  console.log(
+    `🔄 Unified dispatcher running for feed: ${feedId} (Type: ${feed.feedType})`,
+  );
 
   const now = new Date();
   let xmlError: string | undefined = undefined;
@@ -18,7 +20,10 @@ export const importSingleFeed = async (
   let blmResult = null;
 
   // Run XML importer if applicable
-  if ((feed.feedType === "XML" || feed.feedType === "BOTH") && feed.xmlFeedUrl) {
+  if (
+    (feed.feedType === "XML" || feed.feedType === "BOTH") &&
+    feed.xmlFeedUrl
+  ) {
     try {
       xmlResult = await importXMLFeed(feed);
     } catch (error: any) {
@@ -28,7 +33,10 @@ export const importSingleFeed = async (
   }
 
   // Run BLM importer if applicable
-  if ((feed.feedType === "BLM" || feed.feedType === "BOTH") && feed.blmFeedUrl) {
+  if (
+    (feed.feedType === "BLM" || feed.feedType === "BOTH") &&
+    feed.blmFeedUrl
+  ) {
     try {
       blmResult = await importBLMFeed(feed);
     } catch (error: any) {
@@ -57,12 +65,16 @@ export const importSingleFeed = async (
   await AgentFeed.findByIdAndUpdate(feed._id, updateData);
 
   // If both failed and both were scheduled to run, throw an error so the queue job is marked failed
-  const expectedXml = (feed.feedType === "XML" || feed.feedType === "BOTH") && feed.xmlFeedUrl;
-  const expectedBlm = (feed.feedType === "BLM" || feed.feedType === "BOTH") && feed.blmFeedUrl;
-  
+  const expectedXml =
+    (feed.feedType === "XML" || feed.feedType === "BOTH") && feed.xmlFeedUrl;
+  const expectedBlm =
+    (feed.feedType === "BLM" || feed.feedType === "BOTH") && feed.blmFeedUrl;
+
   if (expectedXml && expectedBlm) {
     if (xmlError && blmError) {
-      throw new Error(`Sync failed for both formats: XML: ${xmlError} | BLM: ${blmError}`);
+      throw new Error(
+        `Sync failed for both formats: XML: ${xmlError} | BLM: ${blmError}`,
+      );
     }
   } else if (expectedXml && xmlError) {
     throw new Error(`XML Sync failed: ${xmlError}`);
