@@ -3,7 +3,7 @@ import { Worker } from "bullmq";
 import {
   importAllFeeds,
   importSingleFeed,
-} from "../../app/modules/agentFeed/xmlFeedImporter";
+} from "../../app/modules/agentFeed/feedImporter";
 import { TAgentFeed } from "../../app/modules/agentFeed/agentFeed.interface";
 import { Types } from "mongoose";
 

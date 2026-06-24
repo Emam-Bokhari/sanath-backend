@@ -171,6 +171,10 @@ const listingSchema = new Schema<TListing, TListingModel>(
       type: Schema.Types.ObjectId,
       ref: "AgentFeed",
     },
+    feedSourceType: {
+      type: String,
+      enum: ["XML", "BLM"],
+    },
     externalId: {
       type: String,
     },
@@ -192,6 +196,17 @@ const listingSchema = new Schema<TListing, TListingModel>(
 );
 
 listingSchema.index({ location: "2dsphere" });
+
+listingSchema.index(
+  { feedId: 1, externalId: 1, feedSourceType: 1 },
+  {
+    unique: true,
+    partialFilterExpression: {
+      feedId: { $exists: true },
+      externalId: { $exists: true },
+    },
+  },
+);
 
 listingSchema.plugin(softDeletePlugin);
 

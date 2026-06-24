@@ -1,6 +1,7 @@
 import { model, Schema } from "mongoose";
 import { TAgentFeed, TAgentFeedModel } from "./agentFeed.interface";
 import { softDeletePlugin } from "../../../DB/plugins/softDeletePlugin";
+import { FEED_TYPE } from "./agentFeed.constant";
 
 const agentFeedSchema = new Schema<TAgentFeed, TAgentFeedModel>(
   {
@@ -9,9 +10,16 @@ const agentFeedSchema = new Schema<TAgentFeed, TAgentFeedModel>(
       ref: "User",
       required: true,
     },
-    feedUrl: {
+    feedType: {
       type: String,
+      enum: Object.values(FEED_TYPE),
       required: true,
+    },
+    xmlFeedUrl: {
+      type: String,
+    },
+    blmFeedUrl: {
+      type: String,
     },
     name: {
       type: String,
@@ -24,6 +32,12 @@ const agentFeedSchema = new Schema<TAgentFeed, TAgentFeedModel>(
       type: Date,
     },
     lastSyncError: {
+      type: String,
+    },
+    lastXmlSyncError: {
+      type: String,
+    },
+    lastBlmSyncError: {
       type: String,
     },
   },

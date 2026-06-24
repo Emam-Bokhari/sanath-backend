@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>XML Feed Documentation</title>
+  <title>Feed Documentation (XML & BLM)</title>
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;600&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
   <style>
     :root {
@@ -286,20 +286,24 @@
 
   <div class="container">
     <header>
-      <h1>XML Feed Documentation</h1>
-      <p>This document describes how to format your XML feed for importing properties into our platform.</p>
+      <h1>Property Feed Documentation</h1>
+      <p>This document describes how to format XML and BLM feeds for importing properties into our platform.</p>
       <div class="quick-links">
-        <a href="#demo-feed" class="quick-link">Demo Feed</a>
-        <a href="#feed-format" class="quick-link">Feed Format</a>
+        <a href="#demo-feed" class="quick-link">Demo Feeds</a>
+        <a href="#feed-format" class="quick-link">XML Format</a>
+        <a href="#blm-format" class="quick-link">BLM Format</a>
         <a href="#field-descriptions" class="quick-link">Fields</a>
         <a href="#how-to-use" class="quick-link">How to Use</a>
       </div>
     </header>
 
     <div class="content-section" id="demo-feed">
-      <h2>Demo Feed</h2>
-      <p>You can test using our demo feed available at:</p>
-      <div class="demo-url">http://your-server-url/demo-feed.xml</div>
+      <h2>Demo Feeds</h2>
+      <p>You can test using our demo feeds available at:</p>
+      <div style="display: flex; flex-direction: column; gap: 0.5rem; max-width: fit-content; margin-bottom: 0.5rem;">
+        <div class="demo-url">http://your-server-url/demo-feed.xml</div>
+        <div class="demo-url">http://your-server-url/demo-feed.blm</div>
+      </div>
       <p style="margin-top: 0.75rem;"><small>(Replace <code>your-server-url</code> with your actual server address, e.g., <code>http://localhost:3000</code>)</small></p>
     </div>
 
@@ -365,6 +369,14 @@
     &lt;description&gt;Detailed property description here...&lt;/description&gt;
   &lt;/property&gt;
 &lt;/properties&gt;</code></pre>
+    </div>
+
+    <div class="content-section" id="blm-format">
+      <h2>BLM Feed Format</h2>
+      <p>Our custom BLM format uses the caret (<code>^</code>) as the field separator and the tilde (<code>~</code>) as the row separator. The first row contains the header names (case-insensitive). Multiple values within a single field (like photos, videos, floor plans, and features) are pipe-delimited (<code>|</code>).</p>
+      <p>Structure:</p>
+      <pre><code>externalId^title^price^listingType^country^city^postalCode^address^lat^lng^bedrooms^bathrooms^squareFoot^propertyType^tenure^councilTaxBand^epcLabel^epcScore^photos^videos^floorPlans^brochure^threeSixtyTour^features^description~
+prop-001^3 Bed Apartment in Dhaka^250000^SALE^Bangladesh^Dhaka^1212^Full Address Here^23.8103^90.4125^3^2^1500^APARTMENT^FREEHOLD^B^B^85^https://example.com/p1.jpg|https://example.com/p2.jpg^https://example.com/v1.mp4^https://example.com/fp1.jpg^https://example.com/brochure.pdf^https://example.com/tour^Swimming Pool|Garden^Detailed description here~</code></pre>
     </div>
 
     <div class="content-section" id="field-descriptions">
@@ -580,14 +592,16 @@
     <div class="content-section" id="how-to-use">
       <h2>How to Use</h2>
       <ol>
-        <li><strong>Create your XML feed</strong> following the format above</li>
-        <li><strong>Host your XML feed</strong> on a publicly accessible URL</li>
+        <li><strong>Create your feed</strong> (XML or BLM) following the format above</li>
+        <li><strong>Host your feed</strong> on a publicly accessible URL</li>
         <li>
           <strong>Add the feed</strong> via our agent dashboard or API:
           <pre><code>POST /api/v1/agent-feeds
 {
-  "feedUrl": "https://your-site.com/your-feed.xml",
-  "name": "My Property Feed"
+  "feedType": "BOTH",
+  "xmlFeedUrl": "https://your-site.com/your-feed.xml",
+  "blmFeedUrl": "https://your-site.com/your-feed.blm",
+  "name": "My Property Feeds"
 }</code></pre>
         </li>
         <li><strong>Sync your feed</strong> (automatically hourly or manually via API)</li>
@@ -596,8 +610,11 @@
 
     <div class="content-section">
       <h2>Testing</h2>
-      <p>Use our demo feed to test:</p>
-      <div class="demo-url">http://your-server-url/demo-feed.xml</div>
+      <p>Use our demo feeds to test:</p>
+      <div style="display: flex; flex-direction: column; gap: 0.5rem; max-width: fit-content;">
+        <div class="demo-url">http://your-server-url/demo-feed.xml</div>
+        <div class="demo-url">http://your-server-url/demo-feed.blm</div>
+      </div>
     </div>
 
     <div class="content-section">

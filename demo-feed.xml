@@ -193,6 +193,53 @@
     </features>
     <description>Modern office space available for rent in the commercial hub of Motijheel.</description>
   </property>
+  <property>
+    <externalId>property-004</externalId>
+    <title>test</title>
+    <price>120</price>
+    <listingType>SALE</listingType>
+    <location>
+      <country>Bangladesh</country>
+      <city>Dhaka</city>
+      <postalCode>1000</postalCode>
+      <address>Motijheel Commercial Area</address>
+      <lat>23.7338</lat>
+      <lng>90.4175</lng>
+    </location>
+    <details>
+      <bedrooms>0</bedrooms>
+      <bathrooms>2</bathrooms>
+      <squareFoot>2500</squareFoot>
+      <propertyType>APARTMENT</propertyType>
+      <tenure>LEASEHOLD</tenure>
+      <councilTaxBand>C</councilTaxBand>
+      <epcEnergyRating>
+        <label>C</label>
+        <score>72</score>
+      </epcEnergyRating>
+    </details>
+    <media>
+      <photos>
+        <photo>https://images.unsplash.com/photo-1497366754035-f200968a6e72?w=600</photo>
+        <photo>https://images.unsplash.com/photo-1497366412874-3415097a27e7?w=600</photo>
+      </photos>
+      <videos>
+        <video>https://example.com/office-tour.mp4</video>
+      </videos>
+      <floorPlans>
+        <floorPlan>https://example.com/office-floorplan.jpg</floorPlan>
+      </floorPlans>
+      <brochure>https://example.com/office-brochure.pdf</brochure>
+      <threeSixtyTour>https://example.com/office-360-tour</threeSixtyTour>
+    </media>
+    <features>
+      <feature>High-Speed Internet</feature>
+      <feature>Conference Room</feature>
+      <feature>24/7 Access</feature>
+    </features>
+    <description>Modern office space available for rent in the commercial hub of Motijheel.</description>
+  </property>
+
 </properties>
 
 

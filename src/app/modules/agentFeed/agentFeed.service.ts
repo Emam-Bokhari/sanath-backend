@@ -3,23 +3,54 @@ import ApiError from "../../../errors/ApiErrors";
 import { AgentFeed } from "./agentFeed.model";
 import { Types } from "mongoose";
 import { feedSyncQueue } from "../../../queues";
+import { FEED_TYPE } from "./agentFeed.constant";
 
 const createAgentFeedServiceToDB = async (
-  payload: { feedUrl: string; name?: string },
+  payload: {
+    feedType?: FEED_TYPE;
+    xmlFeedUrl?: string | null;
+    blmFeedUrl?: string | null;
+    name?: string;
+    isActive?: boolean;
+  },
   agentId: string,
 ) => {
-  // Find existing feed or create new one
+  // Check if there's an existing feed
+  const existingFeed = await AgentFeed.findOne({ agentId: new Types.ObjectId(agentId) });
+  
+  // Determine final values
+  const finalFeedType = payload.feedType ?? existingFeed?.feedType;
+  const finalXmlFeedUrl = payload.xmlFeedUrl ?? existingFeed?.xmlFeedUrl;
+  const finalBlmFeedUrl = payload.blmFeedUrl ?? existingFeed?.blmFeedUrl;
+  
+  // Validate only if we have a feedType to work with
+  if (finalFeedType) {
+    if ((finalFeedType === FEED_TYPE.XML || finalFeedType === FEED_TYPE.BOTH) && !finalXmlFeedUrl) {
+      throw new ApiError(StatusCodes.BAD_REQUEST, "xmlFeedUrl is required");
+    }
+    if ((finalFeedType === FEED_TYPE.BLM || finalFeedType === FEED_TYPE.BOTH) && !finalBlmFeedUrl) {
+      throw new ApiError(StatusCodes.BAD_REQUEST, "blmFeedUrl is required");
+    }
+  }
+
+  // Prepare update data
+  const updateData: any = { ...payload };
+  if (!existingFeed) {
+    updateData.isActive = true;
+  }
+
+  // Find existing feed or create new one, unsetting legacy feedUrl
   const feed = await AgentFeed.findOneAndUpdate(
     { agentId: new Types.ObjectId(agentId) },
-    { ...payload, isActive: true },
-    { new: true, upsert: true },
+    { $set: updateData, $unset: { feedUrl: "" } },
+    { new: true, upsert: !existingFeed },
   );
 
   // Add initial feed sync to queue
   try {
     await feedSyncQueue.add("singleFeedSync", {
-      feedId: feed._id.toString(),
-      feed: feed,
+      feedId: feed!._id.toString(),
+      feed: feed!,
     });
   } catch (error) {
     console.error("Error adding feed sync to queue:", error);

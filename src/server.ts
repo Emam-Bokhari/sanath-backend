@@ -106,7 +106,7 @@ async function main() {
         {},
         {
           repeat: {
-            pattern: "* * * * *",
+            pattern: "0 * * * *",
           },
         },
       );

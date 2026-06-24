@@ -66,6 +66,7 @@ export type TListing = {
 
   // Feed specific fields
   feedId?: Types.ObjectId;
+  feedSourceType?: "XML" | "BLM";
   externalId?: string;
   source?: "manual" | "csv" | "feed";
   sourceUrl?: string;

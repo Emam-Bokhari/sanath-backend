@@ -56,6 +56,11 @@ app.get("/demo-feed.xml", (req: Request, res: Response) => {
   res.sendFile(xmlPath);
 });
 
+app.get("/demo-feed.blm", (req: Request, res: Response) => {
+  res.setHeader("Content-Type", "text/plain");
+  res.sendFile(path.join(process.cwd(), "demo-feed.blm"));
+});
+
 // Feed Documentation Endpoint
 app.get("/feed-documentation", (req: Request, res: Response) => {
   res.render("feed-documentation");
