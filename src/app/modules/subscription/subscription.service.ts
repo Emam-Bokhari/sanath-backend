@@ -76,12 +76,28 @@ const cancelSubscription = async (userId: string) => {
 };
 
 const getMySubscription = async (userId: string) => {
-  const result = await Subscription.findOne({
+  let result = await Subscription.findOne({
     userId,
     status: { $in: ["active", "trialing"] },
   })
     .populate("planId")
     .sort({ createdAt: -1 });
+
+  if (result && result.currentPeriodEnd && new Date() > new Date(result.currentPeriodEnd)) {
+    await Subscription.findByIdAndUpdate(result._id, { status: "deactivated" });
+    const user = await User.findById(userId);
+    if (user) {
+      await User.findByIdAndUpdate(userId, {
+        hasAccess: false,
+        isSubscribed: false,
+        isAgentVerified: false,
+        maxListings: 0,
+        remainingListings: 0,
+      });
+    }
+    result = null;
+  }
+
   return result;
 };
 
