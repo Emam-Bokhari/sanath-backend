@@ -14,6 +14,7 @@ export enum PROPERTY_TYPE {
   FLAT = "FLAT",
   PARK_HOME = "PARK_HOME",
   VILLA = "VILLA",
+  STUDIO = "STUDIO",
 }
 
 export enum TENURE {
