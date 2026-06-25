@@ -11,6 +11,9 @@ import {
   parseCSVFile,
   resolveLocalMediaPath,
   generateShareLink,
+  canAgentAddListings,
+  decrementAgentRemainingListings,
+  incrementAgentRemainingListings,
 } from "./listing.utils";
 import { FEATURES, LISTING_STATUS } from "./listing.constant";
 import { FilterQuery, Types } from "mongoose";
@@ -58,6 +61,15 @@ const bulkImportListingsServiceFromZIP = async (
     const csvFilePath = path.join(extractPath, csvFileName);
     const rawRows = await parseCSVFile<any>(csvFilePath);
     const totalRows = rawRows.length;
+
+    // Check listing limits BEFORE processing
+    const limitCheck = await canAgentAddListings(adminId, totalRows);
+    if (!limitCheck.allowed) {
+      throw new ApiError(
+        StatusCodes.FORBIDDEN,
+        `You cannot import ${totalRows} listings. Your plan allows ${limitCheck.max} listings total, and you have ${limitCheck.remaining} available.`,
+      );
+    }
 
     const successListings: TListing[] = [];
     const failedRows: { row: number; error: string }[] = [];
@@ -152,7 +164,7 @@ const bulkImportListingsServiceFromZIP = async (
             (validatedData.features
               ?.split("|")
               .map((f) => f.trim().toUpperCase()) as FEATURES[]) || [],
-          status: LISTING_STATUS.PUBLISHED,
+          status: LISTING_STATUS.PENDING_APPROVAL,
           location:
             validatedData.lat && validatedData.lng
               ? {
@@ -207,6 +219,11 @@ const bulkImportListingsServiceFromZIP = async (
           });
         }
       }
+    }
+
+    // Update remaining listings count
+    if (successCount > 0) {
+      await decrementAgentRemainingListings(adminId, successCount);
     }
 
     return {
@@ -493,6 +510,9 @@ const deleteListingServiceByIdFromDB = async (
     throw new Error("Listing not found or unauthorized");
   }
 
+  // Only increment if listing wasn't already deleted
+  const wasDeletedBefore = listing.isDeleted;
+
   // soft delete
   const result = await Listing.findOneAndUpdate(
     {
@@ -506,6 +526,11 @@ const deleteListingServiceByIdFromDB = async (
       new: true,
     },
   );
+
+  // Increment remaining listings if it wasn't already deleted
+  if (!wasDeletedBefore) {
+    await incrementAgentRemainingListings(agentId);
+  }
 
   return result;
 };

@@ -148,6 +148,53 @@
   </property>
 
   <property>
+    <externalId>property-101</externalId>
+    <title> Gulshan</title>
+    <price>25000000</price>
+    <listingType>SALE</listingType>
+    <location>
+      <country>Bangladesh</country>
+      <city>Dhaka</city>
+      <postalCode>1212</postalCode>
+      <address>Road 45, Gulshan 2</address>
+      <lat>23.7925</lat>
+      <lng>90.4078</lng>
+    </location>
+    <details>
+      <bedrooms>5</bedrooms>
+      <bathrooms>6</bathrooms>
+      <squareFoot>5200</squareFoot>
+      <propertyType>VILLA</propertyType>
+      <tenure>FREEHOLD</tenure>
+      <councilTaxBand>A</councilTaxBand>
+      <epcEnergyRating>
+        <label>A</label>
+        <score>95</score>
+      </epcEnergyRating>
+    </details>
+    <media>
+      <photos>
+        <photo>https://images.unsplash.com/photo-1613977257363-707ba9348227?w=600</photo>
+        <photo>https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?w=600</photo>
+      </photos>
+      <videos>
+        <video>https://example.com/villa-tour.mp4</video>
+      </videos>
+      <floorPlans>
+        <floorPlan>https://example.com/villa-floorplan.jpg</floorPlan>
+      </floorPlans>
+      <brochure>https://example.com/villa-brochure.pdf</brochure>
+      <threeSixtyTour>https://example.com/villa-360-tour</threeSixtyTour>
+    </media>
+    <features>
+      <feature>Private Garden</feature>
+      <feature>Swimming Pool</feature>
+      <feature>Smart Home</feature>
+    </features>
+    <description>Premium luxury villa located in Gulshan with private pool and smart home facilities.</description>
+  </property>
+
+  <property>
     <externalId>property-003</externalId>
     <title>Commercial Office Space in Motijheel</title>
     <price>120000</price>

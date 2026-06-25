@@ -5,6 +5,10 @@ import { Listing } from "../listing/listing.model";
 import { TAgentFeed } from "./agentFeed.interface";
 import { LISTING_STATUS } from "../listing/listing.constant";
 import { makeSnapshot } from "./blmFeedImporter.service";
+import {
+  canAgentAddListings,
+  decrementAgentRemainingListings,
+} from "../listing/listing.utils";
 
 // Helper to get first value if it's an array
 const getSingleValue = (value: any): any => {
@@ -75,17 +79,29 @@ export const importXMLFeed = async (
   let unchanged = 0;
   let duplicateInFeed = 0;
   let failed = 0;
+  let skippedDueToLimit = 0;
+
+  // Get initial limit info
+  const initialLimitCheck = await canAgentAddListings(feed.agentId, 1);
+  let remainingSlots = initialLimitCheck.remaining;
+  const maxListings = initialLimitCheck.max;
+
+
+  // Add more detailed logging
+  console.log(`📊 Listing limits for agent ${feed.agentId}: max=${maxListings}, remaining=${remainingSlots}`);
 
   for (const prop of propertyArray) {
     try {
       const externalId = getSingleValue(prop.externalId);
 
       if (!externalId) {
+        console.log(`❌ Skipping row: missing externalId`);
         failed++;
         continue;
       }
 
       if (seenExternalIds.has(externalId)) {
+        console.log(`⚠️  Duplicate externalId in feed: ${externalId}`);
         duplicateInFeed++;
         continue;
       }
@@ -182,72 +198,86 @@ export const importXMLFeed = async (
       const generatedId = new Types.ObjectId();
       const shareId = generatedId.toString();
 
-      // Atomic, race-safe upsert using updateOne + $setOnInsert
-      const upsertResult = await Listing.updateOne(
-        { feedId: feed._id, externalId, feedSourceType: "XML" },
-        {
-          $setOnInsert: {
-            _id: generatedId,
-            shareId,
+      // First check if listing already exists
+      const existingListing = await Listing.findOne({
+        feedId: feed._id,
+        externalId,
+        feedSourceType: "XML",
+      });
+
+      if (existingListing) {
+        // Listing exists - check if it's identical or needs update
+        const snapExisting = makeSnapshot(existingListing.toObject());
+        const snapIncoming = makeSnapshot(baseListingData);
+
+        if (snapExisting !== snapIncoming || existingListing.isDeleted) {
+          // Content has changed or listing was soft-deleted: fully replace all content fields
+          const updateDoc: any = {
             status: LISTING_STATUS.PENDING_APPROVAL,
-            isDeleted: false,
             lastSyncedAt: now,
-            ...baseListingData,
-          },
-        },
-        { upsert: true },
-      );
+            isDeleted: false,
+          };
 
-      if (upsertResult.upsertedCount > 0) {
-        created++;
-      } else {
-        // Document already existed, check if it's identical
-        const existingListing = await Listing.findOne({
-          feedId: feed._id,
-          externalId,
-          feedSourceType: "XML",
-        });
-
-        if (existingListing) {
-          const snapExisting = makeSnapshot(existingListing.toObject());
-          const snapIncoming = makeSnapshot(baseListingData);
-
-          if (snapExisting !== snapIncoming || existingListing.isDeleted) {
-            // Content has changed or listing was soft-deleted: fully replace all content fields
-            const updateDoc: any = {
-              status: LISTING_STATUS.PENDING_APPROVAL,
-              lastSyncedAt: now,
-              isDeleted: false,
-            };
-
-            for (const key of CONTENT_FIELDS) {
-              updateDoc[key] =
-                (baseListingData as any)[key] !== undefined
-                  ? (baseListingData as any)[key]
-                  : null;
-            }
-
-            await Listing.updateOne(
-              { _id: existingListing._id },
-              { $set: updateDoc },
-            );
-            replaced++;
-          } else {
-            unchanged++;
+          for (const key of CONTENT_FIELDS) {
+            updateDoc[key] =
+              (baseListingData as any)[key] !== undefined
+                ? (baseListingData as any)[key]
+                : null;
           }
+
+          await Listing.updateOne(
+            { _id: existingListing._id },
+            { $set: updateDoc },
+          );
+          console.log(`✅ Updated existing listing: ${externalId}`);
+          replaced++;
         } else {
-          failed++;
+          console.log(`⏭️  Listing unchanged: ${externalId}`);
+          unchanged++;
+        }
+      } else {
+        // New listing - check if we have remaining slots
+        if (maxListings !== -1 && remainingSlots <= 0) {
+          console.log(`⏭️  Skipping due to limit: ${externalId}`);
+          skippedDueToLimit++;
+          continue;
+        }
+
+        // Atomic, race-safe upsert using updateOne + $setOnInsert
+        const upsertResult = await Listing.updateOne(
+          { feedId: feed._id, externalId, feedSourceType: "XML" },
+          {
+            $setOnInsert: {
+              _id: generatedId,
+              shareId,
+              status: LISTING_STATUS.PENDING_APPROVAL,
+              isDeleted: false,
+              lastSyncedAt: now,
+              ...baseListingData,
+            },
+          },
+          { upsert: true },
+        );
+
+        if (upsertResult.upsertedCount > 0) {
+          console.log(`✅ Created new listing: ${externalId}`);
+          created++;
+          if (maxListings !== -1) {
+            remainingSlots--;
+            console.log(`📉 Remaining slots: ${remainingSlots}`);
+          }
         }
       }
     } catch (error: any) {
+      const propExternalId = getSingleValue(prop.externalId);
       if (error.code === 11000) {
         console.log(
-          `Duplicate key error (11000) caught for XML externalId ${getSingleValue(prop.externalId)}. Skipping.`,
+          `Duplicate key error (11000) caught for XML externalId ${propExternalId}. Skipping.`,
         );
         unchanged++;
       } else {
+        console.error(`❌ Failed to process XML property ${propExternalId}:`, error);
         failed++;
-        console.error(`❌ Failed to process XML property:`, error);
       }
     }
   }
@@ -265,6 +295,11 @@ export const importXMLFeed = async (
     await listing.save();
   }
 
+  // Update remaining listings count
+  if (created > 0) {
+    await decrementAgentRemainingListings(feed.agentId, created);
+  }
+
   return {
     created,
     replaced,
@@ -272,6 +307,7 @@ export const importXMLFeed = async (
     duplicateInFeed,
     deleted: listingsToDelete.length,
     failed,
+    skippedDueToLimit,
     total: propertyArray.length,
   };
 };

@@ -3,6 +3,8 @@ import stripe from "../config/stripe";
 import { User } from "../app/modules/user/user.model";
 import { Plan } from "../app/modules/plan/plan.model";
 import { Subscription } from "../app/modules/subscription/subscription.model";
+import { Listing } from "../app/modules/listing/listing.model";
+import { Types } from "mongoose";
 import { sendNotifications } from "../helpers/notificationsHelper";
 import {
   NOTIFICATION_REFERENCE_MODEL,
@@ -132,6 +134,15 @@ export const handleSubscriptionCreated = async (data: Stripe.Subscription) => {
 
         console.log("Subscription Created: ", newSubscription);
 
+        // Calculate current listings and remaining
+        const currentListings = await Listing.countDocuments({
+          agentId: existingUser._id,
+          isDeleted: { $ne: true },
+        });
+        const maxListings = pricingPlan.limits?.maxListings || 0;
+        const remainingListings =
+          maxListings === -1 ? -1 : Math.max(0, maxListings - currentListings);
+
         // Update the user to reflect the active subscription
         await User.findByIdAndUpdate(
           existingUser._id,
@@ -142,8 +153,8 @@ export const handleSubscriptionCreated = async (data: Stripe.Subscription) => {
             subscriptionId: subscription.id,
             customerId: customer.id,
             isAgentVerified: !!pricingPlan.features?.verifiedBadge,
-            maxListings: pricingPlan.limits?.maxListings || 0,
-            remainingListings: pricingPlan.limits?.maxListings || 0,
+            maxListings,
+            remainingListings,
           },
           { new: true },
         );
