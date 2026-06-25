@@ -13,7 +13,6 @@ import {
   generateShareLink,
   canAgentAddListings,
   decrementAgentRemainingListings,
-  incrementAgentRemainingListings,
 } from "./listing.utils";
 import { FEATURES, LISTING_STATUS } from "./listing.constant";
 import { FilterQuery, Types } from "mongoose";
@@ -510,9 +509,6 @@ const deleteListingServiceByIdFromDB = async (
     throw new Error("Listing not found or unauthorized");
   }
 
-  // Only increment if listing wasn't already deleted
-  const wasDeletedBefore = listing.isDeleted;
-
   // soft delete
   const result = await Listing.findOneAndUpdate(
     {
@@ -526,11 +522,6 @@ const deleteListingServiceByIdFromDB = async (
       new: true,
     },
   );
-
-  // Increment remaining listings if it wasn't already deleted
-  if (!wasDeletedBefore) {
-    await incrementAgentRemainingListings(agentId);
-  }
 
   return result;
 };
