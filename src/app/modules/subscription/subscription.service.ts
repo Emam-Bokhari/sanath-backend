@@ -83,7 +83,11 @@ const getMySubscription = async (userId: string) => {
     .populate("planId")
     .sort({ createdAt: -1 });
 
-  if (result && result.currentPeriodEnd && new Date() > new Date(result.currentPeriodEnd)) {
+  if (
+    result &&
+    result.currentPeriodEnd &&
+    new Date() > new Date(result.currentPeriodEnd)
+  ) {
     await Subscription.findByIdAndUpdate(result._id, { status: "deactivated" });
     const user = await User.findById(userId);
     if (user) {

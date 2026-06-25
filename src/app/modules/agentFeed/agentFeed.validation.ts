@@ -1,9 +1,5 @@
 import { z } from "zod";
 import { FEED_TYPE } from "./agentFeed.constant";
-import { NextFunction } from "express";
-import { AgentFeed } from "./agentFeed.model";
-import { Types } from "mongoose";
-import validateRequest from "../../middlewares/validateRequest";
 
 const createAgentFeedValidationSchema = z.object({
   body: z

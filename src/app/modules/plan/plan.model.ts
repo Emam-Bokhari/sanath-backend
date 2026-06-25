@@ -29,10 +29,10 @@ const planFeaturesSchema = new Schema(
       type: Boolean,
       default: false,
     },
-    // featuredListing: {
-    //   type: Boolean,
-    //   default: false,
-    // },
+    featuredListing: {
+      type: Boolean,
+      default: false,
+    },
     verifiedBadge: {
       type: Boolean,
       default: false,

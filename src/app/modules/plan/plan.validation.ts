@@ -26,7 +26,7 @@ const createPlanValidationSchema = z.object({
     features: z.object({
       listings: z.boolean().default(false),
       leadAccess: z.boolean().default(false),
-      // featuredListing: z.boolean().default(false),
+      featuredListing: z.boolean().default(false),
       verifiedBadge: z.boolean().default(false),
       agentProfilePage: z.boolean().default(false),
     }),

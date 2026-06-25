@@ -12,7 +12,7 @@ export interface IPlanLimits {
 export interface IPlanFeatures {
   listings: boolean;
   leadAccess: boolean;
-  // featuredListing: boolean;
+  featuredListing: boolean;
   verifiedBadge: boolean;
   agentProfilePage: boolean;
 }
