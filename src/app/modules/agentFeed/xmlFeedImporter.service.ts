@@ -115,7 +115,7 @@ export const importXMLFeed = async (
         ? getSingleValue(details.epcEnergyRating)
         : undefined;
 
-      // Helper to deeply extract nested values, handling arrays at every level
+      // helper to deeply extract nested values, handling arrays at every level
       const extractNestedArray = (obj: any, path: string[]): any[] => {
         if (!obj || path.length === 0) return [];
 
@@ -136,7 +136,7 @@ export const importXMLFeed = async (
         return arrayValue.map((item) => getSingleValue(item)).filter(Boolean);
       };
 
-      // Helper to extract nested single value properly
+      // helper to extract nested single value properly
       const extractNestedSingle = (obj: any, path: string[]): any => {
         let current = obj;
         for (const key of path) {

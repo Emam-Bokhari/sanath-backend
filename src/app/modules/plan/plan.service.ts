@@ -68,7 +68,7 @@ const updatePlanToDB = async (planId: string, payload: Partial<IPlan>) => {
         stripeUpdatePayload.metadata = {
           sortOrder: payload.sortOrder.toString(),
         };
-
+        
       await stripe.products.update(isExist.productId, stripeUpdatePayload);
     }
   }
@@ -113,6 +113,8 @@ const updatePlanToDB = async (planId: string, payload: Partial<IPlan>) => {
         interval_count,
       },
     });
+
+    console.log(newPrice,'new price');
 
     // update the priceId in payload to be saved in DB
     payload.priceId = newPrice.id;

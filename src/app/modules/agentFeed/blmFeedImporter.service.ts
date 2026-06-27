@@ -3,7 +3,7 @@ import { Types } from "mongoose";
 import { Listing } from "../listing/listing.model";
 import { TAgentFeed } from "./agentFeed.interface";
 import { LISTING_STATUS } from "../listing/listing.constant";
-import { FIELD_MAP, parseBLMContent, splitMultiValueField } from "./blm.utils";
+import { parseBLMContent, splitMultiValueField } from "./blm.utils";
 import {
   canAgentAddListings,
   decrementAgentRemainingListings,

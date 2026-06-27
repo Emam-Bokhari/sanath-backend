@@ -15,7 +15,7 @@ import cryptoToken from "../../../util/cryptoToken";
 import { ResetToken } from "../resetToken/resetToken.model";
 import generateOTP from "../../../util/generateOTP";
 import { emailTemplate } from "../../../shared/emailTemplate";
-import { STATUS } from "../../../enums/user";
+import { STATUS, USER_ROLES } from "../../../enums/user";
 import { firebaseAdmin } from "../../../config/firebase";
 import { FcmTokenService } from "../fcmToken/fcmService";
 import { emailQueue } from "../../../queues";
@@ -54,8 +54,12 @@ const loginUserFromDB = async (payload: ILoginData) => {
     throw new ApiError(StatusCodes.BAD_REQUEST, "Password is incorrect!");
   }
 
-  // check user role
-  if (role && isExistUser.role !== role) {
+  // check user role (only for AGENT)
+  if (
+    role && 
+    isExistUser.role === USER_ROLES.AGENT && 
+    isExistUser.role !== role
+  ) {
     throw new ApiError(StatusCodes.BAD_REQUEST, "Role doesn't match!");
   }
 
@@ -112,7 +116,7 @@ const forgetPasswordToDB = async (email: string) => {
   await User.findOneAndUpdate({ email }, { $set: { authentication } });
 };
 
-// ======================================= afriksms verify phone otp============================
+// ========================== afriksms verify phone otp===================
 const verifyEmailToDB = async (payload: IVerifyEmail) => {
   const { email, oneTimeCode } = payload;
   const isExistUser = await User.findOne({ email }).select("+authentication");
@@ -282,10 +286,10 @@ const changePasswordToDB = async (
 };
 
 const newAccessTokenToUser = async (token: string) => {
-  // Check if the token is provided
+  // check if the token is provided
   if (!token) {
     throw new ApiError(StatusCodes.BAD_REQUEST, "Token is required!");
-  }
+  };
 
   const verifyUser = jwtHelper.verifyToken(
     token,
@@ -295,7 +299,7 @@ const newAccessTokenToUser = async (token: string) => {
   const isExistUser = await User.findById(verifyUser?.id);
   if (!isExistUser) {
     throw new ApiError(StatusCodes.UNAUTHORIZED, "Unauthorized access");
-  }
+  };
 
   // create token
   const accessToken = jwtHelper.createToken(
@@ -376,8 +380,6 @@ const googleLoginService = async (payload: {
   deviceType?: "ios" | "android" | "web";
 }) => {
   const { token, fcmToken, deviceId, deviceType } = payload;
-
-  console.log(token, fcmToken, "Token and device token");
 
   if (!token) {
     throw new ApiError(

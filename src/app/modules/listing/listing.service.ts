@@ -659,12 +659,12 @@ const getSingleListingByIdFromDB = async (
     throw new Error("Listing not found");
   }
 
-  // Add feature flags to agent data
+  // add feature flags to agent data
   if (listing.agentId) {
     const agent = listing.agentId as any;
     const agentPlan = agent.plan;
 
-    // Use stored isAgentVerified from profile, fallback to plan feature if profile field is not set
+    // use stored isAgentVerified from profile, fallback to plan feature if profile field is not set
     agent.isAgentVerified =
       agent.isAgentVerified ?? !!agentPlan?.features?.verifiedBadge;
     agent.hasProfilePage = !!agentPlan?.features?.agentProfilePage;
@@ -721,15 +721,15 @@ const searchListingsServiceFromDB = async (
     lat,
     lng,
     radiusInMiles,
-    radiusInMiels, // Handle common typo in frontend
+    radiusInMiels, // handle common typo in frontend
   } = params as any;
 
-  // Save search to history if userId is provided
+  // save search to history if userId is provided
   if (userId) {
-    // We only save if there are actual search params
+    // we only save if there are actual search params
     const hasParams = Object.values(params).some((v) => v !== undefined);
     if (hasParams) {
-      // Check if this exact search already exists to avoid duplicates in history
+      // check if this exact search already exists to avoid duplicates in history
       const existingSearch = await SavedSearch.findOne({
         userId,
         params,
@@ -744,43 +744,43 @@ const searchListingsServiceFromDB = async (
     }
   }
 
-  /* ================= NORMALIZE NUMBERS ================= */
+  /* ================= normalize numbers ================= */
   const numericMinPrice = minPrice !== undefined ? Number(minPrice) : undefined;
   const numericMaxPrice = maxPrice !== undefined ? Number(maxPrice) : undefined;
   const numericBedrooms = bedrooms !== undefined ? Number(bedrooms) : undefined;
   const numericBathrooms =
     bathrooms !== undefined ? Number(bathrooms) : undefined;
 
-  // Fix: Ensure lat/lng are actual numbers and not empty strings
+  // fix: ensure lat/lng are actual numbers and not empty strings
   const numericLat =
     lat !== undefined && String(lat).trim() !== "" ? Number(lat) : undefined;
   const numericLng =
     lng !== undefined && String(lng).trim() !== "" ? Number(lng) : undefined;
 
-  // Support both correct and typo parameter names
+  // support both correct and typo parameter names
   const effectiveRadius = radiusInMiles || radiusInMiels;
   const numericRadiusInMiles =
     effectiveRadius !== undefined ? Number(effectiveRadius) : undefined;
 
-  /* ================= BASE QUERY ================= */
+  /* ================= base query ================= */
   const query: FilterQuery<any> = {
-    isDeleted: false, // Changed from { $ne: true } for better geo-search compatibility
+    isDeleted: false, // changed from { $ne: true } for better geo-search compatibility
     status: LISTING_STATUS.PUBLISHED,
   };
 
-  /* ================= LISTING TYPE (SALE / RENT) ================= */
+  /* ================= listing type (sale / rent) ================= */
   if (listingType) {
     query.listingType = listingType;
   }
 
-  /* ================= FEATURED (COMMENTED FOR FUTURE USE) ================= */
-  /*
+  /* ================= featured ================= */
+ 
   if (isFeatured !== undefined) {
     query.isFeatured = String(isFeatured) === "true";
   }
-  */
+ 
 
-  /* ================= SEARCH ================= */
+  /* ================= search ================= */
   if (searchTerm || location) {
     const keyword = searchTerm || location;
 
@@ -792,19 +792,19 @@ const searchListingsServiceFromDB = async (
     ];
   }
 
-  /* ================= PROPERTY TYPE ================= */
+  /* ================= property type ================= */
   if (propertyType) {
     query.propertyType = propertyType;
   }
 
-  /* ================= PRICE RANGE ================= */
+  /* ================= price range ================= */
   if (numericMinPrice !== undefined || numericMaxPrice !== undefined) {
     query.askingPrice = {};
     if (numericMinPrice !== undefined) query.askingPrice.$gte = numericMinPrice;
     if (numericMaxPrice !== undefined) query.askingPrice.$lte = numericMaxPrice;
   }
 
-  /* ================= BED / BATH ================= */
+  /* ================= bedrooms / bathrooms ================= */
   if (numericBedrooms) {
     query.propertyBedrooms = { $gte: numericBedrooms };
   }
@@ -813,7 +813,7 @@ const searchListingsServiceFromDB = async (
     query.propertyBathrooms = { $gte: numericBathrooms };
   }
 
-  /* ================= TENURE ================= */
+  /* ================= tenure ================= */
   if (tenure) {
     let tenureArray = Array.isArray(tenure)
       ? tenure
@@ -821,7 +821,7 @@ const searchListingsServiceFromDB = async (
         ? tenure.split(",")
         : [tenure];
 
-    // Trim spaces and filter out empty strings
+    // trim spaces and filter out empty strings
     tenureArray = tenureArray
       .map((t: any) => (typeof t === "string" ? t.trim() : t))
       .filter((t: any) => t !== "");
@@ -831,7 +831,7 @@ const searchListingsServiceFromDB = async (
     }
   }
 
-  /* ================= FEATURES ================= */
+  /* ================= features ================= */
   if (features) {
     let featuresArray = Array.isArray(features)
       ? features
@@ -839,7 +839,7 @@ const searchListingsServiceFromDB = async (
         ? features.split(",")
         : [features];
 
-    // Trim spaces and filter out empty strings
+    // trim spaces and filter out empty strings
     featuresArray = featuresArray
       .map((f: any) => (typeof f === "string" ? f.trim() : f))
       .filter((f: any) => f !== "");
@@ -849,7 +849,7 @@ const searchListingsServiceFromDB = async (
     }
   }
 
-  /* ================= TIME FILTER ================= */
+  /* ================= time filter ================= */
   if (timeFilter && timeFilter !== "any") {
     const now = new Date();
     let fromDate: Date | null = null;
@@ -871,7 +871,7 @@ const searchListingsServiceFromDB = async (
     }
   }
 
-  /* ================= GEO SEARCH ================= */
+  /* ================= geo search ================= */
   const isGeoSearch =
     numericLat !== undefined &&
     numericLng !== undefined &&
@@ -881,7 +881,7 @@ const searchListingsServiceFromDB = async (
   if (isGeoSearch) {
     const safeRadius =
       numericRadiusInMiles && numericRadiusInMiles > 0
-        ? Math.min(numericRadiusInMiles, 100000) // Increased limit to allow global search if needed
+        ? Math.min(numericRadiusInMiles, 100000) // increased limit to allow global search if needed
         : 5;
 
     const radiusInMeters = safeRadius * 1609.34;
@@ -897,7 +897,7 @@ const searchListingsServiceFromDB = async (
           maxDistance: radiusInMeters,
           spherical: true,
           query,
-          key: "location", // Explicitly specify the index key
+          key: "location", // explicitly specify the index key
         },
       },
       {
@@ -990,7 +990,7 @@ const searchListingsServiceFromDB = async (
       });
     }
 
-    /* ================= SORT INSIDE GEO ================= */
+    /* ================= sort inside geo ================= */
     if (sort && sort !== "nearest") {
       let sortQuery: any = {};
 
@@ -1024,7 +1024,7 @@ const searchListingsServiceFromDB = async (
     }));
   }
 
-  /* ================= NORMAL SORT ================= */
+  /* ================= normal sort ================= */
   let sortQuery: any = {};
 
   switch (sort) {
@@ -1048,7 +1048,7 @@ const searchListingsServiceFromDB = async (
       sortQuery.createdAt = -1;
   }
 
-  /* ================= EXECUTE ================= */
+  /* ================= execute ================= */
   const listings = await Listing.find(query)
     .sort(sortQuery)
     .populate({
@@ -1067,7 +1067,7 @@ const searchListingsServiceFromDB = async (
     favoriteListingIds = favorites.map((f) => f.listingId.toString());
   }
 
-  // Add feature flags to agent data and isFavorite flag
+  // add feature flags to agent data and isFavorite flag
   listings.forEach((listing: any) => {
     if (listing.agentId) {
       const agent = listing.agentId;
@@ -1262,10 +1262,12 @@ const getListingStatsServiceFromDB = async () => {
     status: LISTING_STATUS.PUBLISHED,
     isDeleted: { $ne: true },
   });
+
   const pendingApproval = await Listing.countDocuments({
     status: LISTING_STATUS.PENDING_APPROVAL,
     isDeleted: { $ne: true },
   });
+  
   const rejected = await Listing.countDocuments({
     status: LISTING_STATUS.REJECTED,
     isDeleted: { $ne: true },

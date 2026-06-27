@@ -3,6 +3,7 @@ import { TSettings } from "./settings.interface";
 import { Settings } from "./settings.model";
 
 const createOrUpdateSettingsToDB = async (payload: TSettings) => {
+  
   const { paymentNumbers, currency } = payload;
 
   // basic validation

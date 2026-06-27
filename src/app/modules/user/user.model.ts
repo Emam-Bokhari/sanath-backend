@@ -5,7 +5,7 @@ import bcrypt from "bcrypt";
 import config from "../../../config";
 import { softDeletePlugin } from "../../../DB/plugins/softDeletePlugin";
 
-/* ================= USER SCHEMA ================= */
+/* ================= user schema ================= */
 const userSchema = new Schema<IUser, IUserModel>(
   {
     name: {
@@ -26,7 +26,7 @@ const userSchema = new Schema<IUser, IUserModel>(
       default: USER_ROLES.USER,
     },
 
-    /* ================= HYBRID IDENTITY ================= */
+    /* ================= hybrid identity ================= */
     email: {
       type: String,
       lowercase: true,
@@ -60,7 +60,7 @@ const userSchema = new Schema<IUser, IUserModel>(
       default: null,
     },
 
-    /* ================= SECURITY ================= */
+    /* ================= security ================= */
     password: {
       type: String,
       required: true,
@@ -79,7 +79,7 @@ const userSchema = new Schema<IUser, IUserModel>(
       default: STATUS.ACTIVE,
     },
 
-    /* ================= PROFILE ================= */
+    /* ================= profile ================= */
     profileImage: {
       type: String,
       default: "",
@@ -106,7 +106,7 @@ const userSchema = new Schema<IUser, IUserModel>(
       type: String,
     },
 
-    /* ================= LOCATION ================= */
+    /* ================= location ================= */
     location: {
       type: {
         type: String,
@@ -132,7 +132,7 @@ const userSchema = new Schema<IUser, IUserModel>(
       default: null,
     },
 
-    // =================AGENCY PROFILE =================
+    /* ================= agency profile ================= */
     agencyName: {
       type: String,
     },
@@ -141,7 +141,7 @@ const userSchema = new Schema<IUser, IUserModel>(
       default: "",
     },
 
-    // ================= SUBSCRIPTION =================
+    /* ================= subscription ================= */
     isSubscribed: {
       type: Boolean,
       default: false,
@@ -176,7 +176,7 @@ const userSchema = new Schema<IUser, IUserModel>(
       default: 0,
     },
 
-    /* ================= AUTH ================= */
+    /* ================= authentication ================= */
     authentication: {
       type: {
         isResetPassword: { type: Boolean, default: false },
@@ -192,14 +192,14 @@ const userSchema = new Schema<IUser, IUserModel>(
   },
 );
 
-/* ================= INDEX ================= */
+/* ================= index ================= */
 userSchema.index({ email: 1 });
 userSchema.index({ location: "2dsphere" });
 
-/* ================= PLUGIN ================= */
+/* ================= plugin ================= */
 userSchema.plugin(softDeletePlugin);
 
-/* ================= STATIC METHODS ================= */
+/* ================= static methods ================= */
 userSchema.statics.isExistUserById = async function (id: string) {
   return await this.findById(id);
 };
@@ -219,7 +219,7 @@ userSchema.statics.isMatchPassword = async function (
   return await bcrypt.compare(password, hashPassword);
 };
 
-/* ================= PASSWORD HASH ================= */
+/* ================= password hash ================= */
 userSchema.pre("save", async function (next) {
   if (!this.isModified("password")) return next();
 

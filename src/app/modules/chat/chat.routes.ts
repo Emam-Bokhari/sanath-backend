@@ -1,7 +1,5 @@
 import { Router } from "express";
 import { ChatController } from "./chat.controller";
-import { USER_ROLES } from "../../../enums/user";
-import auth from "../../middlewares/auth";
 import { isAuthenticated } from "../../../helpers/authHelper";
 
 const router = Router();
