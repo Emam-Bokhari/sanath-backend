@@ -269,7 +269,7 @@ const createListingServiceToDB = async (payload: TListing, agentId: string) => {
       );
     }
   }
-
+  
   // Generate checklist and set initial status
   let initialStatus = payload.status || LISTING_STATUS.DRAFT;
   if (initialStatus === LISTING_STATUS.PUBLISHED) {
@@ -358,6 +358,8 @@ const getMyListingsServiceFromDB = async (
     "listingId",
   );
   favoriteListingIds = favorites.map((f) => f.listingId.toString());
+
+
 
   const resultWithLeads = await Promise.all(
     result.map(async (listing: any) => {
@@ -463,7 +465,7 @@ const updateListingServiceToDB = async (
   }
 
   // Check for featured listing permission (COMMENTED FOR FUTURE USE)
-  /*
+  
   if ((payload as any).isFeatured) {
     const user = await User.findById(agentId).populate("plan");
     const plan = user?.plan as any;
@@ -471,7 +473,7 @@ const updateListingServiceToDB = async (
       return {} as any;
     }
   }
-  */
+  
 
   Object.assign(existingListing, payload);
 
@@ -1184,6 +1186,7 @@ const updateListingStatusForAdminServiceToDB = async (
       event: "listingApproved",
     });
   } else if (status === LISTING_STATUS.REJECTED) {
+
     await sendNotifications({
       receiver: listing.agentId.toString(),
       title: "Listing Rejected",

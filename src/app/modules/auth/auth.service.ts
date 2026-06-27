@@ -313,7 +313,7 @@ const newAccessTokenToUser = async (token: string) => {
 
 // ==================resend otp phone afriksms=======================
 const resendVerificationEmailToDB = async (email: string) => {
-  // Find the user by ID
+  // find the user by ID
   const existingUser: any = await User.findOne({ email: email }).lean();
 
   if (!existingUser) {
