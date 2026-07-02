@@ -39,7 +39,7 @@ const updateUserPreferenceToDB = async (
   userId: string,
   preferences: Partial<INotificationPreference>,
 ): Promise<INotificationPreference | null> => {
-  // Using findOneAndUpdate with upsert: true handles both creation and update efficiently
+  // using findOneAndUpdate with upsert: true handles both creation and update efficiently
   const result = await NotificationPreferenceModel.findOneAndUpdate(
     { userId },
     { $set: preferences },

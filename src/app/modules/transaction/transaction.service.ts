@@ -9,7 +9,7 @@ const getAllTransactionsFromDB = async (query: Record<string, unknown>) => {
   let userIds: Types.ObjectId[] = [];
   let trxSearchQuery: any = {};
 
-  if (searchTerm) {                      
+  if (searchTerm) {
     // Search users by name or email
     const users = await User.find({
       $or: [

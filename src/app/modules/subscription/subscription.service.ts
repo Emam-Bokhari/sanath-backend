@@ -43,8 +43,8 @@ const createCheckoutSession = async (userId: string, planId: string) => {
         quantity: 1,
       },
     ],
-    success_url: "http://148.230.126.149:5001/api/v1/subscriptions/success",
-    cancel_url: "http://148.230.126.149:5001/api/v1/subscriptions/fail",
+    success_url: "http://148.230.126.149:3000/payment-success",
+    cancel_url: "http://148.230.126.149:3000/payment-failed",
     metadata: {
       userId: user._id.toString(),
       planId: plan._id.toString(),

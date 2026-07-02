@@ -4,8 +4,6 @@ import { User } from "../user/user.model";
 import { Listing } from "../listing/listing.model";
 import { Types } from "mongoose";
 import { Enquery } from "./enquery.model";
-import { ISendEmail } from "../../../types/email";
-import config from "../../../config";
 import QueryBuilder from "../../builder/queryBuilder";
 import { ENQUERY_STATUS } from "./enquery.constant";
 import { sendNotifications } from "../../../helpers/notificationsHelper";
@@ -56,7 +54,7 @@ const createEnquery = async (userId: string, payload: any) => {
     email: user.email,
   });
 
-  // Update listing leads and leadsCount
+  // update listing leads and leadsCount
   if (payload.listingId) {
     await Listing.findByIdAndUpdate(payload.listingId, {
       $push: { leads: enquery._id },
@@ -64,7 +62,7 @@ const createEnquery = async (userId: string, payload: any) => {
     });
   }
 
-  // Send Push & Email Notification to Agent
+  // send push & email notification to agent
   if (agentId) {
     await sendNotifications({
       receiver: agentId,
@@ -387,7 +385,7 @@ const updateEnqueryStatus = async (
     { new: true },
   );
 
-  // Send notification to User when status changes to CONTACTED
+  // send notification to user when status changes to CONTACTED
   if (status === ENQUERY_STATUS.CONTACTED && enquery.userId) {
     await sendNotifications({
       receiver:
@@ -466,10 +464,10 @@ const getEnqueryByIdForAdminFromDB = async (enqueryId: string) => {
 const getEnqueryStatsForAdminFromDB = async () => {
   const now = new Date();
 
-  // Start of this month
+  // start of this month
   const startOfMonth = new Date(now.getFullYear(), now.getMonth(), 1);
 
-  // Start of this week (Sunday as start of week)
+  // start of this week (Sunday as start of week)
   const startOfWeek = new Date(now);
   const day = now.getDay();
   const diff = now.getDate() - day;

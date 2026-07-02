@@ -99,7 +99,9 @@ export const importBLMFeed = async (
   const maxListings = initialLimitCheck.max;
 
   // Add more detailed logging
-  console.log(`📊 Listing limits for agent ${feed.agentId}: max=${maxListings}, remaining=${remainingSlots}`);
+  console.log(
+    `📊 Listing limits for agent ${feed.agentId}: max=${maxListings}, remaining=${remainingSlots}`,
+  );
 
   for (const row of rows) {
     const externalId = row["EXTERNALID"];

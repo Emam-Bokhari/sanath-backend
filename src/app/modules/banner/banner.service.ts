@@ -6,14 +6,14 @@ import { TBanner } from "./banner.interface";
 import ApiError from "../../../errors/ApiErrors";
 
 const createBannerToDB = async (payload: TBanner): Promise<TBanner> => {
-  // If the new banner is set to be active, deactivate all other banners first.
+  // if the new banner is set to be active, deactivate all other banners first.
   if (payload.status === true) {
     await Banner.updateMany({}, { $set: { status: false } });
   }
 
   const createBanner: any = await Banner.create(payload);
   if (!createBanner) {
-    // Safely unlink file only if path exists and is not empty
+    // safely unlink file only if path exists and is not empty
     if (payload.image) {
       unlinkFile(payload.image);
     }
@@ -36,7 +36,7 @@ const updateBannerToDB = async (id: string, payload: TBanner) => {
     throw new ApiError(StatusCodes.NOT_ACCEPTABLE, "Invalid ID");
   }
 
-  // If the banner is being activated, deactivate all others first.
+  // if the banner is being activated, deactivate all others first.
   if (payload.status === true) {
     await Banner.updateMany({ _id: { $ne: id } }, { $set: { status: false } });
   }
@@ -47,7 +47,7 @@ const updateBannerToDB = async (id: string, payload: TBanner) => {
     throw new ApiError(404, "Banner not found");
   }
 
-  // If a new image is uploaded, delete the old one.
+  // if a new image is uploaded, delete the old one.
   if (payload.image && isBannerExist.image) {
     unlinkFile(isBannerExist.image);
   }

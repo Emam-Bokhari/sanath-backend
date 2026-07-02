@@ -20,10 +20,10 @@ export const csvListingSchema = z.object({
   tenure: z.nativeEnum(TENURE).optional(),
   councilTaxBand: z.nativeEnum(COUNCIL_TAX_BAND).optional(),
   description: z.string().min(1, "Description is required"),
-  features: z.string().optional(), // Will be split by |
-  photos: z.string().optional(), // Will be split by |
-  videos: z.string().optional(), // Will be split by |
-  floorPlans: z.string().optional(), // Will be split by |
+  features: z.string().optional(),
+  photos: z.string().optional(),
+  videos: z.string().optional(),
+  floorPlans: z.string().optional(),
   brochure: z.string().optional(),
   threeSixtyTour: z.string().optional(),
   lat: z.coerce.number().optional(),

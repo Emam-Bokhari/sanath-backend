@@ -40,7 +40,7 @@ const bulkImportListingsServiceFromZIP = async (
     `${Date.now()}`,
   );
 
-  // Ensure extract path exists
+  // ensure extract path exists
   if (!fs.existsSync(extractPath)) {
     fs.mkdirSync(extractPath, { recursive: true });
   }
@@ -49,7 +49,7 @@ const bulkImportListingsServiceFromZIP = async (
     const zip = new AdmZip(zipPath);
     zip.extractAllTo(extractPath, true);
 
-    // Find CSV file in extracted folder
+    // find CSV file in extracted folder
     const files = fs.readdirSync(extractPath);
     const csvFileName = files.find((f) => f.endsWith(".csv"));
 
@@ -61,7 +61,7 @@ const bulkImportListingsServiceFromZIP = async (
     const rawRows = await parseCSVFile<any>(csvFilePath);
     const totalRows = rawRows.length;
 
-    // Check listing limits BEFORE processing
+    // check listing limits BEFORE processing
     const limitCheck = await canAgentAddListings(adminId, totalRows);
     if (!limitCheck.allowed) {
       throw new ApiError(
@@ -130,9 +130,11 @@ const bulkImportListingsServiceFromZIP = async (
         const photos = processMedia(validatedData.photos, "photos");
         const videos = processMedia(validatedData.videos, "videos");
         const floorPlans = processMedia(validatedData.floorPlans, "floorPlans");
+
         const brochure = validatedData.brochure
           ? processMedia(validatedData.brochure, "brochure")[0]
           : undefined;
+
         const threeSixtyTour = validatedData.threeSixtyTour
           ? processMedia(validatedData.threeSixtyTour, "threeSixtyTour")[0]
           : undefined;
@@ -269,14 +271,15 @@ const createListingServiceToDB = async (payload: TListing, agentId: string) => {
       );
     }
   }
-  
-  // Generate checklist and set initial status
+
+  // generate checklist and set initial status
   let initialStatus = payload.status || LISTING_STATUS.DRAFT;
+
   if (initialStatus === LISTING_STATUS.PUBLISHED) {
     initialStatus = LISTING_STATUS.PENDING_APPROVAL;
   }
 
-  // Check for featured listing permission (COMMENTED FOR FUTURE USE)
+  // check for featured listing permission (COMMENTED FOR FUTURE USE)
 
   if ((payload as any).isFeatured && !plan?.features?.featuredListing) {
     throw new ApiError(
@@ -292,14 +295,14 @@ const createListingServiceToDB = async (payload: TListing, agentId: string) => {
     status: initialStatus,
   });
 
-  // Set shareId as the listing's _id
+  // set shareId as the listing's _id
   listing.shareId = listing._id.toString();
 
-  // Generate checklist
+  // generate checklist
   const checklist = generateChecklist(listing);
   listing.listingCheckList = checklist;
 
-  // Validation if PENDING_APPROVAL is requested
+  // validate if PENDING_APPROVAL is requested
   if (listing.status === LISTING_STATUS.PENDING_APPROVAL) {
     const allowed = canPublishListing(checklist);
 
@@ -312,10 +315,10 @@ const createListingServiceToDB = async (payload: TListing, agentId: string) => {
     }
   }
 
-  // Save listing to DB
+  // save listing to DB
   await listing.save();
 
-  // Decrement remaining listings if not unlimited
+  // decrement remaining listings if not unlimited
   if (maxListings !== -1) {
     await User.findByIdAndUpdate(agentId, {
       $inc: { remainingListings: -1 },
@@ -359,8 +362,6 @@ const getMyListingsServiceFromDB = async (
   );
   favoriteListingIds = favorites.map((f) => f.listingId.toString());
 
-
-
   const resultWithLeads = await Promise.all(
     result.map(async (listing: any) => {
       let leads: any[] = [];
@@ -375,9 +376,11 @@ const getMyListingsServiceFromDB = async (
           .lean();
         leadsCount = leads.length;
       } else {
-        // If no lead access, we can still show the count if we want, or just 0
+        // if no lead access, we can still show the count if we want, or just 0
         leadsCount = await Enquery.countDocuments({ listingId: listing._id });
       }
+
+      // and favorite, if any,
 
       return {
         ...listing,
@@ -395,6 +398,7 @@ const getMyListingsServiceFromDB = async (
   };
 };
 
+// get all agent listings from DB
 const getAgentListingByIdFromDB = async (
   listingId: string,
   agentId: string,
@@ -455,7 +459,7 @@ const updateListingServiceToDB = async (
     throw new Error("Listing not found or unauthorized");
   }
 
-  // Only if the listing is already PUBLISHED or being set to PUBLISHED,
+  // only if the listing is already PUBLISHED or being set to PUBLISHED,
   // it should go to PENDING_APPROVAL for admin review.
   if (
     existingListing.status === LISTING_STATUS.PUBLISHED ||
@@ -464,8 +468,8 @@ const updateListingServiceToDB = async (
     payload.status = LISTING_STATUS.PENDING_APPROVAL;
   }
 
-  // Check for featured listing permission (COMMENTED FOR FUTURE USE)
-  
+  // check for featured listing permission (COMMENTED FOR FUTURE USE)
+
   if ((payload as any).isFeatured) {
     const user = await User.findById(agentId).populate("plan");
     const plan = user?.plan as any;
@@ -473,14 +477,13 @@ const updateListingServiceToDB = async (
       return {} as any;
     }
   }
-  
 
   Object.assign(existingListing, payload);
 
   const checklist = generateChecklist(existingListing);
   existingListing.listingCheckList = checklist;
 
-  //  Validation if PENDING_APPROVAL is requested
+  // validation if PENDING_APPROVAL is requested
   if (existingListing.status === LISTING_STATUS.PENDING_APPROVAL) {
     const allowed = canPublishListing(checklist);
 
@@ -562,7 +565,7 @@ const getNearbyListingsServiceFromDB = async (
 ) => {
   let baseQuery;
 
-  // If lat or lng is not provided or invalid, return all published listings as fallback
+  // if lat or lng is not provided or invalid, return all published listings as fallback
   if (lat === undefined || lng === undefined || isNaN(lat) || isNaN(lng)) {
     baseQuery = Listing.find({
       isDeleted: { $ne: true },
@@ -577,7 +580,7 @@ const getNearbyListingsServiceFromDB = async (
         $near: {
           $geometry: {
             type: "Point",
-            coordinates: [lng, lat], // IMPORTANT: [lng, lat]
+            coordinates: [lng, lat], // important: [lng, lat]
           },
           $maxDistance: radiusInMeters,
         },
@@ -610,7 +613,7 @@ const getNearbyListingsServiceFromDB = async (
     favoriteListingIds = favorites.map((f) => f.listingId.toString());
   }
 
-  // Add feature flags to agent data and isFavorite flag
+  // add feature flags to agent data and isFavorite flag
   result.forEach((listing: any) => {
     if (listing.agentId) {
       const agent = listing.agentId;
@@ -776,11 +779,10 @@ const searchListingsServiceFromDB = async (
   }
 
   /* ================= featured ================= */
- 
+
   if (isFeatured !== undefined) {
     query.isFeatured = String(isFeatured) === "true";
   }
- 
 
   /* ================= search ================= */
   if (searchTerm || location) {
@@ -1137,9 +1139,6 @@ const getSingleListingForAdminFromDB = async (listingId: string) => {
   const listing = await Listing.findById(listingId)
     .populate({
       path: "agentId",
-      // populate: {
-      //   path: "plan",
-      // },
     })
     .lean();
 
@@ -1174,7 +1173,7 @@ const updateListingStatusForAdminServiceToDB = async (
   listing.status = status;
   await listing.save();
 
-  // Send Notification to Agent
+  // send notification to agent
   if (status === LISTING_STATUS.PUBLISHED) {
     await sendNotifications({
       receiver: listing.agentId.toString(),
@@ -1186,7 +1185,6 @@ const updateListingStatusForAdminServiceToDB = async (
       event: "listingApproved",
     });
   } else if (status === LISTING_STATUS.REJECTED) {
-
     await sendNotifications({
       receiver: listing.agentId.toString(),
       title: "Listing Rejected",
@@ -1218,7 +1216,7 @@ const getListingByShareIdFromDB = async (shareId: string, userId?: string) => {
     throw new Error("Listing not found");
   }
 
-  // Add feature flags to agent data
+  // add feature flags to agent data
   if (listing.agentId) {
     const agent = listing.agentId as any;
     const agentPlan = agent.plan;
@@ -1270,7 +1268,7 @@ const getListingStatsServiceFromDB = async () => {
     status: LISTING_STATUS.PENDING_APPROVAL,
     isDeleted: { $ne: true },
   });
-  
+
   const rejected = await Listing.countDocuments({
     status: LISTING_STATUS.REJECTED,
     isDeleted: { $ne: true },

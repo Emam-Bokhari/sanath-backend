@@ -79,7 +79,7 @@ export type TSort =
   | "newest"
   | "oldest"
   | "nearest";
-  
+
 export type TTimeFilter = "any" | "twentyFourHours" | "threeDays" | "sevenDays";
 
 export type TSearchParams = {

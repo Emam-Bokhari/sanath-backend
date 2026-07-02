@@ -9,6 +9,6 @@ export type IChat = {
   deletedBy: [Types.ObjectId];
   isDeleted: boolean;
   status: "ACTIVE" | "DELETED";
-  pinnedMessages: Types.ObjectId[]; // Pinned message IDs
+  pinnedMessages: Types.ObjectId[]; // pinned message IDs
 };
 export type ChatModel = ISoftDeleteModel<IChat>;

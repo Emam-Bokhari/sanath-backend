@@ -140,11 +140,11 @@ export const handleSubscriptionUpdated = async (data: Stripe.Subscription) => {
 
           // Update user
           const hasAccess = status === "active" || status === "trialing";
-          
+
           // Calculate current listings and remaining
           let maxListings = 0;
           let remainingListings = 0;
-          
+
           if (hasAccess) {
             const currentListings = await Listing.countDocuments({
               agentId: existingUser._id,
@@ -152,9 +152,11 @@ export const handleSubscriptionUpdated = async (data: Stripe.Subscription) => {
             });
             maxListings = pricingPlan.limits?.maxListings || 0;
             remainingListings =
-              maxListings === -1 ? -1 : Math.max(0, maxListings - currentListings);
+              maxListings === -1
+                ? -1
+                : Math.max(0, maxListings - currentListings);
           }
-          
+
           await User.findByIdAndUpdate(existingUser._id, {
             plan: pricingPlan._id,
             hasAccess,
@@ -233,6 +235,7 @@ export const handleSubscriptionUpdated = async (data: Stripe.Subscription) => {
             });
           }
 
+  
           // Calculate current listings and remaining
           const currentListings = await Listing.countDocuments({
             agentId: existingUser._id,
@@ -240,7 +243,9 @@ export const handleSubscriptionUpdated = async (data: Stripe.Subscription) => {
           });
           const maxListings = pricingPlan.limits?.maxListings || 0;
           const remainingListings =
-            maxListings === -1 ? -1 : Math.max(0, maxListings - currentListings);
+            maxListings === -1
+              ? -1
+              : Math.max(0, maxListings - currentListings);
 
           await User.findByIdAndUpdate(existingUser._id, {
             isSubscribed: true,

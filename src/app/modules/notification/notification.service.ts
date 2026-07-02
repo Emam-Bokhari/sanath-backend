@@ -5,7 +5,6 @@ import QueryBuilder from "../../builder/queryBuilder";
 import { NOTIFICATION_TYPE } from "./notification.constant";
 
 // --- USER & AGENT SERVICES (Receiver Based) ---
-
 const getNotificationsFromDB = async (
   user: JwtPayload,
   query: Record<string, unknown>,
@@ -72,7 +71,6 @@ const readSingleNotificationToDB = async (
 };
 
 // --- ADMIN & SUPER_ADMIN SERVICES (Type Based) ---
-
 const getAdminNotificationsFromDB = async (query: any) => {
   const baseQuery = Notification.find({
     type: NOTIFICATION_TYPE.ADMIN,

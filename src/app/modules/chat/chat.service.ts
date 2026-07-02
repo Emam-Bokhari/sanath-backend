@@ -205,15 +205,15 @@ const softDeleteChatForUser = async (chatId: string, id: string) => {
     throw new ApiError(401, "User is not authorized");
   }
 
-  // If already deleted by this user, just return
+  // if already deleted by this user, just return
   if (chat.deletedBy.some((id) => id.toString() === userId.toString())) {
     return chat;
   }
 
-  // Add userId to deletedBy array
+  // add userId to deletedBy array
   chat.deletedBy.push(userId);
 
-  // Optional: If all participants deleted, mark status deleted (soft delete for everyone)
+  // optional: if all participants deleted, mark status deleted (soft delete for everyone)
   if (chat.deletedBy.length === chat.participants.length) {
     chat.isDeleted = true;
   }

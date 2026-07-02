@@ -97,7 +97,7 @@ export interface ListingLimitInfo {
 }
 
 export const getAgentListingLimitInfo = async (
-  agentId: string | Types.ObjectId
+  agentId: string | Types.ObjectId,
 ): Promise<ListingLimitInfo> => {
   const user = await User.findById(agentId).populate("plan");
   if (!user) {
@@ -139,16 +139,16 @@ export const getAgentListingLimitInfo = async (
 
 export const canAgentAddListings = async (
   agentId: string | Types.ObjectId,
-  numberOfListingsToAdd: number = 1
+  numberOfListingsToAdd: number = 1,
 ): Promise<{ allowed: boolean; remaining: number; max: number }> => {
   const limitInfo = await getAgentListingLimitInfo(agentId);
-  
+
   if (limitInfo.maxListings === -1) {
     return { allowed: true, remaining: -1, max: -1 };
   }
 
   const allowed = limitInfo.remainingListings >= numberOfListingsToAdd;
-  
+
   return {
     allowed,
     remaining: limitInfo.remainingListings,
@@ -158,7 +158,7 @@ export const canAgentAddListings = async (
 
 export const decrementAgentRemainingListings = async (
   agentId: string | Types.ObjectId,
-  decrementBy: number = 1
+  decrementBy: number = 1,
 ): Promise<void> => {
   await User.findByIdAndUpdate(agentId, {
     $inc: { remainingListings: -decrementBy },
@@ -167,7 +167,7 @@ export const decrementAgentRemainingListings = async (
 
 export const incrementAgentRemainingListings = async (
   agentId: string | Types.ObjectId,
-  incrementBy: number = 1
+  incrementBy: number = 1,
 ): Promise<void> => {
   const user = await User.findById(agentId);
   if (!user) return;

@@ -86,9 +86,10 @@ export const importXMLFeed = async (
   let remainingSlots = initialLimitCheck.remaining;
   const maxListings = initialLimitCheck.max;
 
-
   // Add more detailed logging
-  console.log(`📊 Listing limits for agent ${feed.agentId}: max=${maxListings}, remaining=${remainingSlots}`);
+  console.log(
+    `📊 Listing limits for agent ${feed.agentId}: max=${maxListings}, remaining=${remainingSlots}`,
+  );
 
   for (const prop of propertyArray) {
     try {
@@ -276,7 +277,10 @@ export const importXMLFeed = async (
         );
         unchanged++;
       } else {
-        console.error(`❌ Failed to process XML property ${propExternalId}:`, error);
+        console.error(
+          `❌ Failed to process XML property ${propExternalId}:`,
+          error,
+        );
         failed++;
       }
     }

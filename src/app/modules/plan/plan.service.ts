@@ -17,9 +17,6 @@ const createPlanToDB = async (payload: IPlan): Promise<IPlan | null> => {
 
   const stripeData = await createSubscriptionProduct(productPayload);
 
-  // if stripeData creation fails, createSubscriptionProduct will throw an error,
-  // preventing the execution from reaching this point and ensuring no Plan is created in DB.
-
   payload.productId = stripeData.productId;
   payload.priceId = stripeData.priceId;
 
@@ -68,7 +65,7 @@ const updatePlanToDB = async (planId: string, payload: Partial<IPlan>) => {
         stripeUpdatePayload.metadata = {
           sortOrder: payload.sortOrder.toString(),
         };
-        
+
       await stripe.products.update(isExist.productId, stripeUpdatePayload);
     }
   }
@@ -114,7 +111,7 @@ const updatePlanToDB = async (planId: string, payload: Partial<IPlan>) => {
       },
     });
 
-    console.log(newPrice,'new price');
+    // console.log(newPrice, "new price");
 
     // update the priceId in payload to be saved in DB
     payload.priceId = newPrice.id;

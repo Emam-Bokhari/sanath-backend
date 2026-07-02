@@ -55,7 +55,7 @@ const sendMessageToDB = async (payload: IMessage): Promise<IMessage> => {
     response?.chatId,
     {
       lastMessage: response._id,
-      readBy: [payload.sender.toString()], // Only sender has read it
+      readBy: [payload.sender.toString()],
       updatedAt: new Date(),
     },
     { new: true },
@@ -121,7 +121,7 @@ const sendMessageToDB = async (payload: IMessage): Promise<IMessage> => {
 
 const getMessagesFromDB = async (
   chatId: string,
-  userId: string, // Add userId parameter
+  userId: string, // add userId parameter
   query: Record<string, unknown>,
 ): Promise<{
   messages: IMessage[];
@@ -154,7 +154,7 @@ const getMessagesFromDB = async (
     .limit(limitInt)
     .sort({ createdAt: -1 });
 
-  // Mark messages as read for the current user (only messages not sent by current user)
+  // mark messages as read for the current user (only messages not sent by current user)
   const messageIds = response
     .filter((msg) => msg.sender._id.toString() !== userId && !msg.read)
     .map((msg) => msg._id);
@@ -163,7 +163,7 @@ const getMessagesFromDB = async (
     await Message.updateMany(
       {
         _id: { $in: messageIds },
-        sender: { $ne: userId }, // Only update messages not sent by current user
+        sender: { $ne: userId }, // only update messages not sent by current user
       },
       {
         $set: { read: true, readAt: new Date() },
@@ -171,7 +171,7 @@ const getMessagesFromDB = async (
     );
   }
 
-  // Get pinned messages separately
+  // get pinned messages separately
   const pinnedMessages = await Message.find({
     chatId,
     isPinned: true,

@@ -56,8 +56,8 @@ const loginUserFromDB = async (payload: ILoginData) => {
 
   // check user role (only for AGENT)
   if (
-    role && 
-    isExistUser.role === USER_ROLES.AGENT && 
+    role &&
+    isExistUser.role === USER_ROLES.AGENT &&
     isExistUser.role !== role
   ) {
     throw new ApiError(StatusCodes.BAD_REQUEST, "Role doesn't match!");
@@ -289,7 +289,7 @@ const newAccessTokenToUser = async (token: string) => {
   // check if the token is provided
   if (!token) {
     throw new ApiError(StatusCodes.BAD_REQUEST, "Token is required!");
-  };
+  }
 
   const verifyUser = jwtHelper.verifyToken(
     token,
@@ -299,7 +299,7 @@ const newAccessTokenToUser = async (token: string) => {
   const isExistUser = await User.findById(verifyUser?.id);
   if (!isExistUser) {
     throw new ApiError(StatusCodes.UNAUTHORIZED, "Unauthorized access");
-  };
+  }
 
   // create token
   const accessToken = jwtHelper.createToken(
