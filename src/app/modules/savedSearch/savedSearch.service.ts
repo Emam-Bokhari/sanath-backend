@@ -22,10 +22,10 @@ const toggleSavedSearchService = async (payload: TSavedSearch) => {
     // If it doesn't exist, we save it (toggle on)
     await SavedSearch.create(payload);
 
-    // Limit to last 20 saved searches
-    const userSavedSearches = await SavedSearch.find({ userId }).sort({
-      createdAt: -1,
-    });
+    // Limit to last 20 saved searches - delete older ones
+    const userSavedSearches = await SavedSearch.find({ userId })
+      .sort({ createdAt: -1 })
+      .select("_id");
 
     if (userSavedSearches.length > 20) {
       const idsToDelete = userSavedSearches
@@ -51,17 +51,20 @@ const getMySavedSearchesService = async (userId: string) => {
   const result: any[] = [];
 
   for (const savedSearch of savedSearches) {
+    if (result.length >= 20) break;
+
     const listings = await ListingServices.searchListingsServiceFromDB(
       savedSearch.params as any,
     );
 
-    listings.forEach((listing: any) => {
+    for (const listing of listings) {
+      if (result.length >= 20) break;
       result.push({
         ...listing,
         listingId: listing._id,
         _id: savedSearch._id,
       });
-    });
+    }
   }
 
   return result;
@@ -71,11 +74,10 @@ const deleteSavedSearchService = async (
   savedSearchId: string,
   userId: string,
 ) => {
-  const result = await SavedSearch.findOneAndUpdate(
-    { _id: savedSearchId, userId },
-    { isDeleted: true },
-    { new: true },
-  );
+  const result = await SavedSearch.findOneAndDelete({
+    _id: savedSearchId,
+    userId,
+  });
   return result;
 };
 

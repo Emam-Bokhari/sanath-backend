@@ -24,25 +24,23 @@
         <score>85</score>
       </epcEnergyRating>
     </details>
-    <media>
+     <media>
       <photos>
-        <photo>https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?w=600</photo>
-        <photo>https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?w=600</photo>
-        <photo>https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?w=600</photo>
-        <photo>https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?w=600</photo>
-        <photo>https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?w=600</photo>
-        <photo>https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?w=600</photo>
-        <photo>https://placehold.co/600</photo>
+        <photo>https://res.cloudinary.com/dphkhbunv/image/upload/v1783158183/pexels-thirdman-8482510_pkgrph.jpg</photo>
+        <photo>https://res.cloudinary.com/dphkhbunv/image/upload/v1783158183/schwoaze-house-3386450_lxjxqr.jpg</photo>
+        <photo>https://res.cloudinary.com/dphkhbunv/image/upload/v1783158183/schwoaze-house-3386450_lxjxqr.jpg</photo>
+        <photo>https://res.cloudinary.com/dphkhbunv/image/upload/v1783158183/schwoaze-house-3386450_lxjxqr.jpg</photo>
+        <photo>https://res.cloudinary.com/dphkhbunv/image/upload/v1783158183/schwoaze-house-3386450_lxjxqr.jpg</photo>
+        <photo>https://res.cloudinary.com/dphkhbunv/image/upload/v1783158183/schwoaze-house-3386450_lxjxqr.jpg</photo>
       </photos>
       <videos>
-        <video>https://example.com/demo-video.mp4</video>
-        <video>https://example.com/demo-video.mp4</video>
+        <video>https://res.cloudinary.com/dphkhbunv/video/upload/v1783159600/12398613_3840_2160_60fps_hzfugi.mp4</video>
       </videos>
       <floorPlans>
-        <floorPlan>https://example.com/floor-plan-1.jpg</floorPlan>
+        <floorPlan>https://res.cloudinary.com/dphkhbunv/image/upload/v1783158182/bernhard_schuermann-bench-6919896_x6q6d3.jpg</floorPlan>
       </floorPlans>
-      <brochure>https://example.com/brochure.pdf</brochure>
-      <threeSixtyTour>https://example.com/360-tour</threeSixtyTour>
+      <brochure>https://example.com/office-brochure.pdf</brochure>
+      <threeSixtyTour>https://res.cloudinary.com/dphkhbunv/video/upload/v1783159600/12398613_3840_2160_60fps_hzfugi.mp4</threeSixtyTour>
     </media>
     <features>
       <feature>Gym</feature>
@@ -78,19 +76,23 @@
         <score>85</score>
       </epcEnergyRating>
     </details>
-    <media>
+     <media>
       <photos>
-        <photo>https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?w=600</photo>
-        <photo>https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?w=600</photo>
+        <photo>https://res.cloudinary.com/dphkhbunv/image/upload/v1783158183/pexels-thirdman-8482510_pkgrph.jpg</photo>
+        <photo>https://res.cloudinary.com/dphkhbunv/image/upload/v1783158183/pexels-thirdman-8482510_pkgrph.jpg</photo>
+        <photo>https://res.cloudinary.com/dphkhbunv/image/upload/v1783158183/pexels-thirdman-8482510_pkgrph.jpg</photo>
+        <photo>https://res.cloudinary.com/dphkhbunv/image/upload/v1783158183/pexels-thirdman-8482510_pkgrph.jpg</photo>
+        <photo>https://res.cloudinary.com/dphkhbunv/image/upload/v1783158183/pexels-thirdman-8482510_pkgrph.jpg</photo>
+        <photo>https://res.cloudinary.com/dphkhbunv/image/upload/v1783158183/schwoaze-house-3386450_lxjxqr.jpg</photo>
       </photos>
       <videos>
-        <video>https://example.com/demo-video.mp4</video>
+        <video>https://res.cloudinary.com/dphkhbunv/video/upload/v1783159600/12398613_3840_2160_60fps_hzfugi.mp4</video>
       </videos>
       <floorPlans>
-        <floorPlan>https://example.com/floor-plan-1.jpg</floorPlan>
+        <floorPlan>https://res.cloudinary.com/dphkhbunv/image/upload/v1783158182/bernhard_schuermann-bench-6919896_x6q6d3.jpg</floorPlan>
       </floorPlans>
-      <brochure>https://example.com/brochure.pdf</brochure>
-      <threeSixtyTour>https://example.com/360-tour</threeSixtyTour>
+      <brochure>https://example.com/office-brochure.pdf</brochure>
+      <threeSixtyTour>https://res.cloudinary.com/dphkhbunv/video/upload/v1783159600/12398613_3840_2160_60fps_hzfugi.mp4</threeSixtyTour>
     </media>
     <features>
       <feature>Gym</feature>
@@ -127,17 +129,21 @@
     </details>
     <media>
       <photos>
-        <photo>https://images.unsplash.com/photo-1613977257363-707ba9348227?w=600</photo>
-        <photo>https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?w=600</photo>
+        <photo>https://res.cloudinary.com/dphkhbunv/image/upload/v1783158183/pexels-thirdman-8482510_pkgrph.jpg</photo>
+        <photo>https://res.cloudinary.com/dphkhbunv/image/upload/v1783158183/pexels-thirdman-8482510_pkgrph.jpg</photo>
+        <photo>https://res.cloudinary.com/dphkhbunv/image/upload/v1783158183/pexels-thirdman-8482510_pkgrph.jpg</photo>
+        <photo>https://res.cloudinary.com/dphkhbunv/image/upload/v1783158183/pexels-thirdman-8482510_pkgrph.jpg</photo>
+        <photo>https://res.cloudinary.com/dphkhbunv/image/upload/v1783158183/pexels-thirdman-8482510_pkgrph.jpg</photo>
+        <photo>https://res.cloudinary.com/dphkhbunv/image/upload/v1783158183/schwoaze-house-3386450_lxjxqr.jpg</photo>
       </photos>
       <videos>
-        <video>https://example.com/villa-tour.mp4</video>
+        <video>https://res.cloudinary.com/dphkhbunv/video/upload/v1783159600/12398613_3840_2160_60fps_hzfugi.mp4</video>
       </videos>
       <floorPlans>
-        <floorPlan>https://example.com/villa-floorplan.jpg</floorPlan>
+        <floorPlan>https://res.cloudinary.com/dphkhbunv/image/upload/v1783158182/bernhard_schuermann-bench-6919896_x6q6d3.jpg</floorPlan>
       </floorPlans>
-      <brochure>https://example.com/villa-brochure.pdf</brochure>
-      <threeSixtyTour>https://example.com/villa-360-tour</threeSixtyTour>
+      <brochure>https://example.com/office-brochure.pdf</brochure>
+      <threeSixtyTour>https://res.cloudinary.com/dphkhbunv/video/upload/v1783159600/12398613_3840_2160_60fps_hzfugi.mp4</threeSixtyTour>
     </media>
     <features>
       <feature>Private Garden</feature>
@@ -174,17 +180,21 @@
     </details>
     <media>
       <photos>
-        <photo>https://images.unsplash.com/photo-1613977257363-707ba9348227?w=600</photo>
-        <photo>https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?w=600</photo>
+        <photo>https://res.cloudinary.com/dphkhbunv/image/upload/v1783158183/pexels-thirdman-8482510_pkgrph.jpg</photo>
+        <photo>https://res.cloudinary.com/dphkhbunv/image/upload/v1783158183/pexels-thirdman-8482510_pkgrph.jpg</photo>
+        <photo>https://res.cloudinary.com/dphkhbunv/image/upload/v1783158183/pexels-thirdman-8482510_pkgrph.jpg</photo>
+        <photo>https://res.cloudinary.com/dphkhbunv/image/upload/v1783158183/pexels-thirdman-8482510_pkgrph.jpg</photo>
+        <photo>https://res.cloudinary.com/dphkhbunv/image/upload/v1783158183/schwoaze-house-3386450_lxjxqr.jpg</photo>
+        <photo>https://res.cloudinary.com/dphkhbunv/image/upload/v1783158183/schwoaze-house-3386450_lxjxqr.jpg</photo>
       </photos>
       <videos>
-        <video>https://example.com/villa-tour.mp4</video>
+        <video>https://res.cloudinary.com/dphkhbunv/video/upload/v1783159600/12398613_3840_2160_60fps_hzfugi.mp4</video>
       </videos>
       <floorPlans>
-        <floorPlan>https://example.com/villa-floorplan.jpg</floorPlan>
+        <floorPlan>https://res.cloudinary.com/dphkhbunv/image/upload/v1783158182/bernhard_schuermann-bench-6919896_x6q6d3.jpg</floorPlan>
       </floorPlans>
-      <brochure>https://example.com/villa-brochure.pdf</brochure>
-      <threeSixtyTour>https://example.com/villa-360-tour</threeSixtyTour>
+      <brochure>https://example.com/office-brochure.pdf</brochure>
+      <threeSixtyTour>https://res.cloudinary.com/dphkhbunv/video/upload/v1783159600/12398613_3840_2160_60fps_hzfugi.mp4</threeSixtyTour>
     </media>
     <features>
       <feature>Private Garden</feature>
@@ -219,19 +229,23 @@
         <score>72</score>
       </epcEnergyRating>
     </details>
-    <media>
+     <media>
       <photos>
-        <photo>https://images.unsplash.com/photo-1497366754035-f200968a6e72?w=600</photo>
-        <photo>https://images.unsplash.com/photo-1497366412874-3415097a27e7?w=600</photo>
+        <photo>https://res.cloudinary.com/dphkhbunv/image/upload/v1783158183/pexels-thirdman-8482510_pkgrph.jpg</photo>
+        <photo>https://res.cloudinary.com/dphkhbunv/image/upload/v1783158183/pexels-thirdman-8482510_pkgrph.jpg</photo>
+        <photo>https://res.cloudinary.com/dphkhbunv/image/upload/v1783158183/pexels-thirdman-8482510_pkgrph.jpg</photo>
+        <photo>https://res.cloudinary.com/dphkhbunv/image/upload/v1783158183/pexels-thirdman-8482510_pkgrph.jpg</photo>
+        <photo>https://res.cloudinary.com/dphkhbunv/image/upload/v1783158182/bernhard_schuermann-bench-6919896_x6q6d3.jpg</photo>
+        <photo>https://res.cloudinary.com/dphkhbunv/image/upload/v1783158183/schwoaze-house-3386450_lxjxqr.jpg</photo>
       </photos>
       <videos>
-        <video>https://example.com/office-tour.mp4</video>
+        <video>https://res.cloudinary.com/dphkhbunv/video/upload/v1783159600/12398613_3840_2160_60fps_hzfugi.mp4</video>
       </videos>
       <floorPlans>
-        <floorPlan>https://example.com/office-floorplan.jpg</floorPlan>
+        <floorPlan>https://res.cloudinary.com/dphkhbunv/image/upload/v1783158182/bernhard_schuermann-bench-6919896_x6q6d3.jpg</floorPlan>
       </floorPlans>
       <brochure>https://example.com/office-brochure.pdf</brochure>
-      <threeSixtyTour>https://example.com/office-360-tour</threeSixtyTour>
+      <threeSixtyTour>https://res.cloudinary.com/dphkhbunv/video/upload/v1783159600/12398613_3840_2160_60fps_hzfugi.mp4</threeSixtyTour>
     </media>
     <features>
       <feature>High-Speed Internet</feature>
@@ -240,6 +254,7 @@
     </features>
     <description>Modern office space available for rent in the commercial hub of Motijheel.</description>
   </property>
+
   <property>
     <externalId>property-004</externalId>
     <title>test</title>
@@ -267,17 +282,21 @@
     </details>
     <media>
       <photos>
-        <photo>https://images.unsplash.com/photo-1497366754035-f200968a6e72?w=600</photo>
-        <photo>https://images.unsplash.com/photo-1497366412874-3415097a27e7?w=600</photo>
+        <photo>https://res.cloudinary.com/dphkhbunv/image/upload/v1783158183/pexels-thirdman-8482510_pkgrph.jpg</photo>
+        <photo>https://res.cloudinary.com/dphkhbunv/image/upload/v1783158183/pexels-thirdman-8482510_pkgrph.jpg</photo>
+        <photo>https://res.cloudinary.com/dphkhbunv/image/upload/v1783158183/pexels-thirdman-8482510_pkgrph.jpg</photo>
+        <photo>https://res.cloudinary.com/dphkhbunv/image/upload/v1783158183/pexels-thirdman-8482510_pkgrph.jpg</photo>
+        <photo>https://res.cloudinary.com/dphkhbunv/image/upload/v1783158183/pexels-thirdman-8482510_pkgrph.jpg</photo>
+        <photo>https://res.cloudinary.com/dphkhbunv/image/upload/v1783158183/schwoaze-house-3386450_lxjxqr.jpg</photo>
       </photos>
       <videos>
-        <video>https://example.com/office-tour.mp4</video>
+        <video>https://res.cloudinary.com/dphkhbunv/video/upload/v1783159600/12398613_3840_2160_60fps_hzfugi.mp4</video>
       </videos>
       <floorPlans>
-        <floorPlan>https://example.com/office-floorplan.jpg</floorPlan>
+        <floorPlan>https://res.cloudinary.com/dphkhbunv/image/upload/v1783158182/bernhard_schuermann-bench-6919896_x6q6d3.jpg</floorPlan>
       </floorPlans>
       <brochure>https://example.com/office-brochure.pdf</brochure>
-      <threeSixtyTour>https://example.com/office-360-tour</threeSixtyTour>
+      <threeSixtyTour>https://res.cloudinary.com/dphkhbunv/video/upload/v1783159600/12398613_3840_2160_60fps_hzfugi.mp4</threeSixtyTour>
     </media>
     <features>
       <feature>High-Speed Internet</feature>
