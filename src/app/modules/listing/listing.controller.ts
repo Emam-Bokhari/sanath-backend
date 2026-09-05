@@ -100,6 +100,29 @@ const updateListingStatusToSold = catchAsync(async (req, res) => {
   });
 });
 
+const updateListingMarketStatus = catchAsync(async (req, res) => {
+  const { id: agentId } = req.user as { id: string };
+  const { listingId } = req.params;
+  const { marketStatus } = req.body;
+
+  if (!marketStatus) {
+    throw new ApiError(StatusCodes.BAD_REQUEST, "Market status is required");
+  }
+
+  const result = await ListingServices.updateListingMarketStatusServiceToDB(
+    listingId,
+    marketStatus,
+    agentId,
+  );
+
+  sendResponse(res, {
+    success: true,
+    statusCode: StatusCodes.OK,
+    message: `Listing market status updated to ${marketStatus} successfully`,
+    data: result,
+  });
+});
+
 const getNearbyListingsService = catchAsync(async (req, res) => {
   const { lat, lng, radiusInMiles, ...query } = req.query;
   const user = req.user as { id: string } | undefined;
@@ -266,6 +289,7 @@ export const ListingControllers = {
   updateListing,
   deleteListing,
   updateListingStatusToSold,
+  updateListingMarketStatus,
   getNearbyListingsService,
   getListingById,
   searchListingsService,

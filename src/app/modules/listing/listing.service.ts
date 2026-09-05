@@ -14,7 +14,7 @@ import {
   canAgentAddListings,
   decrementAgentRemainingListings,
 } from "./listing.utils";
-import { FEATURES, LISTING_STATUS } from "./listing.constant";
+import { FEATURES, LISTING_STATUS, MARKET_STATUS } from "./listing.constant";
 import { FilterQuery, Types } from "mongoose";
 import QueryBuilder from "../../builder/queryBuilder";
 import { Enquery } from "../enquery/enquery.model";
@@ -28,6 +28,25 @@ import { csvListingSchema } from "./listing.validation";
 import AdmZip from "adm-zip";
 import path from "path";
 import fs from "fs";
+import {
+  calculateListingBadges,
+  TBadgeConfig,
+} from "./listing.badge.utils";
+import { Settings } from "../settings/settings.model";
+
+const getBadgeConfig = async (): Promise<TBadgeConfig> => {
+  try {
+    const settings = await Settings.findOne()
+      .select("priceReducedDurationDays newListingDurationDays")
+      .lean();
+    return {
+      priceReducedDays: (settings as any)?.priceReducedDurationDays ?? 30,
+      newListingDays: (settings as any)?.newListingDurationDays ?? 7,
+    };
+  } catch {
+    return { priceReducedDays: 30, newListingDays: 7 };
+  }
+};
 
 const bulkImportListingsServiceFromZIP = async (
   zipPath: string,
@@ -293,6 +312,8 @@ const createListingServiceToDB = async (payload: TListing, agentId: string) => {
     ...payload,
     agentId,
     status: initialStatus,
+    originalPrice: payload.askingPrice,
+    marketStatus: MARKET_STATUS.AVAILABLE,
   });
 
   // set shareId as the listing's _id
@@ -362,6 +383,8 @@ const getMyListingsServiceFromDB = async (
   );
   favoriteListingIds = favorites.map((f) => f.listingId.toString());
 
+  const badgeConfig = await getBadgeConfig();
+
   const resultWithLeads = await Promise.all(
     result.map(async (listing: any) => {
       let leads: any[] = [];
@@ -380,10 +403,15 @@ const getMyListingsServiceFromDB = async (
         leadsCount = await Enquery.countDocuments({ listingId: listing._id });
       }
 
-      // and favorite, if any,
+      const { primaryBadge, badges } = calculateListingBadges(
+        listing,
+        badgeConfig,
+      );
 
       return {
         ...listing,
+        primaryBadge,
+        badges,
         leadsCount,
         leads: hasLeadAccess ? leads : [],
         isFavorite: favoriteListingIds.includes(listing._id.toString()),
@@ -436,8 +464,16 @@ const getAgentListingByIdFromDB = async (
     listingId,
   });
 
+  const badgeConfig = await getBadgeConfig();
+  const { primaryBadge, badges } = calculateListingBadges(
+    listing,
+    badgeConfig,
+  );
+
   return {
     ...listing,
+    primaryBadge,
+    badges,
     leadsCount,
     leads: hasLeadAccess ? leads : [],
     isFavorite: !!isFavorite,
@@ -476,6 +512,40 @@ const updateListingServiceToDB = async (
     if (!plan?.features?.featuredListing) {
       return {} as any;
     }
+  }
+
+  // Strip automatic fields to prevent manual override by agent
+  delete (payload as any).firstPublishedAt;
+  delete (payload as any).lastPriceReducedAt;
+  delete (payload as any).priceHistory;
+  delete (payload as any).originalPrice;
+  delete (payload as any).previousPrice;
+
+  // Track price reduction automatically if askingPrice is lowered
+  if (
+    payload.askingPrice !== undefined &&
+    Number(payload.askingPrice) < existingListing.askingPrice
+  ) {
+    const previousPrice = existingListing.askingPrice;
+    const newPrice = Number(payload.askingPrice);
+    const diff = previousPrice - newPrice;
+    const percentage = Number(((diff / previousPrice) * 100).toFixed(2));
+
+    if (!existingListing.priceHistory) {
+      existingListing.priceHistory = [];
+    }
+
+    existingListing.priceHistory.push({
+      previousPrice,
+      newPrice,
+      difference: diff,
+      percentageReduced: percentage,
+      changedAt: new Date(),
+      changedBy: new Types.ObjectId(agentId),
+    });
+
+    existingListing.previousPrice = previousPrice;
+    existingListing.lastPriceReducedAt = new Date();
   }
 
   Object.assign(existingListing, payload);
@@ -545,8 +615,51 @@ const updateListingStatusToSoldServiceToDB = async (
   }
 
   listing.status = LISTING_STATUS.SOLD;
+  listing.marketStatus = MARKET_STATUS.SOLD;
   await listing.save();
 
+  return listing;
+};
+
+const updateListingMarketStatusServiceToDB = async (
+  listingId: string,
+  marketStatus: MARKET_STATUS,
+  agentId: string,
+) => {
+  const listing = await Listing.findOne({
+    _id: listingId,
+    agentId: new Types.ObjectId(agentId),
+    isDeleted: { $ne: true },
+  });
+
+  if (!listing) {
+    throw new ApiError(
+      StatusCodes.NOT_FOUND,
+      "Listing not found or unauthorized",
+    );
+  }
+
+  const oldMarketStatus = listing.marketStatus;
+  listing.marketStatus = marketStatus;
+
+  // If deal falls through (moving from SOLD_STC or SOLD back to AVAILABLE)
+  if (
+    (oldMarketStatus === MARKET_STATUS.SOLD_STC ||
+      oldMarketStatus === MARKET_STATUS.SOLD) &&
+    marketStatus === MARKET_STATUS.AVAILABLE
+  ) {
+    listing.marketStatus = MARKET_STATUS.BACK_ON_MARKET;
+    listing.backOnMarketAt = new Date();
+    if (listing.status === LISTING_STATUS.SOLD) {
+      listing.status = LISTING_STATUS.PUBLISHED;
+    }
+  } else if (marketStatus === MARKET_STATUS.SOLD) {
+    listing.status = LISTING_STATUS.SOLD;
+  } else if (marketStatus === MARKET_STATUS.RECENTLY_RELISTED) {
+    listing.relistedAt = new Date();
+  }
+
+  await listing.save();
   return listing;
 };
 
@@ -613,6 +726,8 @@ const getNearbyListingsServiceFromDB = async (
     favoriteListingIds = favorites.map((f) => f.listingId.toString());
   }
 
+  const badgeConfig = await getBadgeConfig();
+
   // add feature flags to agent data and isFavorite flag
   result.forEach((listing: any) => {
     if (listing.agentId) {
@@ -628,6 +743,13 @@ const getNearbyListingsServiceFromDB = async (
     } else {
       listing.isFavorite = false;
     }
+
+    const { primaryBadge, badges } = calculateListingBadges(
+      listing,
+      badgeConfig,
+    );
+    listing.primaryBadge = primaryBadge;
+    listing.badges = badges;
 
     listing.shareLink = generateShareLink(listing.shareId);
   });
@@ -698,8 +820,16 @@ const getSingleListingByIdFromDB = async (
     }
   }
 
+  const badgeConfig = await getBadgeConfig();
+  const { primaryBadge, badges } = calculateListingBadges(
+    listing,
+    badgeConfig,
+  );
+
   return {
     ...listing,
+    primaryBadge,
+    badges,
     isFavorite,
     shareLink: generateShareLink(listing.shareId),
   };
@@ -727,6 +857,7 @@ const searchListingsServiceFromDB = async (
     lng,
     radiusInMiles,
     radiusInMiels, // handle common typo in frontend
+    includeSSTC,
   } = params as any;
 
   // save search to history if userId is provided
@@ -772,6 +903,10 @@ const searchListingsServiceFromDB = async (
     isDeleted: false, // changed from { $ne: true } for better geo-search compatibility
     status: LISTING_STATUS.PUBLISHED,
   };
+
+  if (includeSSTC === false || includeSSTC === "false") {
+    query.marketStatus = { $ne: MARKET_STATUS.SOLD_STC };
+  }
 
   /* ================= listing type (sale / rent) ================= */
   if (listingType) {
@@ -1022,10 +1157,19 @@ const searchListingsServiceFromDB = async (
     }
 
     const results = await Listing.aggregate(pipeline);
-    return results.map((listing: any) => ({
-      ...listing,
-      shareLink: generateShareLink(listing.shareId),
-    }));
+    const badgeConfig = await getBadgeConfig();
+    return results.map((listing: any) => {
+      const { primaryBadge, badges } = calculateListingBadges(
+        listing,
+        badgeConfig,
+      );
+      return {
+        ...listing,
+        primaryBadge,
+        badges,
+        shareLink: generateShareLink(listing.shareId),
+      };
+    });
   }
 
   /* ================= normal sort ================= */
@@ -1071,6 +1215,8 @@ const searchListingsServiceFromDB = async (
     favoriteListingIds = favorites.map((f) => f.listingId.toString());
   }
 
+  const badgeConfig = await getBadgeConfig();
+
   // add feature flags to agent data and isFavorite flag
   listings.forEach((listing: any) => {
     if (listing.agentId) {
@@ -1086,6 +1232,13 @@ const searchListingsServiceFromDB = async (
     } else {
       listing.isFavorite = false;
     }
+
+    const { primaryBadge, badges } = calculateListingBadges(
+      listing,
+      badgeConfig,
+    );
+    listing.primaryBadge = primaryBadge;
+    listing.badges = badges;
 
     listing.shareLink = generateShareLink(listing.shareId);
   });
@@ -1110,6 +1263,8 @@ const getAllListingsServiceFromDB = async (query: Record<string, unknown>) => {
     })
     .lean();
 
+  const badgeConfig = await getBadgeConfig();
+
   const resultWithLeads = await Promise.all(
     result.map(async (listing: any) => {
       const leads = await Enquery.find({ listingId: listing._id })
@@ -1119,8 +1274,15 @@ const getAllListingsServiceFromDB = async (query: Record<string, unknown>) => {
         })
         .lean();
 
+      const { primaryBadge, badges } = calculateListingBadges(
+        listing,
+        badgeConfig,
+      );
+
       return {
         ...listing,
+        primaryBadge,
+        badges,
         leadsCount: leads.length,
         leads: leads,
       };
@@ -1153,8 +1315,16 @@ const getSingleListingForAdminFromDB = async (listingId: string) => {
     })
     .lean();
 
+  const badgeConfig = await getBadgeConfig();
+  const { primaryBadge, badges } = calculateListingBadges(
+    listing,
+    badgeConfig,
+  );
+
   return {
     ...listing,
+    primaryBadge,
+    badges,
     leadsCount: leads.length,
     leads: leads,
   };
@@ -1171,6 +1341,17 @@ const updateListingStatusForAdminServiceToDB = async (
   }
 
   listing.status = status;
+
+  if (status === LISTING_STATUS.PUBLISHED) {
+    if (!listing.firstPublishedAt) {
+      listing.firstPublishedAt = new Date();
+      if (!listing.originalPrice) {
+        listing.originalPrice = listing.askingPrice;
+      }
+    }
+    listing.lastPublishedAt = new Date();
+  }
+
   await listing.save();
 
   // send notification to agent
@@ -1250,8 +1431,16 @@ const getListingByShareIdFromDB = async (shareId: string, userId?: string) => {
     }
   }
 
+  const badgeConfig = await getBadgeConfig();
+  const { primaryBadge, badges } = calculateListingBadges(
+    listing,
+    badgeConfig,
+  );
+
   return {
     ...listing,
+    primaryBadge,
+    badges,
     isFavorite,
     shareLink: generateShareLink(listing.shareId),
   };
@@ -1290,6 +1479,7 @@ export const ListingServices = {
   updateListingServiceToDB,
   deleteListingServiceByIdFromDB,
   updateListingStatusToSoldServiceToDB,
+  updateListingMarketStatusServiceToDB,
   getNearbyListingsServiceFromDB,
   getAgentListingByIdFromDB,
   searchListingsServiceFromDB,

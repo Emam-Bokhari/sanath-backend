@@ -26,6 +26,9 @@ const settingsValidationSchema = z.object({
       })
       .min(1, "Currency cannot be empty")
       .max(10, "Invalid currency format"),
+
+    priceReducedDurationDays: z.number().min(1).optional(),
+    newListingDurationDays: z.number().min(1).optional(),
   }),
 });
 

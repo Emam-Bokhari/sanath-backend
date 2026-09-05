@@ -4,11 +4,26 @@ import {
   FEATURES,
   LISTING_STATUS,
   LISTING_TYPE,
+  MARKET_STATUS,
   PROPERTY_TYPE,
   TENURE,
 } from "./listing.constant";
 import { ISoftDeleteModel } from "../../../types/softDelete";
 import { TEnquery } from "../enquery/enquery.interface";
+
+export type TPriceHistory = {
+  previousPrice: number;
+  newPrice: number;
+  difference: number;
+  percentageReduced: number;
+  changedAt: Date;
+  changedBy: Types.ObjectId;
+};
+
+export type TBadge = {
+  code: string;
+  label: string;
+};
 
 export type TListingChecklist = {
   basicInfo: boolean;
@@ -71,6 +86,17 @@ export type TListing = {
   source?: "manual" | "csv" | "feed";
   sourceUrl?: string;
   lastSyncedAt?: Date;
+
+  // New badge, status & price reduction fields (non-breaking)
+  firstPublishedAt?: Date;
+  lastPublishedAt?: Date;
+  relistedAt?: Date;
+  backOnMarketAt?: Date;
+  marketStatus?: MARKET_STATUS;
+  priceHistory?: TPriceHistory[];
+  lastPriceReducedAt?: Date;
+  originalPrice?: number;
+  previousPrice?: number;
 };
 
 export type TSort =
@@ -99,6 +125,7 @@ export type TSearchParams = {
   lat?: number | string;
   lng?: number | string;
   radiusInMiles?: number | string;
+  includeSSTC?: boolean | string;
 };
 
 export type TListingModel = ISoftDeleteModel<TListing>;

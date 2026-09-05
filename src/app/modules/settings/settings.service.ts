@@ -3,7 +3,12 @@ import { TSettings } from "./settings.interface";
 import { Settings } from "./settings.model";
 
 const createOrUpdateSettingsToDB = async (payload: TSettings) => {
-  const { paymentNumbers, currency } = payload;
+  const {
+    paymentNumbers,
+    currency,
+    priceReducedDurationDays,
+    newListingDurationDays,
+  } = payload;
 
   // basic validation
   if (!paymentNumbers || paymentNumbers.length === 0) {
@@ -16,6 +21,19 @@ const createOrUpdateSettingsToDB = async (payload: TSettings) => {
 
   const existingSettings = await Settings.findOne();
 
+  const updateFields: any = {
+    paymentNumbers,
+    currency,
+  };
+
+  if (priceReducedDurationDays !== undefined) {
+    updateFields.priceReducedDurationDays = priceReducedDurationDays;
+  }
+
+  if (newListingDurationDays !== undefined) {
+    updateFields.newListingDurationDays = newListingDurationDays;
+  }
+
   let result;
 
   if (existingSettings) {
@@ -23,10 +41,7 @@ const createOrUpdateSettingsToDB = async (payload: TSettings) => {
     result = await Settings.findByIdAndUpdate(
       existingSettings._id,
       {
-        $set: {
-          paymentNumbers,
-          currency,
-        },
+        $set: updateFields,
       },
       {
         new: true,
@@ -34,10 +49,7 @@ const createOrUpdateSettingsToDB = async (payload: TSettings) => {
       },
     );
   } else {
-    result = await Settings.create({
-      paymentNumbers,
-      currency,
-    });
+    result = await Settings.create(updateFields);
   }
 
   return result;

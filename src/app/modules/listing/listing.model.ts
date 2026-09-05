@@ -5,6 +5,7 @@ import {
   FEATURES,
   LISTING_STATUS,
   LISTING_TYPE,
+  MARKET_STATUS,
   PROPERTY_TYPE,
   TENURE,
 } from "./listing.constant";
@@ -188,6 +189,46 @@ const listingSchema = new Schema<TListing, TListingModel>(
     lastSyncedAt: {
       type: Date,
     },
+    // New badge, status & price reduction fields (non-breaking)
+    firstPublishedAt: {
+      type: Date,
+    },
+    lastPublishedAt: {
+      type: Date,
+    },
+    relistedAt: {
+      type: Date,
+    },
+    backOnMarketAt: {
+      type: Date,
+    },
+    marketStatus: {
+      type: String,
+      enum: Object.values(MARKET_STATUS),
+      default: MARKET_STATUS.AVAILABLE,
+    },
+    priceHistory: {
+      type: [
+        {
+          previousPrice: { type: Number, required: true },
+          newPrice: { type: Number, required: true },
+          difference: { type: Number, required: true },
+          percentageReduced: { type: Number, required: true },
+          changedAt: { type: Date, default: Date.now },
+          changedBy: { type: Schema.Types.ObjectId, ref: "User" },
+        },
+      ],
+      default: [],
+    },
+    lastPriceReducedAt: {
+      type: Date,
+    },
+    originalPrice: {
+      type: Number,
+    },
+    previousPrice: {
+      type: Number,
+    },
   },
   {
     timestamps: true,
@@ -207,6 +248,10 @@ listingSchema.index(
     },
   },
 );
+
+listingSchema.index({ marketStatus: 1 });
+listingSchema.index({ firstPublishedAt: -1 });
+listingSchema.index({ lastPriceReducedAt: -1 });
 
 listingSchema.plugin(softDeletePlugin);
 

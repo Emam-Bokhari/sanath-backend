@@ -96,6 +96,14 @@ router
     ListingControllers.updateListingStatusToSold,
   );
 
+router
+  .route("/my/market-status/:listingId")
+  .patch(
+    isAgent,
+    checkSubscription(),
+    ListingControllers.updateListingMarketStatus,
+  );
+
 router.route("/admin/all").get(isAdmin, ListingControllers.getAllListings);
 
 router

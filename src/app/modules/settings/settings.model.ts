@@ -27,6 +27,14 @@ const settingsSchema = new Schema(
       required: true,
       trim: true,
     },
+    priceReducedDurationDays: {
+      type: Number,
+      default: 30,
+    },
+    newListingDurationDays: {
+      type: Number,
+      default: 7,
+    },
   },
   {
     timestamps: true,
