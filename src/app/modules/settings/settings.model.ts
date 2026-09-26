@@ -1,32 +1,8 @@
 import { Schema, model } from "mongoose";
+import { TSettings } from "./settings.interface";
 
-const paymentNumberSchema = new Schema(
+const settingsSchema = new Schema<TSettings>(
   {
-    label: {
-      type: String,
-      required: true,
-      trim: true,
-    },
-    number: {
-      type: String,
-      required: true,
-      trim: true,
-    },
-  },
-  { _id: false },
-);
-
-const settingsSchema = new Schema(
-  {
-    paymentNumbers: {
-      type: [paymentNumberSchema],
-      default: [],
-    },
-    currency: {
-      type: String,
-      required: true,
-      trim: true,
-    },
     priceReducedDurationDays: {
       type: Number,
       default: 30,
@@ -42,4 +18,4 @@ const settingsSchema = new Schema(
   },
 );
 
-export const Settings = model("Settings", settingsSchema);
+export const Settings = model<TSettings>("Settings", settingsSchema);

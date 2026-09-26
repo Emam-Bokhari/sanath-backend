@@ -362,13 +362,6 @@ URL: /api/v1/settings
 Request Body:
 json
 {
-  "currency": "GBP",
-  "paymentNumbers": [
-    {
-      "label": "UK Bank Transfer",
-      "number": "+44 7700 900077"
-    }
-  ],
   "priceReducedDurationDays": 30,
   "newListingDurationDays": 7
 }
@@ -380,7 +373,6 @@ json
   "message": "Settings updated successfully",
   "data": {
     "_id": "66b0987654321fedcba09876",
-    "currency": "GBP",
     "priceReducedDurationDays": 30,
     "newListingDurationDays": 7
   }
