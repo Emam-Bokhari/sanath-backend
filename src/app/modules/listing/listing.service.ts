@@ -28,13 +28,11 @@ import { csvListingSchema } from "./listing.validation";
 import AdmZip from "adm-zip";
 import path from "path";
 import fs from "fs";
-import {
-  calculateListingBadges,
-  TBadgeConfig,
-} from "./listing.badge.utils";
+import { calculateListingBadges, TBadgeConfig } from "./listing.badge.utils";
 import { Settings } from "../settings/settings.model";
 
-let cachedBadgeConfig: { config: TBadgeConfig; timestamp: number } | null = null;
+let cachedBadgeConfig: { config: TBadgeConfig; timestamp: number } | null =
+  null;
 const getBadgeConfig = async (): Promise<TBadgeConfig> => {
   const now = Date.now();
   if (cachedBadgeConfig && now - cachedBadgeConfig.timestamp < 60000) {
@@ -472,10 +470,7 @@ const getAgentListingByIdFromDB = async (
   });
 
   const badgeConfig = await getBadgeConfig();
-  const { primaryBadge, badges } = calculateListingBadges(
-    listing,
-    badgeConfig,
-  );
+  const { primaryBadge, badges } = calculateListingBadges(listing, badgeConfig);
 
   return {
     ...listing,
@@ -828,10 +823,7 @@ const getSingleListingByIdFromDB = async (
   }
 
   const badgeConfig = await getBadgeConfig();
-  const { primaryBadge, badges } = calculateListingBadges(
-    listing,
-    badgeConfig,
-  );
+  const { primaryBadge, badges } = calculateListingBadges(listing, badgeConfig);
 
   return {
     ...listing,
@@ -1336,10 +1328,7 @@ const getSingleListingForAdminFromDB = async (listingId: string) => {
     .lean();
 
   const badgeConfig = await getBadgeConfig();
-  const { primaryBadge, badges } = calculateListingBadges(
-    listing,
-    badgeConfig,
-  );
+  const { primaryBadge, badges } = calculateListingBadges(listing, badgeConfig);
 
   return {
     ...listing,
@@ -1452,10 +1441,7 @@ const getListingByShareIdFromDB = async (shareId: string, userId?: string) => {
   }
 
   const badgeConfig = await getBadgeConfig();
-  const { primaryBadge, badges } = calculateListingBadges(
-    listing,
-    badgeConfig,
-  );
+  const { primaryBadge, badges } = calculateListingBadges(listing, badgeConfig);
 
   return {
     ...listing,

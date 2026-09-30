@@ -12,7 +12,9 @@ const CACHE_TTL_SECONDS = 60;
  * 1. Checks in-memory L1 cache (<0.1ms)
  * 2. Checks Redis L2 cache (<2ms)
  */
-const getCachedSavedSearches = async (userId: string): Promise<any[] | null> => {
+const getCachedSavedSearches = async (
+  userId: string,
+): Promise<any[] | null> => {
   const cacheKey = `cache:saved_searches:${userId}`;
 
   // L1: Memory Cache
@@ -59,7 +61,11 @@ const setCachedSavedSearches = async (
   // Save to L2
   try {
     if (redisClient?.isOpen) {
-      await redisClient.setEx(cacheKey, CACHE_TTL_SECONDS, JSON.stringify(data));
+      await redisClient.setEx(
+        cacheKey,
+        CACHE_TTL_SECONDS,
+        JSON.stringify(data),
+      );
     }
   } catch {
     // Continue gracefully

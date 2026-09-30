@@ -37,7 +37,11 @@ export const isCalendarYesterday = (
  * Returns the calendar day difference between two dates
  */
 export const getCalendarDaysDiff = (earlier: Date, later: Date): number => {
-  const d1 = new Date(earlier.getFullYear(), earlier.getMonth(), earlier.getDate());
+  const d1 = new Date(
+    earlier.getFullYear(),
+    earlier.getMonth(),
+    earlier.getDate(),
+  );
   const d2 = new Date(later.getFullYear(), later.getMonth(), later.getDate());
   const diffMs = d2.getTime() - d1.getTime();
   return Math.max(0, Math.floor(diffMs / (1000 * 60 * 60 * 24)));

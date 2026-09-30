@@ -28,7 +28,6 @@ const getRuleByType = async (type: RULE_TYPE) => {
   return result;
 };
 
-
 const updateRule = async (type: RULE_TYPE, content: string) => {
   const result = await Rule.findOneAndUpdate(
     { type: type.toUpperCase() },

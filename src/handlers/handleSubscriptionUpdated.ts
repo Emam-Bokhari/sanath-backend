@@ -235,7 +235,6 @@ export const handleSubscriptionUpdated = async (data: Stripe.Subscription) => {
             });
           }
 
-  
           // Calculate current listings and remaining
           const currentListings = await Listing.countDocuments({
             agentId: existingUser._id,
