@@ -34,15 +34,22 @@ import {
 } from "./listing.badge.utils";
 import { Settings } from "../settings/settings.model";
 
+let cachedBadgeConfig: { config: TBadgeConfig; timestamp: number } | null = null;
 const getBadgeConfig = async (): Promise<TBadgeConfig> => {
+  const now = Date.now();
+  if (cachedBadgeConfig && now - cachedBadgeConfig.timestamp < 60000) {
+    return cachedBadgeConfig.config;
+  }
   try {
     const settings = await Settings.findOne()
       .select("priceReducedDurationDays newListingDurationDays")
       .lean();
-    return {
+    const config: TBadgeConfig = {
       priceReducedDays: (settings as any)?.priceReducedDurationDays ?? 30,
       newListingDays: (settings as any)?.newListingDurationDays ?? 7,
     };
+    cachedBadgeConfig = { config, timestamp: now };
+    return config;
   } catch {
     return { priceReducedDays: 30, newListingDays: 7 };
   }
@@ -858,7 +865,13 @@ const searchListingsServiceFromDB = async (
     radiusInMiles,
     radiusInMiels, // handle common typo in frontend
     includeSSTC,
+    limit,
   } = params as any;
+
+  const numericLimit =
+    limit !== undefined && !isNaN(Number(limit)) && Number(limit) > 0
+      ? Number(limit)
+      : undefined;
 
   // save search to history if userId is provided
   if (userId) {
@@ -1156,6 +1169,10 @@ const searchListingsServiceFromDB = async (
       }
     }
 
+    if (numericLimit !== undefined) {
+      pipeline.push({ $limit: numericLimit });
+    }
+
     const results = await Listing.aggregate(pipeline);
     const badgeConfig = await getBadgeConfig();
     return results.map((listing: any) => {
@@ -1197,7 +1214,7 @@ const searchListingsServiceFromDB = async (
   }
 
   /* ================= execute ================= */
-  const listings = await Listing.find(query)
+  let findQuery = Listing.find(query)
     .sort(sortQuery)
     .populate({
       path: "agentId",
@@ -1206,6 +1223,12 @@ const searchListingsServiceFromDB = async (
       },
     })
     .lean();
+
+  if (numericLimit !== undefined) {
+    findQuery = findQuery.limit(numericLimit) as any;
+  }
+
+  const listings = await findQuery;
 
   let favoriteListingIds: string[] = [];
   if (userId) {
@@ -1257,9 +1280,6 @@ const getAllListingsServiceFromDB = async (query: Record<string, unknown>) => {
   const result = await listingQuery.modelQuery
     .populate({
       path: "agentId",
-      // populate: {
-      //   path: "plan",
-      // },
     })
     .lean();
 

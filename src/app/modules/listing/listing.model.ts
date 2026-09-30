@@ -252,6 +252,9 @@ listingSchema.index(
 listingSchema.index({ marketStatus: 1 });
 listingSchema.index({ firstPublishedAt: -1 });
 listingSchema.index({ lastPriceReducedAt: -1 });
+listingSchema.index({ isDeleted: 1, status: 1, createdAt: -1 });
+listingSchema.index({ isDeleted: 1, status: 1, askingPrice: 1 });
+listingSchema.index({ isDeleted: 1, status: 1, askingPrice: -1 });
 
 listingSchema.plugin(softDeletePlugin);
 

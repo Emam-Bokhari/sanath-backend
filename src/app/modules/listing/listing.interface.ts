@@ -126,6 +126,7 @@ export type TSearchParams = {
   lng?: number | string;
   radiusInMiles?: number | string;
   includeSSTC?: boolean | string;
+  limit?: number | string;
 };
 
 export type TListingModel = ISoftDeleteModel<TListing>;

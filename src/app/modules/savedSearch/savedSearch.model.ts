@@ -35,6 +35,9 @@ const savedSearchSchema = new Schema<TSavedSearch>(
   },
 );
 
+savedSearchSchema.index({ userId: 1, createdAt: -1 });
+savedSearchSchema.index({ userId: 1, "params.searchTerm": 1 });
+
 export const SavedSearch = model<TSavedSearch>(
   "SavedSearch",
   savedSearchSchema,
