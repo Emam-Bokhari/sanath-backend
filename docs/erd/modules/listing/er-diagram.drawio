@@ -1,0 +1,314 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mxfile host="Electron" modified="2026-10-04T04:45:40.774Z" agent="Antigravity" version="24.0.0" type="device">
+  <diagram id="Page-1" name="Page-1">
+    <mxGraphModel dx="1422" dy="804" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="2000" pageHeight="1988" math="0" shadow="0" background="#FFFFFF">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="column_0" value="Parent Lookups / External Dependencies" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#F0F9FF;strokeColor=#BAE6FD;strokeWidth=1.5;dashed=1;arcSize=6;align=left;verticalAlign=top;spacingLeft=15;spacingTop=12;fontColor=#0F766E;fontSize=14;fontStyle=1;container=1;collapsible=0;recursiveResize=0;" vertex="1" parent="1">
+          <mxGeometry x="100" y="100" width="400" height="1788" as="geometry" />
+        </mxCell>
+        <mxCell id="column_1" value="Core Module: Listing" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#F5F3FF;strokeColor=#C7D2FE;strokeWidth=1.5;dashed=1;arcSize=6;align=left;verticalAlign=top;spacingLeft=15;spacingTop=12;fontColor=#1E1B4B;fontSize=14;fontStyle=1;container=1;collapsible=0;recursiveResize=0;" vertex="1" parent="1">
+          <mxGeometry x="800" y="100" width="400" height="1788" as="geometry" />
+        </mxCell>
+        <mxCell id="column_2" value="Dependent Entities &amp; Sub-Schemas" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFF7ED;strokeColor=#FED7AA;strokeWidth=1.5;dashed=1;arcSize=6;align=left;verticalAlign=top;spacingLeft=15;spacingTop=12;fontColor=#9A3412;fontSize=14;fontStyle=1;container=1;collapsible=0;recursiveResize=0;" vertex="1" parent="1">
+          <mxGeometry x="1500" y="100" width="400" height="1788" as="geometry" />
+        </mxCell>
+        <mxCell id="table_AgentFeed" value="AgentFeed" style="swimlane;fontStyle=1;childLayout=stackLayout;horizontal=1;startSize=38;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=0;marginBottom=0;whiteSpace=wrap;html=1;fillColor=#0F766E;swimlaneFillColor=#F0FDFA;strokeColor=#14B8A6;strokeWidth=2;dashed=1;fontColor=#FFFFFF;fontSize=13;align=center;" vertex="1" parent="column_0">
+          <mxGeometry x="30" y="1124" width="340" height="66" as="geometry" />
+        </mxCell>
+        <mxCell id="field_AgentFeed__id" value="&lt;div style=&quot;box-sizing:border-box; width:100%; overflow-wrap:anywhere; word-break:break-word;&quot;&gt;&lt;b&gt;_id&lt;/b&gt;: &lt;span style=&quot;color:#4B5563;&quot;&gt;&lt;b&gt;objectId&lt;/b&gt;&lt;/span&gt; &lt;span style=&quot;background-color:#FBBF24;color:#1F2937;padding:1px 5px;font-size:9px;font-weight:bold;border-radius:3px;margin-left:5px;display:inline-block;line-height:1.2;&quot;&gt;PK&lt;/span&gt;&lt;/div&gt;" style="text;strokeColor=none;fillColor=#FEF3C7;align=left;verticalAlign=top;spacingLeft=10;spacingRight=10;spacingTop=6;overflow=visible;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;whiteSpace=wrap;html=1;fontSize=11;fontColor=#111827;" vertex="1" parent="table_AgentFeed">
+          <mxGeometry y="38" width="340" height="28" as="geometry" />
+        </mxCell>
+        <mxCell id="table_Enquery" value="Enquery" style="swimlane;fontStyle=1;childLayout=stackLayout;horizontal=1;startSize=38;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=0;marginBottom=0;whiteSpace=wrap;html=1;fillColor=#0F766E;swimlaneFillColor=#F0FDFA;strokeColor=#14B8A6;strokeWidth=2;dashed=1;fontColor=#FFFFFF;fontSize=13;align=center;" vertex="1" parent="column_0">
+          <mxGeometry x="30" y="858" width="340" height="66" as="geometry" />
+        </mxCell>
+        <mxCell id="field_Enquery__id" value="&lt;div style=&quot;box-sizing:border-box; width:100%; overflow-wrap:anywhere; word-break:break-word;&quot;&gt;&lt;b&gt;_id&lt;/b&gt;: &lt;span style=&quot;color:#4B5563;&quot;&gt;&lt;b&gt;objectId&lt;/b&gt;&lt;/span&gt; &lt;span style=&quot;background-color:#FBBF24;color:#1F2937;padding:1px 5px;font-size:9px;font-weight:bold;border-radius:3px;margin-left:5px;display:inline-block;line-height:1.2;&quot;&gt;PK&lt;/span&gt;&lt;/div&gt;" style="text;strokeColor=none;fillColor=#FEF3C7;align=left;verticalAlign=top;spacingLeft=10;spacingRight=10;spacingTop=6;overflow=visible;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;whiteSpace=wrap;html=1;fontSize=11;fontColor=#111827;" vertex="1" parent="table_Enquery">
+          <mxGeometry y="38" width="340" height="28" as="geometry" />
+        </mxCell>
+        <mxCell id="table_FavoriteProperty" value="FavoriteProperty" style="swimlane;fontStyle=1;childLayout=stackLayout;horizontal=1;startSize=38;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=0;marginBottom=0;whiteSpace=wrap;html=1;fillColor=#0F766E;swimlaneFillColor=#F0FDFA;strokeColor=#14B8A6;strokeWidth=2;dashed=1;fontColor=#FFFFFF;fontSize=13;align=center;" vertex="1" parent="column_0">
+          <mxGeometry x="30" y="326" width="340" height="66" as="geometry" />
+        </mxCell>
+        <mxCell id="field_FavoriteProperty__id" value="&lt;div style=&quot;box-sizing:border-box; width:100%; overflow-wrap:anywhere; word-break:break-word;&quot;&gt;&lt;b&gt;_id&lt;/b&gt;: &lt;span style=&quot;color:#4B5563;&quot;&gt;&lt;b&gt;objectId&lt;/b&gt;&lt;/span&gt; &lt;span style=&quot;background-color:#FBBF24;color:#1F2937;padding:1px 5px;font-size:9px;font-weight:bold;border-radius:3px;margin-left:5px;display:inline-block;line-height:1.2;&quot;&gt;PK&lt;/span&gt;&lt;/div&gt;" style="text;strokeColor=none;fillColor=#FEF3C7;align=left;verticalAlign=top;spacingLeft=10;spacingRight=10;spacingTop=6;overflow=visible;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;whiteSpace=wrap;html=1;fontSize=11;fontColor=#111827;" vertex="1" parent="table_FavoriteProperty">
+          <mxGeometry y="38" width="340" height="28" as="geometry" />
+        </mxCell>
+        <mxCell id="table_Listing" value="Listing" style="swimlane;fontStyle=1;childLayout=stackLayout;horizontal=1;startSize=38;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=0;marginBottom=0;whiteSpace=wrap;html=1;fillColor=#1E1B4B;swimlaneFillColor=#EEF2FF;strokeColor=#4338CA;strokeWidth=2;fontColor=#FFFFFF;fontSize=13;align=center;" vertex="1" parent="column_1">
+          <mxGeometry x="30" y="60" width="340" height="1698" as="geometry" />
+        </mxCell>
+        <mxCell id="field_Listing__id" value="&lt;div style=&quot;box-sizing:border-box; width:100%; overflow-wrap:anywhere; word-break:break-word;&quot;&gt;&lt;b&gt;_id&lt;/b&gt;: &lt;span style=&quot;color:#4B5563;&quot;&gt;&lt;b&gt;objectId&lt;/b&gt;&lt;/span&gt; &lt;span style=&quot;background-color:#FBBF24;color:#1F2937;padding:1px 5px;font-size:9px;font-weight:bold;border-radius:3px;margin-left:5px;display:inline-block;line-height:1.2;&quot;&gt;PK&lt;/span&gt;&lt;/div&gt;" style="text;strokeColor=none;fillColor=#FEF3C7;align=left;verticalAlign=top;spacingLeft=10;spacingRight=10;spacingTop=6;overflow=visible;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;whiteSpace=wrap;html=1;fontSize=11;fontColor=#111827;" vertex="1" parent="table_Listing">
+          <mxGeometry y="38" width="340" height="28" as="geometry" />
+        </mxCell>
+        <mxCell id="field_Listing_title" value="&lt;div style=&quot;box-sizing:border-box; width:100%; overflow-wrap:anywhere; word-break:break-word;&quot;&gt;title: &lt;span style=&quot;color:#4B5563;&quot;&gt;string&lt;/span&gt;&lt;/div&gt;" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=10;spacingRight=10;spacingTop=6;overflow=visible;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;whiteSpace=wrap;html=1;fontSize=11;fontColor=#111827;" vertex="1" parent="table_Listing">
+          <mxGeometry y="66" width="340" height="28" as="geometry" />
+        </mxCell>
+        <mxCell id="field_Listing_listingType" value="&lt;div style=&quot;box-sizing:border-box; width:100%; overflow-wrap:anywhere; word-break:break-word;&quot;&gt;listingType: &lt;span style=&quot;color:#4B5563;&quot;&gt;string&lt;/span&gt;&lt;span style=&quot;background-color:#7C3AED;color:#FFFFFF;padding:1px 5px;font-size:9px;font-weight:bold;border-radius:3px;margin-left:5px;display:inline-block;line-height:1.2;&quot;&gt;ENUM&lt;/span&gt; &lt;span style=&quot;color:#4B5563; font-size:10px; font-style:italic;&quot;&gt;(enum: SALE|​RENT)&lt;/span&gt;&lt;/div&gt;" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=10;spacingRight=10;spacingTop=6;overflow=visible;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;whiteSpace=wrap;html=1;fontSize=11;fontColor=#111827;" vertex="1" parent="table_Listing">
+          <mxGeometry y="94" width="340" height="28" as="geometry" />
+        </mxCell>
+        <mxCell id="field_Listing_askingPrice" value="&lt;div style=&quot;box-sizing:border-box; width:100%; overflow-wrap:anywhere; word-break:break-word;&quot;&gt;askingPrice: &lt;span style=&quot;color:#4B5563;&quot;&gt;number&lt;/span&gt;&lt;/div&gt;" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=10;spacingRight=10;spacingTop=6;overflow=visible;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;whiteSpace=wrap;html=1;fontSize=11;fontColor=#111827;" vertex="1" parent="table_Listing">
+          <mxGeometry y="122" width="340" height="28" as="geometry" />
+        </mxCell>
+        <mxCell id="field_Listing_country" value="&lt;div style=&quot;box-sizing:border-box; width:100%; overflow-wrap:anywhere; word-break:break-word;&quot;&gt;country: &lt;span style=&quot;color:#4B5563;&quot;&gt;string&lt;/span&gt;&lt;/div&gt;" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=10;spacingRight=10;spacingTop=6;overflow=visible;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;whiteSpace=wrap;html=1;fontSize=11;fontColor=#111827;" vertex="1" parent="table_Listing">
+          <mxGeometry y="150" width="340" height="28" as="geometry" />
+        </mxCell>
+        <mxCell id="field_Listing_city" value="&lt;div style=&quot;box-sizing:border-box; width:100%; overflow-wrap:anywhere; word-break:break-word;&quot;&gt;city: &lt;span style=&quot;color:#4B5563;&quot;&gt;string&lt;/span&gt;&lt;/div&gt;" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=10;spacingRight=10;spacingTop=6;overflow=visible;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;whiteSpace=wrap;html=1;fontSize=11;fontColor=#111827;" vertex="1" parent="table_Listing">
+          <mxGeometry y="178" width="340" height="28" as="geometry" />
+        </mxCell>
+        <mxCell id="field_Listing_postalCode" value="&lt;div style=&quot;box-sizing:border-box; width:100%; overflow-wrap:anywhere; word-break:break-word;&quot;&gt;postalCode: &lt;span style=&quot;color:#4B5563;&quot;&gt;string&lt;/span&gt;&lt;/div&gt;" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=10;spacingRight=10;spacingTop=6;overflow=visible;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;whiteSpace=wrap;html=1;fontSize=11;fontColor=#111827;" vertex="1" parent="table_Listing">
+          <mxGeometry y="206" width="340" height="28" as="geometry" />
+        </mxCell>
+        <mxCell id="field_Listing_location_type" value="&lt;div style=&quot;box-sizing:border-box; width:100%; overflow-wrap:anywhere; word-break:break-word;&quot;&gt;location_type: &lt;span style=&quot;color:#4B5563;&quot;&gt;string&lt;/span&gt;&lt;span style=&quot;background-color:#7C3AED;color:#FFFFFF;padding:1px 5px;font-size:9px;font-weight:bold;border-radius:3px;margin-left:5px;display:inline-block;line-height:1.2;&quot;&gt;ENUM&lt;/span&gt; &lt;span style=&quot;color:#4B5563; font-size:10px; font-style:italic;&quot;&gt;(enum: Point)&lt;/span&gt;&lt;/div&gt;" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=10;spacingRight=10;spacingTop=6;overflow=visible;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;whiteSpace=wrap;html=1;fontSize=11;fontColor=#111827;" vertex="1" parent="table_Listing">
+          <mxGeometry y="234" width="340" height="28" as="geometry" />
+        </mxCell>
+        <mxCell id="field_Listing_location_coordinates" value="&lt;div style=&quot;box-sizing:border-box; width:100%; overflow-wrap:anywhere; word-break:break-word;&quot;&gt;location_coordinates: &lt;span style=&quot;color:#4B5563;&quot;&gt;number[]&lt;/span&gt;&lt;/div&gt;" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=10;spacingRight=10;spacingTop=6;overflow=visible;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;whiteSpace=wrap;html=1;fontSize=11;fontColor=#111827;" vertex="1" parent="table_Listing">
+          <mxGeometry y="262" width="340" height="28" as="geometry" />
+        </mxCell>
+        <mxCell id="field_Listing_location_address" value="&lt;div style=&quot;box-sizing:border-box; width:100%; overflow-wrap:anywhere; word-break:break-word;&quot;&gt;location_address: &lt;span style=&quot;color:#4B5563;&quot;&gt;string&lt;/span&gt;&lt;/div&gt;" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=10;spacingRight=10;spacingTop=6;overflow=visible;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;whiteSpace=wrap;html=1;fontSize=11;fontColor=#111827;" vertex="1" parent="table_Listing">
+          <mxGeometry y="290" width="340" height="28" as="geometry" />
+        </mxCell>
+        <mxCell id="field_Listing_agentId" value="&lt;div style=&quot;box-sizing:border-box; width:100%; overflow-wrap:anywhere; word-break:break-word;&quot;&gt;agentId: &lt;span style=&quot;color:#4B5563;&quot;&gt;&lt;i&gt;objectId&lt;/i&gt;&lt;/span&gt;&lt;span style=&quot;background-color:#2563EB;color:#FFFFFF;padding:1px 5px;font-size:9px;font-weight:bold;border-radius:3px;margin-left:5px;display:inline-block;line-height:1.2;&quot;&gt;FK&lt;/span&gt;&lt;/div&gt;" style="text;strokeColor=none;fillColor=#DBEAFE;align=left;verticalAlign=top;spacingLeft=10;spacingRight=10;spacingTop=6;overflow=visible;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;whiteSpace=wrap;html=1;fontSize=11;fontColor=#111827;" vertex="1" parent="table_Listing">
+          <mxGeometry y="318" width="340" height="28" as="geometry" />
+        </mxCell>
+        <mxCell id="field_Listing_photos" value="&lt;div style=&quot;box-sizing:border-box; width:100%; overflow-wrap:anywhere; word-break:break-word;&quot;&gt;photos: &lt;span style=&quot;color:#4B5563;&quot;&gt;string[]&lt;/span&gt; &lt;span style=&quot;color:#4B5563; font-size:10px; font-style:italic;&quot;&gt;(def: [])&lt;/span&gt;&lt;/div&gt;" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=10;spacingRight=10;spacingTop=6;overflow=visible;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;whiteSpace=wrap;html=1;fontSize=11;fontColor=#111827;" vertex="1" parent="table_Listing">
+          <mxGeometry y="346" width="340" height="28" as="geometry" />
+        </mxCell>
+        <mxCell id="field_Listing_videos" value="&lt;div style=&quot;box-sizing:border-box; width:100%; overflow-wrap:anywhere; word-break:break-word;&quot;&gt;videos: &lt;span style=&quot;color:#4B5563;&quot;&gt;string[]&lt;/span&gt; &lt;span style=&quot;color:#4B5563; font-size:10px; font-style:italic;&quot;&gt;(def: [])&lt;/span&gt;&lt;/div&gt;" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=10;spacingRight=10;spacingTop=6;overflow=visible;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;whiteSpace=wrap;html=1;fontSize=11;fontColor=#111827;" vertex="1" parent="table_Listing">
+          <mxGeometry y="374" width="340" height="28" as="geometry" />
+        </mxCell>
+        <mxCell id="field_Listing_views" value="&lt;div style=&quot;box-sizing:border-box; width:100%; overflow-wrap:anywhere; word-break:break-word;&quot;&gt;views: &lt;span style=&quot;color:#4B5563;&quot;&gt;number&lt;/span&gt; &lt;span style=&quot;color:#4B5563; font-size:10px; font-style:italic;&quot;&gt;(def: 0)&lt;/span&gt;&lt;/div&gt;" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=10;spacingRight=10;spacingTop=6;overflow=visible;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;whiteSpace=wrap;html=1;fontSize=11;fontColor=#111827;" vertex="1" parent="table_Listing">
+          <mxGeometry y="402" width="340" height="28" as="geometry" />
+        </mxCell>
+        <mxCell id="field_Listing_viewedBy" value="&lt;div style=&quot;box-sizing:border-box; width:100%; overflow-wrap:anywhere; word-break:break-word;&quot;&gt;viewedBy: &lt;span style=&quot;color:#4B5563;&quot;&gt;&lt;i&gt;objectId[]&lt;/i&gt;&lt;/span&gt;&lt;span style=&quot;background-color:#2563EB;color:#FFFFFF;padding:1px 5px;font-size:9px;font-weight:bold;border-radius:3px;margin-left:5px;display:inline-block;line-height:1.2;&quot;&gt;FK&lt;/span&gt; &lt;span style=&quot;color:#4B5563; font-size:10px; font-style:italic;&quot;&gt;(def: [])&lt;/span&gt;&lt;/div&gt;" style="text;strokeColor=none;fillColor=#DBEAFE;align=left;verticalAlign=top;spacingLeft=10;spacingRight=10;spacingTop=6;overflow=visible;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;whiteSpace=wrap;html=1;fontSize=11;fontColor=#111827;" vertex="1" parent="table_Listing">
+          <mxGeometry y="430" width="340" height="28" as="geometry" />
+        </mxCell>
+        <mxCell id="field_Listing_floorPlans" value="&lt;div style=&quot;box-sizing:border-box; width:100%; overflow-wrap:anywhere; word-break:break-word;&quot;&gt;floorPlans: &lt;span style=&quot;color:#4B5563;&quot;&gt;string[]&lt;/span&gt; &lt;span style=&quot;color:#4B5563; font-size:10px; font-style:italic;&quot;&gt;(def: [])&lt;/span&gt;&lt;/div&gt;" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=10;spacingRight=10;spacingTop=6;overflow=visible;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;whiteSpace=wrap;html=1;fontSize=11;fontColor=#111827;" vertex="1" parent="table_Listing">
+          <mxGeometry y="458" width="340" height="28" as="geometry" />
+        </mxCell>
+        <mxCell id="field_Listing_brochure" value="&lt;div style=&quot;box-sizing:border-box; width:100%; overflow-wrap:anywhere; word-break:break-word;&quot;&gt;brochure: &lt;span style=&quot;color:#4B5563;&quot;&gt;string&lt;/span&gt;&lt;/div&gt;" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=10;spacingRight=10;spacingTop=6;overflow=visible;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;whiteSpace=wrap;html=1;fontSize=11;fontColor=#111827;" vertex="1" parent="table_Listing">
+          <mxGeometry y="486" width="340" height="28" as="geometry" />
+        </mxCell>
+        <mxCell id="field_Listing_threeSixtyTour" value="&lt;div style=&quot;box-sizing:border-box; width:100%; overflow-wrap:anywhere; word-break:break-word;&quot;&gt;threeSixtyTour: &lt;span style=&quot;color:#4B5563;&quot;&gt;string&lt;/span&gt;&lt;/div&gt;" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=10;spacingRight=10;spacingTop=6;overflow=visible;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;whiteSpace=wrap;html=1;fontSize=11;fontColor=#111827;" vertex="1" parent="table_Listing">
+          <mxGeometry y="514" width="340" height="28" as="geometry" />
+        </mxCell>
+        <mxCell id="field_Listing_propertyType" value="&lt;div style=&quot;box-sizing:border-box; width:100%; overflow-wrap:anywhere; word-break:break-word;&quot;&gt;propertyType: &lt;span style=&quot;color:#4B5563;&quot;&gt;string&lt;/span&gt;&lt;span style=&quot;background-color:#7C3AED;color:#FFFFFF;padding:1px 5px;font-size:9px;font-weight:bold;border-radius:3px;margin-left:5px;display:inline-block;line-height:1.2;&quot;&gt;ENUM&lt;/span&gt; &lt;span style=&quot;color:#4B5563; font-size:10px; font-style:italic;&quot;&gt;(enum: DETACHED|​SEMI|​SEMI_​DETACHED|​TERRACED|​BUNGLOW|​APARTMENT|​COUNTRY_​HOUSE|​FLAT|​PARK_​HOME|​VILLA|​STUDIO)&lt;/span&gt;&lt;/div&gt;" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=10;spacingRight=10;spacingTop=6;overflow=visible;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;whiteSpace=wrap;html=1;fontSize=11;fontColor=#111827;" vertex="1" parent="table_Listing">
+          <mxGeometry y="542" width="340" height="58" as="geometry" />
+        </mxCell>
+        <mxCell id="field_Listing_propertyBedrooms" value="&lt;div style=&quot;box-sizing:border-box; width:100%; overflow-wrap:anywhere; word-break:break-word;&quot;&gt;propertyBedrooms: &lt;span style=&quot;color:#4B5563;&quot;&gt;number&lt;/span&gt;&lt;/div&gt;" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=10;spacingRight=10;spacingTop=6;overflow=visible;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;whiteSpace=wrap;html=1;fontSize=11;fontColor=#111827;" vertex="1" parent="table_Listing">
+          <mxGeometry y="600" width="340" height="28" as="geometry" />
+        </mxCell>
+        <mxCell id="field_Listing_propertyBathrooms" value="&lt;div style=&quot;box-sizing:border-box; width:100%; overflow-wrap:anywhere; word-break:break-word;&quot;&gt;propertyBathrooms: &lt;span style=&quot;color:#4B5563;&quot;&gt;number&lt;/span&gt;&lt;/div&gt;" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=10;spacingRight=10;spacingTop=6;overflow=visible;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;whiteSpace=wrap;html=1;fontSize=11;fontColor=#111827;" vertex="1" parent="table_Listing">
+          <mxGeometry y="628" width="340" height="28" as="geometry" />
+        </mxCell>
+        <mxCell id="field_Listing_propertySquareFoot" value="&lt;div style=&quot;box-sizing:border-box; width:100%; overflow-wrap:anywhere; word-break:break-word;&quot;&gt;propertySquareFoot: &lt;span style=&quot;color:#4B5563;&quot;&gt;number&lt;/span&gt;&lt;/div&gt;" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=10;spacingRight=10;spacingTop=6;overflow=visible;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;whiteSpace=wrap;html=1;fontSize=11;fontColor=#111827;" vertex="1" parent="table_Listing">
+          <mxGeometry y="656" width="340" height="28" as="geometry" />
+        </mxCell>
+        <mxCell id="field_Listing_tenure" value="&lt;div style=&quot;box-sizing:border-box; width:100%; overflow-wrap:anywhere; word-break:break-word;&quot;&gt;tenure: &lt;span style=&quot;color:#4B5563;&quot;&gt;string&lt;/span&gt;&lt;span style=&quot;background-color:#7C3AED;color:#FFFFFF;padding:1px 5px;font-size:9px;font-weight:bold;border-radius:3px;margin-left:5px;display:inline-block;line-height:1.2;&quot;&gt;ENUM&lt;/span&gt; &lt;span style=&quot;color:#4B5563; font-size:10px; font-style:italic;&quot;&gt;(enum: FREEHOLD|​LEASEHOLD|​SHARE_​OF_​FREEHOLD)&lt;/span&gt;&lt;/div&gt;" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=10;spacingRight=10;spacingTop=6;overflow=visible;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;whiteSpace=wrap;html=1;fontSize=11;fontColor=#111827;" vertex="1" parent="table_Listing">
+          <mxGeometry y="684" width="340" height="43" as="geometry" />
+        </mxCell>
+        <mxCell id="field_Listing_councilTaxBand" value="&lt;div style=&quot;box-sizing:border-box; width:100%; overflow-wrap:anywhere; word-break:break-word;&quot;&gt;councilTaxBand: &lt;span style=&quot;color:#4B5563;&quot;&gt;string&lt;/span&gt;&lt;span style=&quot;background-color:#7C3AED;color:#FFFFFF;padding:1px 5px;font-size:9px;font-weight:bold;border-radius:3px;margin-left:5px;display:inline-block;line-height:1.2;&quot;&gt;ENUM&lt;/span&gt; &lt;span style=&quot;color:#4B5563; font-size:10px; font-style:italic;&quot;&gt;(enum: A|​B|​C|​D|​E|​F|​G|​H)&lt;/span&gt;&lt;/div&gt;" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=10;spacingRight=10;spacingTop=6;overflow=visible;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;whiteSpace=wrap;html=1;fontSize=11;fontColor=#111827;" vertex="1" parent="table_Listing">
+          <mxGeometry y="727" width="340" height="43" as="geometry" />
+        </mxCell>
+        <mxCell id="field_Listing_epcEnergyRating_label" value="&lt;div style=&quot;box-sizing:border-box; width:100%; overflow-wrap:anywhere; word-break:break-word;&quot;&gt;epcEnergyRating_label: &lt;span style=&quot;color:#4B5563;&quot;&gt;string&lt;/span&gt;&lt;/div&gt;" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=10;spacingRight=10;spacingTop=6;overflow=visible;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;whiteSpace=wrap;html=1;fontSize=11;fontColor=#111827;" vertex="1" parent="table_Listing">
+          <mxGeometry y="770" width="340" height="28" as="geometry" />
+        </mxCell>
+        <mxCell id="field_Listing_epcEnergyRating_score" value="&lt;div style=&quot;box-sizing:border-box; width:100%; overflow-wrap:anywhere; word-break:break-word;&quot;&gt;epcEnergyRating_score: &lt;span style=&quot;color:#4B5563;&quot;&gt;number&lt;/span&gt;&lt;/div&gt;" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=10;spacingRight=10;spacingTop=6;overflow=visible;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;whiteSpace=wrap;html=1;fontSize=11;fontColor=#111827;" vertex="1" parent="table_Listing">
+          <mxGeometry y="798" width="340" height="28" as="geometry" />
+        </mxCell>
+        <mxCell id="field_Listing_shareId" value="&lt;div style=&quot;box-sizing:border-box; width:100%; overflow-wrap:anywhere; word-break:break-word;&quot;&gt;shareId: &lt;span style=&quot;color:#4B5563;&quot;&gt;string&lt;/span&gt;&lt;span style=&quot;background-color:#0891B2;color:#FFFFFF;padding:1px 5px;font-size:9px;font-weight:bold;border-radius:3px;margin-left:5px;display:inline-block;line-height:1.2;&quot;&gt;UK&lt;/span&gt;&lt;span style=&quot;background-color:#16A34A;color:#FFFFFF;padding:1px 5px;font-size:9px;font-weight:bold;border-radius:3px;margin-left:5px;display:inline-block;line-height:1.2;&quot;&gt;IDX&lt;/span&gt;&lt;/div&gt;" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=10;spacingRight=10;spacingTop=6;overflow=visible;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;whiteSpace=wrap;html=1;fontSize=11;fontColor=#111827;" vertex="1" parent="table_Listing">
+          <mxGeometry y="826" width="340" height="28" as="geometry" />
+        </mxCell>
+        <mxCell id="field_Listing_features" value="&lt;div style=&quot;box-sizing:border-box; width:100%; overflow-wrap:anywhere; word-break:break-word;&quot;&gt;features: &lt;span style=&quot;color:#4B5563;&quot;&gt;string[]&lt;/span&gt; &lt;span style=&quot;color:#4B5563; font-size:10px; font-style:italic;&quot;&gt;(def: [])&lt;/span&gt;&lt;/div&gt;" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=10;spacingRight=10;spacingTop=6;overflow=visible;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;whiteSpace=wrap;html=1;fontSize=11;fontColor=#111827;" vertex="1" parent="table_Listing">
+          <mxGeometry y="854" width="340" height="28" as="geometry" />
+        </mxCell>
+        <mxCell id="field_Listing_description" value="&lt;div style=&quot;box-sizing:border-box; width:100%; overflow-wrap:anywhere; word-break:break-word;&quot;&gt;description: &lt;span style=&quot;color:#4B5563;&quot;&gt;string&lt;/span&gt;&lt;/div&gt;" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=10;spacingRight=10;spacingTop=6;overflow=visible;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;whiteSpace=wrap;html=1;fontSize=11;fontColor=#111827;" vertex="1" parent="table_Listing">
+          <mxGeometry y="882" width="340" height="28" as="geometry" />
+        </mxCell>
+        <mxCell id="field_Listing_isFeatured" value="&lt;div style=&quot;box-sizing:border-box; width:100%; overflow-wrap:anywhere; word-break:break-word;&quot;&gt;isFeatured: &lt;span style=&quot;color:#4B5563;&quot;&gt;boolean&lt;/span&gt; &lt;span style=&quot;color:#4B5563; font-size:10px; font-style:italic;&quot;&gt;(def: false)&lt;/span&gt;&lt;/div&gt;" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=10;spacingRight=10;spacingTop=6;overflow=visible;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;whiteSpace=wrap;html=1;fontSize=11;fontColor=#111827;" vertex="1" parent="table_Listing">
+          <mxGeometry y="910" width="340" height="28" as="geometry" />
+        </mxCell>
+        <mxCell id="field_Listing_leadsCount" value="&lt;div style=&quot;box-sizing:border-box; width:100%; overflow-wrap:anywhere; word-break:break-word;&quot;&gt;leadsCount: &lt;span style=&quot;color:#4B5563;&quot;&gt;number&lt;/span&gt; &lt;span style=&quot;color:#4B5563; font-size:10px; font-style:italic;&quot;&gt;(def: 0)&lt;/span&gt;&lt;/div&gt;" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=10;spacingRight=10;spacingTop=6;overflow=visible;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;whiteSpace=wrap;html=1;fontSize=11;fontColor=#111827;" vertex="1" parent="table_Listing">
+          <mxGeometry y="938" width="340" height="28" as="geometry" />
+        </mxCell>
+        <mxCell id="field_Listing_leads" value="&lt;div style=&quot;box-sizing:border-box; width:100%; overflow-wrap:anywhere; word-break:break-word;&quot;&gt;leads: &lt;span style=&quot;color:#4B5563;&quot;&gt;&lt;i&gt;objectId[]&lt;/i&gt;&lt;/span&gt;&lt;span style=&quot;background-color:#2563EB;color:#FFFFFF;padding:1px 5px;font-size:9px;font-weight:bold;border-radius:3px;margin-left:5px;display:inline-block;line-height:1.2;&quot;&gt;FK&lt;/span&gt; &lt;span style=&quot;color:#4B5563; font-size:10px; font-style:italic;&quot;&gt;(def: [])&lt;/span&gt;&lt;/div&gt;" style="text;strokeColor=none;fillColor=#DBEAFE;align=left;verticalAlign=top;spacingLeft=10;spacingRight=10;spacingTop=6;overflow=visible;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;whiteSpace=wrap;html=1;fontSize=11;fontColor=#111827;" vertex="1" parent="table_Listing">
+          <mxGeometry y="966" width="340" height="28" as="geometry" />
+        </mxCell>
+        <mxCell id="field_Listing_listingCheckList_basicInfo" value="&lt;div style=&quot;box-sizing:border-box; width:100%; overflow-wrap:anywhere; word-break:break-word;&quot;&gt;listingCheckList_basicInfo: &lt;span style=&quot;color:#4B5563;&quot;&gt;boolean&lt;/span&gt;&lt;/div&gt;" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=10;spacingRight=10;spacingTop=6;overflow=visible;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;whiteSpace=wrap;html=1;fontSize=11;fontColor=#111827;" vertex="1" parent="table_Listing">
+          <mxGeometry y="994" width="340" height="28" as="geometry" />
+        </mxCell>
+        <mxCell id="field_Listing_listingCheckList_media" value="&lt;div style=&quot;box-sizing:border-box; width:100%; overflow-wrap:anywhere; word-break:break-word;&quot;&gt;listingCheckList_media: &lt;span style=&quot;color:#4B5563;&quot;&gt;boolean&lt;/span&gt;&lt;/div&gt;" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=10;spacingRight=10;spacingTop=6;overflow=visible;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;whiteSpace=wrap;html=1;fontSize=11;fontColor=#111827;" vertex="1" parent="table_Listing">
+          <mxGeometry y="1022" width="340" height="28" as="geometry" />
+        </mxCell>
+        <mxCell id="field_Listing_listingCheckList_propertyInfo" value="&lt;div style=&quot;box-sizing:border-box; width:100%; overflow-wrap:anywhere; word-break:break-word;&quot;&gt;listingCheckList_propertyInfo: &lt;span style=&quot;color:#4B5563;&quot;&gt;boolean&lt;/span&gt;&lt;/div&gt;" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=10;spacingRight=10;spacingTop=6;overflow=visible;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;whiteSpace=wrap;html=1;fontSize=11;fontColor=#111827;" vertex="1" parent="table_Listing">
+          <mxGeometry y="1050" width="340" height="28" as="geometry" />
+        </mxCell>
+        <mxCell id="field_Listing_listingCheckList_featureDescription" value="&lt;div style=&quot;box-sizing:border-box; width:100%; overflow-wrap:anywhere; word-break:break-word;&quot;&gt;listingCheckList_featureDescription: &lt;span style=&quot;color:#4B5563;&quot;&gt;boolean&lt;/span&gt;&lt;/div&gt;" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=10;spacingRight=10;spacingTop=6;overflow=visible;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;whiteSpace=wrap;html=1;fontSize=11;fontColor=#111827;" vertex="1" parent="table_Listing">
+          <mxGeometry y="1078" width="340" height="28" as="geometry" />
+        </mxCell>
+        <mxCell id="field_Listing_listingCheckList_readyToPublish" value="&lt;div style=&quot;box-sizing:border-box; width:100%; overflow-wrap:anywhere; word-break:break-word;&quot;&gt;listingCheckList_readyToPublish: &lt;span style=&quot;color:#4B5563;&quot;&gt;boolean&lt;/span&gt;&lt;/div&gt;" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=10;spacingRight=10;spacingTop=6;overflow=visible;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;whiteSpace=wrap;html=1;fontSize=11;fontColor=#111827;" vertex="1" parent="table_Listing">
+          <mxGeometry y="1106" width="340" height="28" as="geometry" />
+        </mxCell>
+        <mxCell id="field_Listing_status" value="&lt;div style=&quot;box-sizing:border-box; width:100%; overflow-wrap:anywhere; word-break:break-word;&quot;&gt;&lt;b&gt;status&lt;/b&gt;: &lt;span style=&quot;color:#4B5563;&quot;&gt;string&lt;/span&gt;&lt;span style=&quot;background-color:#7C3AED;color:#FFFFFF;padding:1px 5px;font-size:9px;font-weight:bold;border-radius:3px;margin-left:5px;display:inline-block;line-height:1.2;&quot;&gt;ENUM&lt;/span&gt; &lt;span style=&quot;color:#4B5563; font-size:10px; font-style:italic;&quot;&gt;(def: LISTING_​STATUS.​DRAFT, enum: DRAFT|​PENDING_​APPROVAL|​PUBLISHED|​REJECTED|​SOLD)&lt;/span&gt;&lt;/div&gt;" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=10;spacingRight=10;spacingTop=6;overflow=visible;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;whiteSpace=wrap;html=1;fontSize=11;fontColor=#111827;" vertex="1" parent="table_Listing">
+          <mxGeometry y="1134" width="340" height="58" as="geometry" />
+        </mxCell>
+        <mxCell id="field_Listing_isDeleted" value="&lt;div style=&quot;box-sizing:border-box; width:100%; overflow-wrap:anywhere; word-break:break-word;&quot;&gt;isDeleted: &lt;span style=&quot;color:#4B5563;&quot;&gt;boolean&lt;/span&gt; &lt;span style=&quot;color:#4B5563; font-size:10px; font-style:italic;&quot;&gt;(def: false)&lt;/span&gt;&lt;/div&gt;" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=10;spacingRight=10;spacingTop=6;overflow=visible;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;whiteSpace=wrap;html=1;fontSize=11;fontColor=#111827;" vertex="1" parent="table_Listing">
+          <mxGeometry y="1192" width="340" height="28" as="geometry" />
+        </mxCell>
+        <mxCell id="field_Listing_feedId" value="&lt;div style=&quot;box-sizing:border-box; width:100%; overflow-wrap:anywhere; word-break:break-word;&quot;&gt;feedId: &lt;span style=&quot;color:#4B5563;&quot;&gt;&lt;i&gt;objectId&lt;/i&gt;&lt;/span&gt;&lt;span style=&quot;background-color:#2563EB;color:#FFFFFF;padding:1px 5px;font-size:9px;font-weight:bold;border-radius:3px;margin-left:5px;display:inline-block;line-height:1.2;&quot;&gt;FK&lt;/span&gt;&lt;/div&gt;" style="text;strokeColor=none;fillColor=#DBEAFE;align=left;verticalAlign=top;spacingLeft=10;spacingRight=10;spacingTop=6;overflow=visible;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;whiteSpace=wrap;html=1;fontSize=11;fontColor=#111827;" vertex="1" parent="table_Listing">
+          <mxGeometry y="1220" width="340" height="28" as="geometry" />
+        </mxCell>
+        <mxCell id="field_Listing_feedSourceType" value="&lt;div style=&quot;box-sizing:border-box; width:100%; overflow-wrap:anywhere; word-break:break-word;&quot;&gt;feedSourceType: &lt;span style=&quot;color:#4B5563;&quot;&gt;string&lt;/span&gt;&lt;span style=&quot;background-color:#7C3AED;color:#FFFFFF;padding:1px 5px;font-size:9px;font-weight:bold;border-radius:3px;margin-left:5px;display:inline-block;line-height:1.2;&quot;&gt;ENUM&lt;/span&gt; &lt;span style=&quot;color:#4B5563; font-size:10px; font-style:italic;&quot;&gt;(enum: XML|​BLM)&lt;/span&gt;&lt;/div&gt;" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=10;spacingRight=10;spacingTop=6;overflow=visible;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;whiteSpace=wrap;html=1;fontSize=11;fontColor=#111827;" vertex="1" parent="table_Listing">
+          <mxGeometry y="1248" width="340" height="28" as="geometry" />
+        </mxCell>
+        <mxCell id="field_Listing_externalId" value="&lt;div style=&quot;box-sizing:border-box; width:100%; overflow-wrap:anywhere; word-break:break-word;&quot;&gt;externalId: &lt;span style=&quot;color:#4B5563;&quot;&gt;string&lt;/span&gt;&lt;/div&gt;" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=10;spacingRight=10;spacingTop=6;overflow=visible;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;whiteSpace=wrap;html=1;fontSize=11;fontColor=#111827;" vertex="1" parent="table_Listing">
+          <mxGeometry y="1276" width="340" height="28" as="geometry" />
+        </mxCell>
+        <mxCell id="field_Listing_source" value="&lt;div style=&quot;box-sizing:border-box; width:100%; overflow-wrap:anywhere; word-break:break-word;&quot;&gt;source: &lt;span style=&quot;color:#4B5563;&quot;&gt;string&lt;/span&gt;&lt;span style=&quot;background-color:#7C3AED;color:#FFFFFF;padding:1px 5px;font-size:9px;font-weight:bold;border-radius:3px;margin-left:5px;display:inline-block;line-height:1.2;&quot;&gt;ENUM&lt;/span&gt; &lt;span style=&quot;color:#4B5563; font-size:10px; font-style:italic;&quot;&gt;(enum: manual|​csv|​feed)&lt;/span&gt;&lt;/div&gt;" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=10;spacingRight=10;spacingTop=6;overflow=visible;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;whiteSpace=wrap;html=1;fontSize=11;fontColor=#111827;" vertex="1" parent="table_Listing">
+          <mxGeometry y="1304" width="340" height="28" as="geometry" />
+        </mxCell>
+        <mxCell id="field_Listing_sourceUrl" value="&lt;div style=&quot;box-sizing:border-box; width:100%; overflow-wrap:anywhere; word-break:break-word;&quot;&gt;sourceUrl: &lt;span style=&quot;color:#4B5563;&quot;&gt;string&lt;/span&gt;&lt;/div&gt;" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=10;spacingRight=10;spacingTop=6;overflow=visible;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;whiteSpace=wrap;html=1;fontSize=11;fontColor=#111827;" vertex="1" parent="table_Listing">
+          <mxGeometry y="1332" width="340" height="28" as="geometry" />
+        </mxCell>
+        <mxCell id="field_Listing_lastSyncedAt" value="&lt;div style=&quot;box-sizing:border-box; width:100%; overflow-wrap:anywhere; word-break:break-word;&quot;&gt;lastSyncedAt: &lt;span style=&quot;color:#4B5563;&quot;&gt;date&lt;/span&gt;&lt;/div&gt;" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=10;spacingRight=10;spacingTop=6;overflow=visible;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;whiteSpace=wrap;html=1;fontSize=11;fontColor=#111827;" vertex="1" parent="table_Listing">
+          <mxGeometry y="1360" width="340" height="28" as="geometry" />
+        </mxCell>
+        <mxCell id="field_Listing_firstPublishedAt" value="&lt;div style=&quot;box-sizing:border-box; width:100%; overflow-wrap:anywhere; word-break:break-word;&quot;&gt;firstPublishedAt: &lt;span style=&quot;color:#4B5563;&quot;&gt;date&lt;/span&gt;&lt;/div&gt;" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=10;spacingRight=10;spacingTop=6;overflow=visible;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;whiteSpace=wrap;html=1;fontSize=11;fontColor=#111827;" vertex="1" parent="table_Listing">
+          <mxGeometry y="1388" width="340" height="28" as="geometry" />
+        </mxCell>
+        <mxCell id="field_Listing_lastPublishedAt" value="&lt;div style=&quot;box-sizing:border-box; width:100%; overflow-wrap:anywhere; word-break:break-word;&quot;&gt;lastPublishedAt: &lt;span style=&quot;color:#4B5563;&quot;&gt;date&lt;/span&gt;&lt;/div&gt;" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=10;spacingRight=10;spacingTop=6;overflow=visible;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;whiteSpace=wrap;html=1;fontSize=11;fontColor=#111827;" vertex="1" parent="table_Listing">
+          <mxGeometry y="1416" width="340" height="28" as="geometry" />
+        </mxCell>
+        <mxCell id="field_Listing_relistedAt" value="&lt;div style=&quot;box-sizing:border-box; width:100%; overflow-wrap:anywhere; word-break:break-word;&quot;&gt;relistedAt: &lt;span style=&quot;color:#4B5563;&quot;&gt;date&lt;/span&gt;&lt;/div&gt;" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=10;spacingRight=10;spacingTop=6;overflow=visible;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;whiteSpace=wrap;html=1;fontSize=11;fontColor=#111827;" vertex="1" parent="table_Listing">
+          <mxGeometry y="1444" width="340" height="28" as="geometry" />
+        </mxCell>
+        <mxCell id="field_Listing_backOnMarketAt" value="&lt;div style=&quot;box-sizing:border-box; width:100%; overflow-wrap:anywhere; word-break:break-word;&quot;&gt;backOnMarketAt: &lt;span style=&quot;color:#4B5563;&quot;&gt;date&lt;/span&gt;&lt;/div&gt;" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=10;spacingRight=10;spacingTop=6;overflow=visible;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;whiteSpace=wrap;html=1;fontSize=11;fontColor=#111827;" vertex="1" parent="table_Listing">
+          <mxGeometry y="1472" width="340" height="28" as="geometry" />
+        </mxCell>
+        <mxCell id="field_Listing_marketStatus" value="&lt;div style=&quot;box-sizing:border-box; width:100%; overflow-wrap:anywhere; word-break:break-word;&quot;&gt;marketStatus: &lt;span style=&quot;color:#4B5563;&quot;&gt;string&lt;/span&gt;&lt;span style=&quot;background-color:#7C3AED;color:#FFFFFF;padding:1px 5px;font-size:9px;font-weight:bold;border-radius:3px;margin-left:5px;display:inline-block;line-height:1.2;&quot;&gt;ENUM&lt;/span&gt; &lt;span style=&quot;color:#4B5563; font-size:10px; font-style:italic;&quot;&gt;(def: MARKET_​STATUS.​AVAILABLE, enum: AVAILABLE|​SOLD_​STC|​SOLD|​BACK_​ON_​MARKET|​RECENTLY_​RELISTED)&lt;/span&gt;&lt;/div&gt;" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=10;spacingRight=10;spacingTop=6;overflow=visible;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;whiteSpace=wrap;html=1;fontSize=11;fontColor=#111827;" vertex="1" parent="table_Listing">
+          <mxGeometry y="1500" width="340" height="58" as="geometry" />
+        </mxCell>
+        <mxCell id="field_Listing_lastPriceReducedAt" value="&lt;div style=&quot;box-sizing:border-box; width:100%; overflow-wrap:anywhere; word-break:break-word;&quot;&gt;lastPriceReducedAt: &lt;span style=&quot;color:#4B5563;&quot;&gt;date&lt;/span&gt;&lt;/div&gt;" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=10;spacingRight=10;spacingTop=6;overflow=visible;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;whiteSpace=wrap;html=1;fontSize=11;fontColor=#111827;" vertex="1" parent="table_Listing">
+          <mxGeometry y="1558" width="340" height="28" as="geometry" />
+        </mxCell>
+        <mxCell id="field_Listing_originalPrice" value="&lt;div style=&quot;box-sizing:border-box; width:100%; overflow-wrap:anywhere; word-break:break-word;&quot;&gt;originalPrice: &lt;span style=&quot;color:#4B5563;&quot;&gt;number&lt;/span&gt;&lt;/div&gt;" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=10;spacingRight=10;spacingTop=6;overflow=visible;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;whiteSpace=wrap;html=1;fontSize=11;fontColor=#111827;" vertex="1" parent="table_Listing">
+          <mxGeometry y="1586" width="340" height="28" as="geometry" />
+        </mxCell>
+        <mxCell id="field_Listing_previousPrice" value="&lt;div style=&quot;box-sizing:border-box; width:100%; overflow-wrap:anywhere; word-break:break-word;&quot;&gt;previousPrice: &lt;span style=&quot;color:#4B5563;&quot;&gt;number&lt;/span&gt;&lt;/div&gt;" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=10;spacingRight=10;spacingTop=6;overflow=visible;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;whiteSpace=wrap;html=1;fontSize=11;fontColor=#111827;" vertex="1" parent="table_Listing">
+          <mxGeometry y="1614" width="340" height="28" as="geometry" />
+        </mxCell>
+        <mxCell id="field_Listing_createdAt" value="&lt;div style=&quot;box-sizing:border-box; width:100%; overflow-wrap:anywhere; word-break:break-word;&quot;&gt;&lt;b&gt;createdAt&lt;/b&gt;: &lt;span style=&quot;color:#4B5563;&quot;&gt;date&lt;/span&gt;&lt;/div&gt;" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=10;spacingRight=10;spacingTop=6;overflow=visible;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;whiteSpace=wrap;html=1;fontSize=11;fontColor=#111827;" vertex="1" parent="table_Listing">
+          <mxGeometry y="1642" width="340" height="28" as="geometry" />
+        </mxCell>
+        <mxCell id="field_Listing_updatedAt" value="&lt;div style=&quot;box-sizing:border-box; width:100%; overflow-wrap:anywhere; word-break:break-word;&quot;&gt;&lt;b&gt;updatedAt&lt;/b&gt;: &lt;span style=&quot;color:#4B5563;&quot;&gt;date&lt;/span&gt;&lt;/div&gt;" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=10;spacingRight=10;spacingTop=6;overflow=visible;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;whiteSpace=wrap;html=1;fontSize=11;fontColor=#111827;" vertex="1" parent="table_Listing">
+          <mxGeometry y="1670" width="340" height="28" as="geometry" />
+        </mxCell>
+        <mxCell id="table_Listing_PriceHistory" value="Listing_PriceHistory" style="swimlane;fontStyle=1;childLayout=stackLayout;horizontal=1;startSize=38;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=0;marginBottom=0;whiteSpace=wrap;html=1;fillColor=#B45309;swimlaneFillColor=#FFFBEB;strokeColor=#F59E0B;strokeWidth=2;dashed=1;fontColor=#FFFFFF;fontSize=13;align=center;" vertex="1" parent="column_2">
+          <mxGeometry x="30" y="60" width="340" height="234" as="geometry" />
+        </mxCell>
+        <mxCell id="field_Listing_PriceHistory__id" value="&lt;div style=&quot;box-sizing:border-box; width:100%; overflow-wrap:anywhere; word-break:break-word;&quot;&gt;&lt;b&gt;_id&lt;/b&gt;: &lt;span style=&quot;color:#4B5563;&quot;&gt;&lt;b&gt;objectId&lt;/b&gt;&lt;/span&gt; &lt;span style=&quot;background-color:#FBBF24;color:#1F2937;padding:1px 5px;font-size:9px;font-weight:bold;border-radius:3px;margin-left:5px;display:inline-block;line-height:1.2;&quot;&gt;PK&lt;/span&gt;&lt;/div&gt;" style="text;strokeColor=none;fillColor=#FEF3C7;align=left;verticalAlign=top;spacingLeft=10;spacingRight=10;spacingTop=6;overflow=visible;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;whiteSpace=wrap;html=1;fontSize=11;fontColor=#111827;" vertex="1" parent="table_Listing_PriceHistory">
+          <mxGeometry y="38" width="340" height="28" as="geometry" />
+        </mxCell>
+        <mxCell id="field_Listing_PriceHistory_previousPrice" value="&lt;div style=&quot;box-sizing:border-box; width:100%; overflow-wrap:anywhere; word-break:break-word;&quot;&gt;&lt;b&gt;previousPrice&lt;/b&gt;: &lt;span style=&quot;color:#4B5563;&quot;&gt;number&lt;/span&gt;&lt;/div&gt;" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=10;spacingRight=10;spacingTop=6;overflow=visible;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;whiteSpace=wrap;html=1;fontSize=11;fontColor=#111827;" vertex="1" parent="table_Listing_PriceHistory">
+          <mxGeometry y="66" width="340" height="28" as="geometry" />
+        </mxCell>
+        <mxCell id="field_Listing_PriceHistory_newPrice" value="&lt;div style=&quot;box-sizing:border-box; width:100%; overflow-wrap:anywhere; word-break:break-word;&quot;&gt;&lt;b&gt;newPrice&lt;/b&gt;: &lt;span style=&quot;color:#4B5563;&quot;&gt;number&lt;/span&gt;&lt;/div&gt;" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=10;spacingRight=10;spacingTop=6;overflow=visible;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;whiteSpace=wrap;html=1;fontSize=11;fontColor=#111827;" vertex="1" parent="table_Listing_PriceHistory">
+          <mxGeometry y="94" width="340" height="28" as="geometry" />
+        </mxCell>
+        <mxCell id="field_Listing_PriceHistory_difference" value="&lt;div style=&quot;box-sizing:border-box; width:100%; overflow-wrap:anywhere; word-break:break-word;&quot;&gt;&lt;b&gt;difference&lt;/b&gt;: &lt;span style=&quot;color:#4B5563;&quot;&gt;number&lt;/span&gt;&lt;/div&gt;" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=10;spacingRight=10;spacingTop=6;overflow=visible;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;whiteSpace=wrap;html=1;fontSize=11;fontColor=#111827;" vertex="1" parent="table_Listing_PriceHistory">
+          <mxGeometry y="122" width="340" height="28" as="geometry" />
+        </mxCell>
+        <mxCell id="field_Listing_PriceHistory_percentageReduced" value="&lt;div style=&quot;box-sizing:border-box; width:100%; overflow-wrap:anywhere; word-break:break-word;&quot;&gt;&lt;b&gt;percentageReduced&lt;/b&gt;: &lt;span style=&quot;color:#4B5563;&quot;&gt;number&lt;/span&gt;&lt;/div&gt;" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=10;spacingRight=10;spacingTop=6;overflow=visible;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;whiteSpace=wrap;html=1;fontSize=11;fontColor=#111827;" vertex="1" parent="table_Listing_PriceHistory">
+          <mxGeometry y="150" width="340" height="28" as="geometry" />
+        </mxCell>
+        <mxCell id="field_Listing_PriceHistory_changedAt" value="&lt;div style=&quot;box-sizing:border-box; width:100%; overflow-wrap:anywhere; word-break:break-word;&quot;&gt;changedAt: &lt;span style=&quot;color:#4B5563;&quot;&gt;date&lt;/span&gt; &lt;span style=&quot;color:#4B5563; font-size:10px; font-style:italic;&quot;&gt;(def: Date.​now)&lt;/span&gt;&lt;/div&gt;" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=10;spacingRight=10;spacingTop=6;overflow=visible;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;whiteSpace=wrap;html=1;fontSize=11;fontColor=#111827;" vertex="1" parent="table_Listing_PriceHistory">
+          <mxGeometry y="178" width="340" height="28" as="geometry" />
+        </mxCell>
+        <mxCell id="field_Listing_PriceHistory_changedBy" value="&lt;div style=&quot;box-sizing:border-box; width:100%; overflow-wrap:anywhere; word-break:break-word;&quot;&gt;changedBy: &lt;span style=&quot;color:#4B5563;&quot;&gt;&lt;i&gt;objectId&lt;/i&gt;&lt;/span&gt;&lt;span style=&quot;background-color:#2563EB;color:#FFFFFF;padding:1px 5px;font-size:9px;font-weight:bold;border-radius:3px;margin-left:5px;display:inline-block;line-height:1.2;&quot;&gt;FK&lt;/span&gt;&lt;/div&gt;" style="text;strokeColor=none;fillColor=#DBEAFE;align=left;verticalAlign=top;spacingLeft=10;spacingRight=10;spacingTop=6;overflow=visible;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;whiteSpace=wrap;html=1;fontSize=11;fontColor=#111827;" vertex="1" parent="table_Listing_PriceHistory">
+          <mxGeometry y="206" width="340" height="28" as="geometry" />
+        </mxCell>
+        <mxCell id="table_Plan" value="Plan" style="swimlane;fontStyle=1;childLayout=stackLayout;horizontal=1;startSize=38;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=0;marginBottom=0;whiteSpace=wrap;html=1;fillColor=#0F766E;swimlaneFillColor=#F0FDFA;strokeColor=#14B8A6;strokeWidth=2;dashed=1;fontColor=#FFFFFF;fontSize=13;align=center;" vertex="1" parent="column_0">
+          <mxGeometry x="30" y="592" width="340" height="66" as="geometry" />
+        </mxCell>
+        <mxCell id="field_Plan__id" value="&lt;div style=&quot;box-sizing:border-box; width:100%; overflow-wrap:anywhere; word-break:break-word;&quot;&gt;&lt;b&gt;_id&lt;/b&gt;: &lt;span style=&quot;color:#4B5563;&quot;&gt;&lt;b&gt;objectId&lt;/b&gt;&lt;/span&gt; &lt;span style=&quot;background-color:#FBBF24;color:#1F2937;padding:1px 5px;font-size:9px;font-weight:bold;border-radius:3px;margin-left:5px;display:inline-block;line-height:1.2;&quot;&gt;PK&lt;/span&gt;&lt;/div&gt;" style="text;strokeColor=none;fillColor=#FEF3C7;align=left;verticalAlign=top;spacingLeft=10;spacingRight=10;spacingTop=6;overflow=visible;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;whiteSpace=wrap;html=1;fontSize=11;fontColor=#111827;" vertex="1" parent="table_Plan">
+          <mxGeometry y="38" width="340" height="28" as="geometry" />
+        </mxCell>
+        <mxCell id="table_User" value="User" style="swimlane;fontStyle=1;childLayout=stackLayout;horizontal=1;startSize=38;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=0;marginBottom=0;whiteSpace=wrap;html=1;fillColor=#0F766E;swimlaneFillColor=#F0FDFA;strokeColor=#14B8A6;strokeWidth=2;dashed=1;fontColor=#FFFFFF;fontSize=13;align=center;" vertex="1" parent="column_0">
+          <mxGeometry x="30" y="60" width="340" height="66" as="geometry" />
+        </mxCell>
+        <mxCell id="field_User__id" value="&lt;div style=&quot;box-sizing:border-box; width:100%; overflow-wrap:anywhere; word-break:break-word;&quot;&gt;&lt;b&gt;_id&lt;/b&gt;: &lt;span style=&quot;color:#4B5563;&quot;&gt;&lt;b&gt;objectId&lt;/b&gt;&lt;/span&gt; &lt;span style=&quot;background-color:#FBBF24;color:#1F2937;padding:1px 5px;font-size:9px;font-weight:bold;border-radius:3px;margin-left:5px;display:inline-block;line-height:1.2;&quot;&gt;PK&lt;/span&gt;&lt;/div&gt;" style="text;strokeColor=none;fillColor=#FEF3C7;align=left;verticalAlign=top;spacingLeft=10;spacingRight=10;spacingTop=6;overflow=visible;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;whiteSpace=wrap;html=1;fontSize=11;fontColor=#111827;" vertex="1" parent="table_User">
+          <mxGeometry y="38" width="340" height="28" as="geometry" />
+        </mxCell>
+        <mxCell id="edge_1" value="priceHistory" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=0;html=1;strokeColor=#2563EB;strokeWidth=2.5;startArrow=ERone;startFill=0;endArrow=ERmany;endFill=0;fontSize=10;fontColor=#0F172A;labelBackgroundColor=#FFFFFF;labelBorderColor=#CBD5E1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="1" source="field_Listing__id" target="table_Listing_PriceHistory">
+          <mxGeometry x="1" y="0" relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="1200" y="212" />
+              <mxPoint x="1200" y="277" />
+            </Array>
+            <mxPoint as="offset" x="-50" y="-10" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="edge_2" value="agentId" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=0;html=1;strokeColor=#64748B;strokeWidth=2;dashed=1;startArrow=ERone;startFill=0;endArrow=ERmany;endFill=0;fontSize=10;fontColor=#0F172A;labelBackgroundColor=#FFFFFF;labelBorderColor=#CBD5E1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="1" source="field_User__id" target="field_Listing_agentId">
+          <mxGeometry x="1" y="0" relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="584" y="204" />
+              <mxPoint x="584" y="492" />
+            </Array>
+            <mxPoint as="offset" x="-50" y="-10" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="edge_3" value="viewedBy" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=0;html=1;strokeColor=#64748B;strokeWidth=2;dashed=1;startArrow=ERone;startFill=0;endArrow=ERmany;endFill=0;fontSize=10;fontColor=#0F172A;labelBackgroundColor=#FFFFFF;labelBorderColor=#CBD5E1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="1" source="field_User__id" target="field_Listing_viewedBy">
+          <mxGeometry x="1" y="0" relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="570" y="212" />
+              <mxPoint x="570" y="604" />
+            </Array>
+            <mxPoint as="offset" x="-50" y="-10" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="edge_4" value="agentId ($lookup)" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=0;html=1;strokeColor=#7C3AED;strokeWidth=2;dashed=1;startArrow=ERone;startFill=0;endArrow=ERmany;endFill=0;fontSize=10;fontColor=#0F172A;labelBackgroundColor=#FFFFFF;labelBorderColor=#CBD5E1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="1" source="field_User__id" target="table_Listing">
+          <mxGeometry x="1" y="0" relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="528" y="220" />
+              <mxPoint x="528" y="1009" />
+            </Array>
+            <mxPoint as="offset" x="-50" y="-10" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="edge_5" value="favorites ($lookup)" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=0;html=1;strokeColor=#7C3AED;strokeWidth=2;dashed=1;startArrow=ERone;startFill=0;endArrow=ERmany;endFill=0;fontSize=10;fontColor=#0F172A;labelBackgroundColor=#FFFFFF;labelBorderColor=#CBD5E1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="1" source="field_FavoriteProperty__id" target="table_Listing">
+          <mxGeometry x="1" y="0" relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="542" y="478" />
+              <mxPoint x="542" y="1009" />
+            </Array>
+            <mxPoint as="offset" x="-50" y="-10" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="edge_6" value="agentId.plan ($lookup)" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=0;html=1;strokeColor=#7C3AED;strokeWidth=2;dashed=1;startArrow=ERone;startFill=0;endArrow=ERmany;endFill=0;fontSize=10;fontColor=#0F172A;labelBackgroundColor=#FFFFFF;labelBorderColor=#CBD5E1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="1" source="field_Plan__id" target="table_Listing">
+          <mxGeometry x="1" y="0" relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="556" y="744" />
+              <mxPoint x="556" y="1009" />
+            </Array>
+            <mxPoint as="offset" x="-50" y="-10" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="edge_7" value="leads" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=0;html=1;strokeColor=#64748B;strokeWidth=2;dashed=1;startArrow=ERone;startFill=0;endArrow=ERmany;endFill=0;fontSize=10;fontColor=#0F172A;labelBackgroundColor=#FFFFFF;labelBorderColor=#CBD5E1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="1" source="field_Enquery__id" target="field_Listing_leads">
+          <mxGeometry x="1" y="0" relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="514" y="1010" />
+              <mxPoint x="514" y="1140" />
+            </Array>
+            <mxPoint as="offset" x="-50" y="-10" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="edge_8" value="feedId" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=0;html=1;strokeColor=#64748B;strokeWidth=2;dashed=1;startArrow=ERone;startFill=0;endArrow=ERmany;endFill=0;fontSize=10;fontColor=#0F172A;labelBackgroundColor=#FFFFFF;labelBorderColor=#CBD5E1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="1" source="field_AgentFeed__id" target="field_Listing_feedId">
+          <mxGeometry x="1" y="0" relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="500" y="1276" />
+              <mxPoint x="500" y="1394" />
+            </Array>
+            <mxPoint as="offset" x="-50" y="-10" />
+          </mxGeometry>
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
