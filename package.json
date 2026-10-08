@@ -3,9 +3,9 @@
   "version": "1.0.0",
   "main": "app.ts",
   "scripts": {
-    "dev": "ts-node-dev --respawn --transpile-only src/server.ts",
-    "start": "node dist/server.js",
-    "build": "tsc",
+    "dev": "node api.js && ts-node-dev --respawn --transpile-only src/server.ts",
+    "start": "node api.js && node dist/server.js",
+    "build": "node api.js && tsc",
     "format": "prettier . --write",
     "test": "echo \"Error: no test specified\" && exit 1",
     "generate:diagram": "ts-node scripts/generate-erd.ts && ts-node scripts/render-erd.ts && ts-node scripts/export-erd.ts"
